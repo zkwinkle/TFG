@@ -1,0 +1,72 @@
+\documentclass[11pt, sfdefaults=false, spanish]{scrreprt}
+
+% Lenguaje y encoding
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{csquotes}
+\usepackage[spanish]{babel}
+
+% Bilbiografía
+\usepackage[style=ieee,backend=biber]{biblatex}
+\addbibresource{referencias.bib}
+
+% Imágenes
+\usepackage{graphicx}
+
+\begin{document}
+
+\include{portada.tex}
+
+\chapter*{Hoja de Aprobación}
+\chapter*{Dedicatoria}
+\chapter*{Agradecimientos}
+
+\chapter*{Resumen}
+\chapter*{Abstract}
+
+\tableofcontents
+\listoftables
+\listoffigures
+
+\chapter*{Siglas y acrónimos}
+
+\chapter{Introducción}
+
+\section{Antecedentes del proyecto}
+
+\subsection{Descripción de la organización}
+\subsection{Descripción del área de conocimiento del proyecto}
+\subsection{Trabajos similares encontrados}
+
+\section{Planteamiento del problema}
+
+\subsection{Contexto del problema}
+\subsection{Justificación del problema}
+\subsection{Enunciado del problema}
+
+\section{Objetivos del proyecto}
+
+\subsection{Objetivo General}
+\subsection{Objetivos Específicos}
+
+\section{Alcances, entregables y limitaciones del proyecto}
+
+\chapter{Marco de referencia teórico}
+
+\chapter{Marco metodológico}
+
+\chapter{Descripción del trabajo realizado}
+
+\section{Descripción del proceso de solución}
+\section{Análisis de los resultados obtenidos}
+
+\chapter{Conclusiones y recomendaciones}
+
+\chapter{Apéndices y anexos}
+
+
+% TODO: Quitar el nocite
+\nocite{*}
+\printbibliography
+
+\end{document}
