@@ -1,0 +1,141 @@
+\section{Antecedentes del proyecto}
+
+\subsection{Descripción de la organización}
+
+Se realizará en colaboración con la escuela de Ingeniería Electrónica del
+Instituto Tecnológico de Costa Rica.
+
+Una de las universidades públicas de Costa Rica, con su sede original en
+Cartago creada en 1971.
+
+\subsection{Descripción del área de conocimiento del proyecto}
+
+Este proyecto trata temas en la intersección de las áreas de computación
+aproximada y aprendizaje automático (ML por sus siglas en inglés).
+Específicamente en el campo generación de circuitos aproximados, actividad a la
+que se le llama Síntesis de Lógica Aproximada (ALS por sus siglas en inglés).
+Este proyecto plantea aplicar técnicas del área de aprendizaje automático al
+área de ALS.
+
+\subsection{Trabajos similares encontrados}
+
+En \cite{castro-godinez_axls_2021}, Castro-Godínez et al. presentan una
+herramienta de fuente abierta para ALS llamada AxLS. Este framework implementa
+múltiples técnicas de ALS y permite utilizar los mismos métodos para calcular
+el umbral de error y métricas de calidad en ellas, lo que permite una mejor
+comparación de los diferentes enfoques de ALS. Este trabajo es fundamental para
+este proyecto, ya que se realizó sobre sobre herramienta AxLS, aportando un
+enfoque de ML a la herramienta.
+
+La intersección de aplicar técnicas de ML para ALS es un nicho que ha surgido
+principalmente en los últimos 5 años. Dentro de esta área se han identificado 3
+categorías principales de aplicación de ML a ALS.
+
+La primer categoría identificada es sobre métodos que buscan entrenar modelo
+que funcione como "asistente" en otros métodos de ALS, evaluando más
+rápidamente los efectos que causaría generar cambios en un circuito, usualmente
+ayudando a evaluar error rápidamente. El beneficio es que en muchos métodos se
+generan cambios a prueba y error o de manera heurísticas, pero se debe evaluar
+el error introducido por cada cambio lo cual puede conllevar simulaciones
+costosas computacionalmente, pero un modelo puede estimar el error con una
+exactitud aceptable mucho más rápido. Dentro de esta categoría se encuentran
+los trabajos de Pasandi et al. \cite{pasandi_approximate_2019}
+\cite{pasandi_deep-powerx_2020}, en donde aplica técnias de aprendizaje
+reforzado y aprendizaje profundo, respectivamente, para estimar el error
+generado en un circuito al hacer cambios locales. En
+\cite{ye_timing-driven_2024}, Ye et al. no estiman directamente el error con
+ML, pero entrenan un agente de aprendizaje reforzado para realizar cambios
+locales en un circuito y los estados de este agente son representados con una
+red neuronal de grafos con pesos en los caminos (PGNN por sus siglas en
+inglés).
+
+La segunda categoría identificada es sobre métodos que se enfocan en técnicas
+de ML para realizar exploraciones del espacio de diseño de un circuito.
+Específicamente suelen emplear una técnica llamada Búsqueda en Árbol de Monte
+Carlo (MCTS por sus siglas en inglés). El trabajo de Rajput et al.
+\cite{rajput_improved_2023} plantea la aplicación de MCTS para ALS, modificando
+el algoritmo levemente para que pueda explorar nodos más profundos en el árbol
+y utilizando la reducción de área como recompensa para evaluar nodos en el
+árbol. También se cuenta con \cite{awais_deepapprox_2024}, donde Awais et al.
+también aplican MCTS al problema de ALS utilizando ML para la estimación de
+error, lo cual lo hace también un ejemplo de la primer categoría de
+aplicaciones de ML a ALS mencionada.
+
+La tercer categoría identificada conlleva realizar un entrenamiento supervisado
+sobre las entradas y salidas de un circuito, el modelo de ML entrenado es
+seguidamente mapeado a un circuito. Ya que los modelos de aprendizaje
+supervisado aprenden a generalizar una función, al ser mapeados a un circuito
+se obtiene un circuito que aproxima al original.
+
+Uno de los primeros ejemplos en esta categoría es
+\cite{boroumand_learning_2021}, donde Boroumand et al. desarrollan un método
+para aprender funciones lógicas de ejemplos y sintetizar circuitos basado en el
+modelo aprendido, a lo que le llaman síntesis lógica a partir de ejemplos. En
+\cite{de_abreu_fast_2021}, De Abreu et al. exploran el uso de árboles de
+decisiones como alternativa tanto para optimizar circuitos exactos como para
+generar versiones aproximadas de los circuitos. En ambos casos la técnica es
+exitosa, reduciendo el tiempo de ejecución para optimizar los circuitos exactos
+al compararse las alternativas comunes ABC y Espresso, así como siendo capaz de
+generar circuitos aproximados de profundidad y área sumamente reducidos e igual
+logrando buenos niveles de exactitud. Miayasaka et al. prueban y comparan
+varios métodos populares de aprendizaje supervisado en
+\cite{miyasaka_logic_2021}, incluyendo redes neuronales, arboles de decisiones
+y redes de tablas de búsqueda (LUT por sus siglas en inglés). Evalúan estos
+métodos en su capacidad de aproximar circuitos lógicos y aritméticos, notando
+que estos modelos comunes no pueden aprender de manera efectiva ciertos tipos
+de circuitos aritméticos.
+
+Los resultados del concurso del International Workshop on Logic \& Synthesis
+(IWLS) del 2020 \cite{rai_logic_2021} han sido sumamente claves en el avance de
+esta área. El concurso consistía en implementar 100 funciones booleanas dados
+ejemplos incompletos de sus tablas de verdad, luego las implementaciones fueron
+validadas con el set de ejemplos de validación que no fue proporcionado a los
+concursantes. Entre las técnicas evaluadas se encuentran árboles de decisiones,
+bosques aleatorios, redes de LUTs, Espresso, redes neuronales y programación
+genética cartesiana.
+
+% Las principales conclusiones del análisis de resultados son que ninguna
+% técnica dominó todas las pruebas; la mayoría de los equipos, incluyendo el
+% ganador, emplearon un conjunto de técnicas diferentes. Los bosques aleatorios
+% y los árboles de decisión fueron muy populares y constituyen un punto de
+% referencia sólido para ALS. Sacrificar un poco de exactitud permite una
+% reducción significativa en el tamaño del circuito.
+
+Zeng et al. \cite{zeng_sampling-based_2021} explora con mayor profundidad el
+uso de árboles de decisión para ALS, utilizando una alteración de la técnica
+llamada árbol de decisión adaptable, particularmente aplicando variaciones
+guiadas por una métrica llamada "Shapley Additive Explanations" (SHAP), que
+busca explicar la importancia de las características de entrada a un modelo.
+En la misma línea de explorar variaciones a la técnica de árboles de decisión,
+Huang y Jiang \cite{huang_circuit_2023} exploran el uso de grafos de decisión
+para relajar las limitaciones estructurales de un árbol, como el crecimiento
+exponencial a medida que aumenta la complejidad. Otra variación novedosa de los
+árboles de decisión es la propuesta de Hu y Cai \cite{hu_optdtals_2024}, donde
+aplican una técnica a la que llaman árboles de decisión óptimos, proporcionando
+una garantía de optimalidad, lo que les permite un mejor control en el balance
+entre precisión y complejidad del circuito.
+
+También se ha profundizado en la técnica de programación genética cartesiana.
+Berndt et al. \cite{berndt_cgp-based_2022} proponen recibir una tabla de verdad
+que representa el comportamiento deseado y evolucionar circuitos para ajustarse
+a ese comportamiento, partiendo de circuitos aleatorios o de un circuito
+previamente especificado. Una ventaja de esta técnica es que puede combinarse
+con otras, utilizando circuitos generados por otras técnicas como punto de
+partida en el proceso evolutivo.
+
+Prats Ramos et al. \cite{prats_ramos_impact_2024} presentan un análisis
+comparativo entre las técnicas de árboles de decisión, programación genética
+cartesiana y un enfoque mixto de ML que fue originalmente presentado por el
+equipo ganador del concurso de IWLS 2020 \cite{rai_logic_2021} y combina el uso
+de redes neuronales y LUTs.
+
+\section{Planteamiento del problema}
+
+\subsection{Contexto del problema} \subsection{Justificación del problema}
+\subsection{Enunciado del problema}
+
+\section{Objetivos del proyecto}
+
+\subsection{Objetivo General} \subsection{Objetivos Específicos}
+
+\section{Alcances, entregables y limitaciones del proyecto}
