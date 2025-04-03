@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{csquotes}
-\usepackage[spanish]{babel}
+\usepackage[spanish,es-tabla]{babel}
 
 % Bilbiografía
 \usepackage[style=ieee,backend=biber]{biblatex}
@@ -15,6 +15,12 @@
 
 % Hipervínculos
 \usepackage{hyperref}
+
+% Tablas
+\usepackage{array, booktabs, multirow}
+\setlength\heavyrulewidth{0.2em}
+\setlength\lightrulewidth{0.1em}
+\newcolumntype{M}[1]{>{\centering\arraybackslash}m{#1}}
 
 \begin{document}
 
@@ -33,8 +39,6 @@
 
 \chapter*{Siglas y acrónimos}
 
-\chapter{Introducción}
-
 \include{introducción.tex}
 
 \chapter{Marco de referencia teórico}
@@ -48,11 +52,11 @@
 
 \chapter{Conclusiones y recomendaciones}
 
+\printbibliography
+
+\clearpage
+
 \chapter{Apéndices y anexos}
 
-
-% TODO: Quitar el nocite
-\nocite{*}
-\printbibliography
 
 \end{document}

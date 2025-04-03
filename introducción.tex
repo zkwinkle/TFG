@@ -1,3 +1,5 @@
+\chapter{Introducción}
+
 \section{Antecedentes del proyecto}
 
 \subsection{Descripción de la organización}
@@ -131,11 +133,101 @@ de redes neuronales y LUTs.
 
 \section{Planteamiento del problema}
 
-\subsection{Contexto del problema} \subsection{Justificación del problema}
+\subsection{Contexto del problema}
+
+Los investigadores del Instituto Tecnológico de Costa Rica enfrentan
+limitaciones en el uso de técnicas de Síntesis Lógica Aproximada (ALS) basadas
+en aprendizaje automático (ML). Actualmente, la herramienta disponible para
+ellos, AxLS, no cuenta con las capacidades técnicas necesarias para implementar
+estas técnicas, lo que restringe sus posibilidades de experimentación y
+análisis.
+
+\subsection{Justificación del problema}
+
+La capacidad de utilizar técnicas de ALS basadas en ML permitiría a los
+investigadores verificar y comparar resultados obtenidos por otros grupos de
+investigación. Además, facilitaría el diseño y desarrollo de técnicas novedosas
+de ALS basadas en ML, permitiéndoles contribuir de manera más significativa en
+la investigación en ALS.
+
 \subsection{Enunciado del problema}
+
+Los investigadores del Instituto Tecnológico de Costa Rica carecen de una
+herramienta que les permita aplicar técnicas de ALS basadas en aprendizaje
+automático. La herramienta disponible, AxLS, no posee las capacidades técnicas
+necesarias para ello, lo que impide la validación, comparación y desarrollo de
+nuevas técnicas en este campo.
 
 \section{Objetivos del proyecto}
 
-\subsection{Objetivo General} \subsection{Objetivos Específicos}
+\subsection{Objetivo General}
+
+Formular una técnica del estado del arte de aprendizaje automático para ALS en la herramienta AxLS, de manera que permita ser comparada con otras técnicas implementadas dentro de la herramienta así como con otras implementaciones diferentes de las técnicas seleccionadas.
+
+\subsection{Objetivos Específicos}
+
+1. Evaluar al menos 3 técnicas de ALS basadas en aprendizaje automático
+determinando cuál es la más apropiada para ser integrada en la herramienta
+AxLS.
+2. Adaptar la herramienta AxLS para que sea posible la implementación de la
+técnica escogida, con la consideración de que permita más fácilmente la
+implementación de futuras técnicas de aprendizaje automático.
+3. Evaluar los resultados de la técnica de aprendizaje automático implementada
+en AxLS con respecto a resultados obtenidos mediante las técnicas ya
+existentes en la herramienta.
 
 \section{Alcances, entregables y limitaciones del proyecto}
+
+El alcance de este proyecto incluye investigar y evaluar la técnicas del estado
+del arte, escoger e implementar una en la herramienta AxLS y documentar el
+proceso. Los entregables asociados a este alcance, las técnicas y herramientas a emplear así
+como sus estrategias de verificación se presentan en la tabla \ref{tab:entregables}.
+
+Como limitación, la implementación escogida está restringida a las capacidades
+actuales de AxLS, incluyendo las métricas y conjunto de pruebas con las que
+cuenta actualmente. Este proyecto no plantea agregar más pruebas a la
+herramienta.
+Otra limitación del proyecto es la falta de acceso a máquinas con capacidades
+computacionales de alto rendimiento, por lo que la técnica seleccionada no
+puede requerir un entrenamiento demasiado pesado. Debe ser factible su
+entrenamiento en poco tiempo en un computador personal.
+
+\begin{table}[htb]
+  \caption{Entregables del proyecto.}
+  \label{tab:entregables}
+  \resizebox{\textwidth}{!}{
+    \begin{tabular}{M{0.32\linewidth}M{0.17\linewidth}M{0.37\linewidth}M{0.12\linewidth}}
+      \toprule
+      Entregable & Técnicas / Herramientas & Estrategias de verificación & Objetivo Específico \\
+      \midrule
+      Documento de diseño que justifica la escogencia de la técnica de aprendizaje automático a
+      implementar en AxLS. Compara todas las técnicas que estén bajo consideración inicialmente
+      de aquellas encontradas en trabajos relacionados del estado del arte.
+      & Zotero para manejo de referencias.
+      & Documento detalla y escoge una técnica en específico, da razones de por qué se escogió
+      tomando en cuenta la factibilidad y relevancia en el estado del arte.
+      & 1 \\ \\
+      Documento de diseño que explica el plan de implementación de la técnica escogida dentro de
+      la herramienta AxLS.
+      & AxLS, Python, Yosys.
+      & Documento detalla todos los cambios de API necesarios en AxLS y el API para utilizar la
+      técnica nueva, con ejemplos de uso y un plan de pruebas. Detalla el proceso de crear los
+      datos de entrenamiento, entrenamiento del modelo y sintetización del circuito.
+      & 2 \\ \\
+      Código adaptado de herramienta AxLS con técnica de ML integrada.
+      & AxLS, Python, Yosys, git, Github, Pytorch u otra biblioteca de ML.
+      & La herramienta AxLS sigue funcionando con todas sus técnicas pasadas y además se puede
+      escoger utilizar la técnica de ML y la cual se ejecuta correctamente. La ejecución correcta
+      se validará con un plan de pruebas.
+      & 2 \\ \\
+      Informe final sobre el proyecto realizado y los resultados encontrados al comparar la
+      técnica de AA con las ya existentes en la herramienta AxLS
+      & LaTeX, IEEE, AxLS
+      & El informe describe cómo se llevó a cabo el proyecto, la técnica de ML empleada y
+      presenta los resultados de esta técnica comparados con los de las otras técnicas ya
+      existentes en la máquina con gráficos.
+      & 3 \\
+      \bottomrule
+    \end{tabular}
+  }
+\end{table}
