@@ -1,14 +1,31 @@
 \chapter{Introducción}
 
+Este proyecto consiste en la aplicación de técnicas de aprendizaje automático
+(ML por sus siglas en inglés) al campo de la Síntesis Lógica Aproximada (ALS
+por sus siglas en inglés).
+Este informe detalla el proceso para la integración de una técnica del estado del
+arte de ML en la herramienta de fuente abierta AxLS.
+
+Este capítulo presenta el contexto y la motivación detrás del desarrollo del
+proyecto. Se describen los antecedentes relevantes, el problema identificado,
+así como los objetivos y alcances planteados para dar respuesta a dicho
+problema.
+
 \section{Antecedentes del proyecto}
+
+En esta sección se recopila información relevante sobre la organización
+involucrada, el área temática del proyecto y trabajos relacionados que han
+abordado problemáticas similares. Esto permite ubicar el proyecto dentro de un
+marco de referencia académico.
 
 \subsection{Descripción de la organización}
 
 Se realizará en colaboración con la escuela de Ingeniería Electrónica del
-Instituto Tecnológico de Costa Rica.
+Instituto Tecnológico de Costa Rica, específicamente con el laboratorio de
+"Efficient Computing Across the Stack" (ECASLab).
 
-Una de las universidades públicas de Costa Rica, con su sede original en
-Cartago creada en 1971.
+El Tecnológico de Costa Rica es una de las universidades públicas de Costa
+Rica, con su sede original en Cartago creada en 1971 \cite{resena_tec}.
 
 \subsection{Descripción del área de conocimiento del proyecto}
 
@@ -34,21 +51,21 @@ principalmente en los últimos 5 años. Dentro de esta área se han identificado
 categorías principales de aplicación de ML a ALS.
 
 La primer categoría identificada es sobre métodos que buscan entrenar modelo
-que funcione como "asistente" en otros métodos de ALS, evaluando más
+que funcione como ``asistente'' en otros métodos de ALS, evaluando más
 rápidamente los efectos que causaría generar cambios en un circuito, usualmente
 ayudando a evaluar error rápidamente. El beneficio es que en muchos métodos se
-generan cambios a prueba y error o de manera heurísticas, pero se debe evaluar
-el error introducido por cada cambio lo cual puede conllevar simulaciones
-costosas computacionalmente, pero un modelo puede estimar el error con una
-exactitud aceptable mucho más rápido. Dentro de esta categoría se encuentran
-los trabajos de Pasandi et al. \cite{pasandi_approximate_2019}
-\cite{pasandi_deep-powerx_2020}, en donde aplica técnias de aprendizaje
-reforzado y aprendizaje profundo, respectivamente, para estimar el error
-generado en un circuito al hacer cambios locales. En
-\cite{ye_timing-driven_2024}, Ye et al. no estiman directamente el error con
-ML, pero entrenan un agente de aprendizaje reforzado para realizar cambios
-locales en un circuito y los estados de este agente son representados con una
-red neuronal de grafos con pesos en los caminos (PGNN por sus siglas en
+generan cambios a prueba y error o con heurísticas, pero se debe evaluar el
+error introducido por cada cambio lo cual puede conllevar simulaciones costosas
+computacionalmente, pero un modelo puede estimar el error con una exactitud
+aceptable mucho más rápido. Dentro de esta categoría se encuentran los trabajos
+de Pasandi et al. \cite{pasandi_approximate_2019}
+\cite{pasandi_deep-powerx_2020}, en donde aplica técnicas de aprendizaje
+reforzado y aprendizaje profundo (DL por sus siglas en inglés),
+respectivamente, para estimar el error generado en un circuito al hacer cambios
+locales. En \cite{ye_timing-driven_2024}, Ye et al. no estiman directamente el
+error con ML, pero entrenan un agente de aprendizaje reforzado para realizar
+cambios locales en un circuito y los estados de este agente son representados
+con una red neuronal de grafos con pesos en los caminos (PGNN por sus siglas en
 inglés).
 
 La segunda categoría identificada es sobre métodos que se enfocan en técnicas
@@ -74,27 +91,27 @@ Uno de los primeros ejemplos en esta categoría es
 para aprender funciones lógicas de ejemplos y sintetizar circuitos basado en el
 modelo aprendido, a lo que le llaman síntesis lógica a partir de ejemplos. En
 \cite{de_abreu_fast_2021}, De Abreu et al. exploran el uso de árboles de
-decisiones como alternativa tanto para optimizar circuitos exactos como para
-generar versiones aproximadas de los circuitos. En ambos casos la técnica es
-exitosa, reduciendo el tiempo de ejecución para optimizar los circuitos exactos
-al compararse las alternativas comunes ABC y Espresso, así como siendo capaz de
-generar circuitos aproximados de profundidad y área sumamente reducidos e igual
-logrando buenos niveles de exactitud. Miayasaka et al. prueban y comparan
-varios métodos populares de aprendizaje supervisado en
-\cite{miyasaka_logic_2021}, incluyendo redes neuronales, arboles de decisiones
-y redes de tablas de búsqueda (LUT por sus siglas en inglés). Evalúan estos
-métodos en su capacidad de aproximar circuitos lógicos y aritméticos, notando
-que estos modelos comunes no pueden aprender de manera efectiva ciertos tipos
-de circuitos aritméticos.
+decisiones (DT por sus siglas en inglés) como alternativa tanto para optimizar
+circuitos exactos como para generar versiones aproximadas de los circuitos. En
+ambos casos la técnica es exitosa, reduciendo el tiempo de ejecución para
+optimizar los circuitos exactos al compararse las alternativas comunes ABC y
+Espresso, así como siendo capaz de generar circuitos aproximados de profundidad
+y área sumamente reducidos e igual logrando buenos niveles de exactitud.
+Miayasaka et al. prueban y comparan varios métodos populares de aprendizaje
+supervisado en \cite{miyasaka_logic_2021}, incluyendo redes neuronales, arboles
+de decisiones y redes de tablas de búsqueda (LUT por sus siglas en inglés).
+Evalúan estos métodos en su capacidad de aproximar circuitos lógicos y
+aritméticos, notando que estos modelos comunes no pueden aprender de manera
+efectiva ciertos tipos de circuitos aritméticos.
 
 Los resultados del concurso del International Workshop on Logic \& Synthesis
 (IWLS) del 2020 \cite{rai_logic_2021} han sido sumamente claves en el avance de
 esta área. El concurso consistía en implementar 100 funciones booleanas dados
 ejemplos incompletos de sus tablas de verdad, luego las implementaciones fueron
 validadas con el set de ejemplos de validación que no fue proporcionado a los
-concursantes. Entre las técnicas evaluadas se encuentran árboles de decisiones,
-bosques aleatorios, redes de LUTs, Espresso, redes neuronales y programación
-genética cartesiana.
+concursantes. Entre las técnicas evaluadas se encuentran DTs, bosques
+aleatorios (RF por sus siglas en inglés), redes de LUTs, Espresso, redes
+neuronales y programación genética cartesiana. (CGP por sus siglas en inglés)
 
 % Las principales conclusiones del análisis de resultados son que ninguna
 % técnica dominó todas las pruebas; la mayoría de los equipos, incluyendo el
@@ -104,43 +121,45 @@ genética cartesiana.
 % reducción significativa en el tamaño del circuito.
 
 Zeng et al. \cite{zeng_sampling-based_2021} explora con mayor profundidad el
-uso de árboles de decisión para ALS, utilizando una alteración de la técnica
-llamada árbol de decisión adaptable, particularmente aplicando variaciones
-guiadas por una métrica llamada "Shapley Additive Explanations" (SHAP), que
-busca explicar la importancia de las características de entrada a un modelo.
-En la misma línea de explorar variaciones a la técnica de árboles de decisión,
-Huang y Jiang \cite{huang_circuit_2023} exploran el uso de grafos de decisión
-para relajar las limitaciones estructurales de un árbol, como el crecimiento
-exponencial a medida que aumenta la complejidad. Otra variación novedosa de los
-árboles de decisión es la propuesta de Hu y Cai \cite{hu_optdtals_2024}, donde
-aplican una técnica a la que llaman árboles de decisión óptimos, proporcionando
-una garantía de optimalidad, lo que les permite un mejor control en el balance
-entre precisión y complejidad del circuito.
+uso de DTs para ALS, utilizando una alteración de la técnica llamada árbol de
+decisión adaptable, particularmente aplicando variaciones guiadas por una
+métrica llamada ``Shapley Additive Explanations'' (SHAP), que busca explicar la
+importancia de las características de entrada a un modelo. En la misma línea de
+explorar variaciones a la técnica de DTs, Huang y Jiang
+\cite{huang_circuit_2023} exploran el uso de grafos de decisión para relajar
+las limitaciones estructurales de un árbol, como el crecimiento exponencial a
+medida que aumenta la complejidad. Otra variación novedosa de los DTs es la
+propuesta de Hu y Cai \cite{hu_optdtals_2024}, donde aplican una técnica a la
+que llaman árboles de decisión óptimos, proporcionando una garantía de
+optimalidad, lo que les permite un mejor control en el balance entre precisión
+y complejidad del circuito.
 
-También se ha profundizado en la técnica de programación genética cartesiana.
-Berndt et al. \cite{berndt_cgp-based_2022} proponen recibir una tabla de verdad
-que representa el comportamiento deseado y evolucionar circuitos para ajustarse
-a ese comportamiento, partiendo de circuitos aleatorios o de un circuito
+También se ha profundizado en la técnica de CGP. Berndt et al.
+\cite{berndt_cgp-based_2022} proponen recibir una tabla de verdad que
+representa el comportamiento deseado y evolucionar circuitos para ajustarse a
+ese comportamiento, partiendo de circuitos aleatorios o de un circuito
 previamente especificado. Una ventaja de esta técnica es que puede combinarse
 con otras, utilizando circuitos generados por otras técnicas como punto de
 partida en el proceso evolutivo.
 
 Prats Ramos et al. \cite{prats_ramos_impact_2024} presentan un análisis
-comparativo entre las técnicas de árboles de decisión, programación genética
-cartesiana y un enfoque mixto de ML que fue originalmente presentado por el
-equipo ganador del concurso de IWLS 2020 \cite{rai_logic_2021} y combina el uso
-de redes neuronales y LUTs.
+comparativo entre las técnicas de DT, CGP y un enfoque mixto de ML que fue
+originalmente presentado por el equipo ganador del concurso de IWLS 2020
+\cite{rai_logic_2021} y combina el uso de redes neuronales y LUTs.
 
 \section{Planteamiento del problema}
+
+En esta sección se describe el problema central que motiva este proyecto. Se
+presenta el contexto en el que surge, su justificación desde una perspectiva
+investigativa, y se formula claramente el problema que se busca resolver.
 
 \subsection{Contexto del problema}
 
 Los investigadores del Instituto Tecnológico de Costa Rica enfrentan
-limitaciones en el uso de técnicas de Síntesis Lógica Aproximada (ALS) basadas
-en aprendizaje automático (ML). Actualmente, la herramienta disponible para
-ellos, AxLS, no cuenta con las capacidades técnicas necesarias para implementar
-estas técnicas, lo que restringe sus posibilidades de experimentación y
-análisis.
+limitaciones en el uso de técnicas de ALS basadas en ML. Actualmente, la
+herramienta disponible para ellos, AxLS, no cuenta con las capacidades técnicas
+necesarias para implementar estas técnicas, lo que restringe sus posibilidades
+de experimentación y análisis.
 
 \subsection{Justificación del problema}
 
@@ -166,22 +185,25 @@ Formular una técnica del estado del arte de aprendizaje automático para ALS en
 
 \subsection{Objetivos Específicos}
 
-1. Evaluar al menos 3 técnicas de ALS basadas en aprendizaje automático
-determinando cuál es la más apropiada para ser integrada en la herramienta
-AxLS.
-2. Adaptar la herramienta AxLS para que sea posible la implementación de la
-técnica escogida, con la consideración de que permita más fácilmente la
-implementación de futuras técnicas de aprendizaje automático.
-3. Evaluar los resultados de la técnica de aprendizaje automático implementada
-en AxLS con respecto a resultados obtenidos mediante las técnicas ya
-existentes en la herramienta.
+\begin{enumerate}
+  \item Evaluar al menos 3 técnicas de ALS basadas en aprendizaje automático
+  determinando cuál es la más apropiada para ser integrada en la herramienta
+  AxLS.
+  \item Adaptar la herramienta AxLS para que sea posible la implementación de la
+  técnica escogida, con la consideración de que permita más fácilmente la
+  implementación de futuras técnicas de aprendizaje automático.
+  \item Evaluar los resultados de la técnica de aprendizaje automático implementada
+  en AxLS con respecto a resultados obtenidos mediante las técnicas ya
+  existentes en la herramienta.
+\end{enumerate}
+
 
 \section{Alcances, entregables y limitaciones del proyecto}
 
 El alcance de este proyecto incluye investigar y evaluar la técnicas del estado
 del arte, escoger e implementar una en la herramienta AxLS y documentar el
 proceso. Los entregables asociados a este alcance, las técnicas y herramientas a emplear así
-como sus estrategias de verificación se presentan en la tabla \ref{tab:entregables}.
+como sus estrategias de verificación se presentan en la Tabla \ref{tab:entregables}.
 
 Como limitación, la implementación escogida está restringida a las capacidades
 actuales de AxLS, incluyendo las métricas y conjunto de pruebas con las que
