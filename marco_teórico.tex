@@ -23,15 +23,19 @@ este capítulo en un mapa conceptual.
 \begin{figure}[ht]
   \centering
   \includesvg[width=0.85\linewidth]{./imágenes/Mapa conceptual.svg}
-  \caption{Mapa conceptual de los temas abordados en el marco teórico. Las burbujas rojas corresponden a temas asociados a ML, las burbujas azules corresponden a temas asociados a ALS y las burbujas moradas corresponden a temas que integran las 2 áreas.}
+  \caption{Mapa conceptual de los temas abordados en el marco teórico. Las
+    burbujas rojas corresponden a temas asociados a ML, las burbujas azules
+    corresponden a temas asociados a ALS y las burbujas moradas corresponden a
+  temas que integran las 2 áreas.}
   \label{fig:mapa_conceptual}
 \end{figure}
 
 \section{Aprendizaje Automático}
 
-Según Russel y Norvig \cite{russell2016artificial}, en el aprendizaje automático una computadora analiza datos, construye un modelo
-basado en esos datos y luego usa ese modelo tanto como una hipótesis sobre el
-mundo como una herramienta de software para resolver problemas.
+Según Russel y Norvig \cite{russell2016artificial}, en el aprendizaje
+automático una computadora analiza datos, construye un modelo basado en esos
+datos y luego usa ese modelo tanto como una hipótesis sobre el mundo como una
+herramienta de software para resolver problemas.
 
 En el contexto de ALS, una de las formas que más nos interesa aplicar ML es
 que la computadora analice los datos de la tabla de verdad de un circuito,
@@ -96,11 +100,114 @@ abstracta del circuito basada en patrones presentes en los ejemplos.
 
 \subsection{Sobreajuste}
 
+Se dice que una función aprendida tiene sobreajuste cuando presta demasiada
+atención al conjunto de datos con el que fue entrenada, lo que provoca un mal
+desempeño con datos no vistos \cite{russell2016artificial}.
+
+En el contexto de aprendizaje de circuitos, el sobreajuste puede ocurrir si un
+modelo memoriza las entradas y salidas de un subconjunto limitado de la tabla
+de verdad, sin capturar el comportamiento general del circuito. Como resultado,
+puede fallar al predecir correctamente salidas para combinaciones de entrada no
+vistas, aunque estas sigan la misma lógica.
+
 \subsection{Validación de modelos}
+
+La validación de modelos es el proceso de confirmar que un modelo produce
+resultados suficientemente correctos para el propósito con el que fue diseñado,
+dentro del dominio en el que se aplica \cite{schlesinger_terminology_1979}.
+
+En el dominio de ML, esta validación comúnmente se lleva a cabo separando los
+datos de entrenamiento en 3 conjuntos:
+
+\begin{itemize}
+  \item Un conjunto de entrenamiento, utilizado para entrenar los modelos
+  \item Un conjunto de validación, que se utiliza para evaluar los modelos
+    entrenados y ver que generalicen bien y no tengan sobreajuste. Se puede
+    utilizar para entrenar múltiples modelos similares y escoger el que tenga
+    mejor rendimiento.
+  \item Un conjunto de prueba para realizar una evaluación final e imparcial
+    del modelo \cite{russell2016artificial}.
+\end{itemize}
+
+A pesar de los nombres utilizados para los conjuntos, la validación final de la
+efectividad del modelo tendrá que venir del conjunto de prueba.
+
+En el caso de aprender el comportamiento de un circuito tenemos una situación
+única que no se da comúnmente en ML. Cuando el circuito es pequeño, se pueden
+conocer todos sus posibles pares de entrada/salida. Por lo que en estos casos
+se puede entrenar y validar el modelo con el conjunto completo de
+entradas/salidas posibles del circuito.
 
 \subsection{Modelos y técnicas}
 
+En esta sección se explican los modelos más populares en aplicaciones de ALS,
+así como los métodos utilizados para adaptarlos a este dominio.
+
+\subsubsection{Árboles de decisión (DT)}
+
+Un arbol de desición es una representación de una función que mapean un vector
+de atributos a un solo valor de salida, una ``decisión''. Utilizando términos
+que generalmente se utilizan para estructuras de grafo en forma de árbol, un
+arbol de decisión llega a su decisión realizando una secuencia de pruebas,
+iniciando en la raíz del árbol y siguiendo las ramas apropiadas hasta llegar a
+una hoja. Cada nodo interno del árbol corresponde a una prueba del valor de uno
+de sus atributos de entrada, las ramas del nodo son etiquetadas con los
+posibles valores del atributo, y los nodos hoja corresponden con los valores
+que puede retornar la función.
+
+En el caso general, los valores de entrada y salida pueden ser discretos o
+continuos. Cuando las entradas son valores discretos y las salidas solo pueden
+tener dos valores, falso o verdadero, se le llama clasificación Booleana
+\cite{russell2016artificial}.
+
+En la Figura \ref{fig:DT} se puede observar la estructura de un árbol de
+decisión booleano.
+
+\begin{figure}[ht]
+  \centering
+  \includesvg[width=0.55\linewidth]{./imágenes/DT.svg}
+  \caption{Árbol de decisión booleano con tres variables de entrada. El nodo
+    naranja es la raíz del árbol, los nodos azules los nodos intermedios y los
+    nodos verdes son las hojas del árbol, los cuales representan la decisión a la
+  que llega.}
+  \label{fig:DT}
+\end{figure}
+
+En el caso de aprender el comportamiento de un circuito nos enfrentamos a un
+problema de clasificación booleana: dependiendo de las entradas del circuito,
+cuál debe ser la salida. Por esto es que, dentro del contexto de ALS, son de
+particular interés lo árboles de decisión booleanos.
+
+Para transformar un modelo DT booleano a una expresión booleana que puede ser
+expresada con componentes de un circuito se puede emplear el teorema de
+expansión de Boole \cite{boole_investigation_1854}. Aplicando este teorema al
+árbol de la figura \ref{fig:DT}, este se puede representar con la expresión
+booleana $(\bar{X}Y) + (XY\bar{Z})$. Un árbol de decisiones no necesariamente
+se encontrará en la configuración más optima para expresar la función booleana
+que implementa, en el caso de de la Figura \ref{fig:DT} la expresión que
+obtuvimos se puede simplificar más para obtener $Y(\bar{X} + \bar{Z})$. Por
+este motivo, se recomienda aplicar técnicas de simplificación a la expresión
+booleana o al circuito derivado de ella.
+
+Un solo DT booleano tiene una sola salida, por lo que para circuitos con
+múltiples salidas se debe de aplicar un DT que aprenda la función individual de
+cada salida del circuito.
+
 \subsubsection{Bosque aleatorio (RF)}
+
+Es común crear modelos que son colecciones de hipótesis y combinar las
+predicciones de cada hipótesis, puede escogerse un promedio de las
+predicciones, tratarlas como un voto de mayoría o aplicar otras técnicas de ML
+para obtener el resultado final. A las hipótesis individuales se les llama
+modelo base y su combinación modelo de conjunto.
+Crear estos modelos de conjunto puede ser beneficioso para disminuir el
+sobreajuste y sesgo del modelo base.
+Los bosques aleatorios son de los modelos de conjunto más comúnmente aplicados,
+son formados por DTs como modelo base. \cite{russell2016artificial}
+
+En el caso de un RF conformado por DTs booleanos, se determina la salida del
+bosque con un voto de mayoría por parte de los árboles. Para implementar este
+voto por mayoría en un circuito se pueden utilizador sumadores y un comparador.
 
 \subsubsection{Redes de tablas de búsqueda (LUTs)}
 
