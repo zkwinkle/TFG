@@ -29,13 +29,70 @@ este capítulo en un mapa conceptual.
 
 \section{Aprendizaje Automático}
 
-Definición y objetivos.
+Según Russel y Norvig \cite{russell2016artificial}, en el aprendizaje automático una computadora analiza datos, construye un modelo
+basado en esos datos y luego usa ese modelo tanto como una hipótesis sobre el
+mundo como una herramienta de software para resolver problemas.
+
+En el contexto de ALS, una de las formas que más nos interesa aplicar ML es
+que la computadora analice los datos de la tabla de verdad de un circuito,
+de modo que se construya una representación generalizada del comportamiento de
+dicho circuito.
+Este modelo actúa como una hipótesis sobre lo que haría el circuito original, y
+aunque normalmente en otros enfoques de ML se mantendría como una solución en
+software, en nuestro caso buscamos transformarlo en hardware. De esta forma, el
+modelo sigue funcionando como una hipótesis de lo que haría el circuito
+original, pero implementada directamente como un circuito aproximado.
 
 \subsection{Aprendizaje supervisado}
 
+En el aprendizaje supervisado, el agente observa parejas de entradas y salidas
+y aprende una función que mapea las entradas a sus correspondientes salidas
+\cite{russell2016artificial}.
+
+Es decir, en el aprendizaje supervisado, se dispone de los datos del
+comportamiento que se desea aprender antes del entrenamiento.
+
+Un ejemplo de esto, en el contexto de ALS, es cuando se entrena un modelo
+utilizando la tabla de verdad de un circuito, que es un conjunto de datos que
+muestra las salidas correspondientes a sus entradas.
+
 \subsection{Aprendizaje reforzado}
 
+El aprendizaje reforzado es aprender qué hacer o cómo asociar situaciones con
+acciones, para maximizar una señal de recompensa. No se le dice al agente qué
+acciones tomar, sino que debe descubrir cuáles acciones dan la mayor recompensa
+mediante prueba y error. \cite{sutton_reinforcement_2018}
+
+En el contexto de ALS, un agente RL podría ser entrenado para aprender a
+modificar un circuito, realizando modificaciones y recibiendo una recompensa
+basado en parámetros como la reducción en área, en tiempo de ejecución, o el
+aumento en el error del circuito. Así el agente, después de mucho entrenamiento
+se convertirá en un experto en realizar modificaciones a circuitos para generar
+versiones aproximadas de ellos.
+
 \subsection{Generalización}
+
+Según Bishop \cite{bishop_pattern_2006}, en el contexto de ML, la
+generalización es la capacidad de un modelo para producir respuestas correctas
+ante entradas no vistas durante el entrenamiento. En la práctica, el espacio de
+posibles entradas suele ser tan amplio que el conjunto de entrenamiento solo
+representa una pequeña fracción del total.
+
+Por ejemplo, un modelo entrenado para distinguir entre fotos de gatos y perros
+no puede haber visto todas las imágenes de estos animales en la existencia;
+debe aprender patrones generales (es decir, debe generalizar), para poder
+clasificar imágenes nuevas.
+
+En el contexto de la síntesis lógica aproximada (ALS), si bien es posible
+generar todas las combinaciones de entrada/salida de la tabla de verdad para
+circuitos pequeños, esto se vuelve inviable a medida que el número de entradas
+crece. Un circuito con 64 bits de entrada tiene $2^{64}$ combinaciones
+posibles, aproximadamente \num{1.8e19}, lo que hace imposible utilizar su tabla
+de verdad completa. Por tanto, el modelo debe aprender a generalizar a partir
+de un subconjunto representativo. Incluso en circuitos pequeños, donde es
+posible entrenar modelos con una tabla de verdad exhaustiva, el modelo no
+memoriza los datos, sino que generaliza al construir una representación
+abstracta del circuito basada en patrones presentes en los ejemplos.
 
 \subsection{Sobreajuste}
 
@@ -50,7 +107,6 @@ Definición y objetivos.
 \subsubsection{Perceptrón multicapa / Red neuronal}
 
 \subsubsection{Programación genética cartesiana (CGP)}
-
 
 \section{Computación Aproximada}
 
