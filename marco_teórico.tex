@@ -283,20 +283,43 @@ es un proceso simple.
 
 \section{Computación Aproximada}
 
+En esta sección se explican los conceptos de computación aproximada más
+revelantes para este trabajo.
+
+La computación aproximada surgió como un paradigma para diseñar sistemas
+digitales más eficientes en consumo de energía y rendimiento. Muchos sistemas y
+aplicaciones son tolerantes a errores en los resultados computados; por
+ejemplo, el procesamiento multimedia (audio, video, gráficos e imágenes), el
+reconocimiento de patrones y la minería de datos. Al relajar la necesidad de
+realizar operaciones exactas y determinísticas, las técnicas de computación
+aproximada permiten mejorar significativamente la eficiencia de los circuitos.
+\cite{han_approximate_2013}
+
 \subsection{Síntesis Lógica Aproximada}
 
-Definición y características
+La construcción automática de circuitos digitales aproximados se realiza
+mediante herramientas de diseño asistido por computador (Computer-Aided Design,
+CAD), disponibles en entornos de diseño electrónico automatizado (Electronic
+Design Automation, EDA). ALS se enfoca en mejorar el comportamiento de un
+circuito (ya sea en consumo de potencia, área o rendimiento) sin necesidad de
+conocer sus detalles de implementación. Este proceso se lleva a cabo de forma
+sistemática, modificando la funcionalidad especificada sin exceder un umbral de
+error predefinido.
+\cite{ammes_two-level_2022}
+
+En los últimos años, se ha explorado con gran éxito la aplicación de técnicas
+de ML para ALS
+\cite{pasandi_approximate_2019}, \cite{rai_logic_2021},
+\cite{berndt_review_2022}, \cite{prats_ramos_impact_2024}.
+Gracias a su capacidad de generalizar funciones, el aprendizaje de funciones
+booleanas ha sido una de las técnicas de ML más exploradas y útiles para la
+generación de circuitos aproximados. Esta efectividad se debe a que, al
+aprender una función, el modelo busca cubrir todas las posibles soluciones de
+manera eficiente. Así, logra un buen equilibrio entre precisión y rendimiento,
+lo que permite crear circuitos eficientes sin perder demasiada exactitud.
 
 \subsection{Métodos clásicos}
 
 Principios teóricos
 
 \subsection{Métricas de error}
-
-\subsection{Síntesis de modelos de ML}
-
-\subsubsection{Diagramas de decisión binarios}
-
-\subsubsection{Bosques de decisión}
-
-\subsubsection{Redes neuronales}
