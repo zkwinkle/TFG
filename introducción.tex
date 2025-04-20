@@ -1,8 +1,8 @@
 \chapter{Introducción}
 
 Este proyecto consiste en la aplicación de técnicas de aprendizaje automático
-(ML por sus siglas en inglés) al campo de la Síntesis Lógica Aproximada (ALS
-por sus siglas en inglés).
+(Machine Learning, ML) al campo de la Síntesis Lógica Aproximada (Approximate
+Logic Synthesis, ALS).
 Este informe detalla el proceso para la integración de una técnica del estado del
 arte de ML en la herramienta de fuente abierta AxLS.
 
@@ -30,11 +30,9 @@ Rica, con su sede original en Cartago creada en 1971 \cite{resena_tec}.
 \subsection{Descripción del área de conocimiento del proyecto}
 
 Este proyecto trata temas en la intersección de las áreas de computación
-aproximada y aprendizaje automático (ML por sus siglas en inglés).
-Específicamente en el campo generación de circuitos aproximados, actividad a la
-que se le llama Síntesis de Lógica Aproximada (ALS por sus siglas en inglés).
-Este proyecto plantea aplicar técnicas del área de aprendizaje automático al
-área de ALS.
+aproximada y ML.
+Específicamente en el campo generación de circuitos aproximados, a la
+que se le llama Síntesis de Lógica Aproximada.
 
 \subsection{Trabajos similares encontrados}
 
@@ -60,18 +58,18 @@ computacionalmente, pero un modelo puede estimar el error con una exactitud
 aceptable mucho más rápido. Dentro de esta categoría se encuentran los trabajos
 de Pasandi et al. \cite{pasandi_approximate_2019}
 \cite{pasandi_deep-powerx_2020}, en donde aplica técnicas de aprendizaje
-reforzado y aprendizaje profundo (DL por sus siglas en inglés),
+reforzado y aprendizaje profundo (Deep Learning, DL),
 respectivamente, para estimar el error generado en un circuito al hacer cambios
 locales. En \cite{ye_timing-driven_2024}, Ye et al. no estiman directamente el
 error con ML, pero entrenan un agente de aprendizaje reforzado para realizar
 cambios locales en un circuito y los estados de este agente son representados
-con una red neuronal de grafos con pesos en los caminos (PGNN por sus siglas en
-inglés).
+con una red neuronal de grafos con pesos en los caminos (Path-weighted Graph
+Neural Network, PGNN).
 
 La segunda categoría identificada es sobre métodos que se enfocan en técnicas
 de ML para realizar exploraciones del espacio de diseño de un circuito.
 Específicamente suelen emplear una técnica llamada Búsqueda en Árbol de Monte
-Carlo (MCTS por sus siglas en inglés). El trabajo de Rajput et al.
+Carlo (Monte Carlo Tree Search, MCTS). El trabajo de Rajput et al.
 \cite{rajput_improved_2023} plantea la aplicación de MCTS para ALS, modificando
 el algoritmo levemente para que pueda explorar nodos más profundos en el árbol
 y utilizando la reducción de área como recompensa para evaluar nodos en el
@@ -91,7 +89,7 @@ Uno de los primeros ejemplos en esta categoría es
 para aprender funciones lógicas de ejemplos y sintetizar circuitos basado en el
 modelo aprendido, a lo que le llaman síntesis lógica a partir de ejemplos. En
 \cite{de_abreu_fast_2021}, De Abreu et al. exploran el uso de árboles de
-decisiones (DT por sus siglas en inglés) como alternativa tanto para optimizar
+decisiones (Decision Tree, DT) como alternativa tanto para optimizar
 circuitos exactos como para generar versiones aproximadas de los circuitos. En
 ambos casos la técnica es exitosa, reduciendo el tiempo de ejecución para
 optimizar los circuitos exactos al compararse las alternativas comunes ABC y
@@ -99,7 +97,7 @@ Espresso, así como siendo capaz de generar circuitos aproximados de profundidad
 y área sumamente reducidos e igual logrando buenos niveles de exactitud.
 Miayasaka et al. prueban y comparan varios métodos populares de aprendizaje
 supervisado en \cite{miyasaka_logic_2021}, incluyendo redes neuronales, arboles
-de decisiones y redes de tablas de búsqueda (LUT por sus siglas en inglés).
+de decisiones y redes de tablas de búsqueda (Lookup Table, LUT).
 Evalúan estos métodos en su capacidad de aproximar circuitos lógicos y
 aritméticos, notando que estos modelos comunes no pueden aprender de manera
 efectiva ciertos tipos de circuitos aritméticos.
@@ -110,8 +108,8 @@ esta área. El concurso consistía en implementar 100 funciones booleanas dados
 ejemplos incompletos de sus tablas de verdad, luego las implementaciones fueron
 validadas con el set de ejemplos de validación que no fue proporcionado a los
 concursantes. Entre las técnicas evaluadas se encuentran DTs, bosques
-aleatorios (RF por sus siglas en inglés), redes de LUTs, Espresso, redes
-neuronales y programación genética cartesiana. (CGP por sus siglas en inglés)
+aleatorios (Random Forest, RF), redes de LUTs, Espresso, redes neuronales y
+programación genética cartesiana (Cartesian Genetic Programming, CGP).
 
 % Las principales conclusiones del análisis de resultados son que ninguna
 % técnica dominó todas las pruebas; la mayoría de los equipos, incluyendo el
