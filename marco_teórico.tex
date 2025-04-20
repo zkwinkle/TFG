@@ -211,16 +211,75 @@ voto por mayoría en un circuito se pueden utilizador sumadores y un comparador.
 
 \subsubsection{Perceptrón multicapa / Red neuronal}
 
+Las redes neuronales tienen sus orígenes en \cite{mcculloch_logical_1943},
+donde con inspiración biológica se intentó modelar la red de neurones en el
+cerebro con circuitos computacionales. A pesar de sus orígenes, al utilizar
+redes neuronales en el contexto de ML el realismo biológico impondría
+restricciones innecesarias que limitarían su practicalidad. Por esto en la
+actualidad las redes neuronales no se tratan como un modelo biológicos, sino
+que son de interés como modelos puramente estadísticos para el reconocimiento
+de patrones.
+
+Existen muchos modelos de redes neuronales, pero uno de particular interés es
+el perceptrón multicapa. Este uno de los tipos de red neuronal más conocida y
+utilizada \cite{popescu_multilayer_2009}.
+
+La arquitectura de perceptrón multicapa se caracteriza por formar un grafo
+acíclico dirigido de nodos llamados neuronas artificiales. Los nodos se
+organizan en capas, como se puede observar en la Figura \ref{fig:MLP}. Hay
+capas de nodos designadas de entrada y de salida, cada nodo le aplica un
+procesamiento a sus entradas y pasa los valores resultantes a sus sucesores en
+la red.
+
+Típicamente, el procesamiento de cada nodo es tomar una suma ponderada de sus
+nodos predecesores y aplicarle una función de activación, la cual en
+perceptrones multicapa modernos es continua y no lineal. Sea $a_j$ la salida
+del nodo $j$ y sea $w_{i,j}$ el factor de ponderación para la conexión entre el
+nodo $i$ y el nodo $j$; entonces se tiene
+
+$$a_j = g_j\left(\sigma_i w_{i,j} a_i \right),$$
+
+donde $g_j$ es la función de activación no lineal del nodo $j$.
+\cite{russell2016artificial}
+
 \begin{figure}[htb]
   \centering
-  \includesvg[width=0.5\linewidth]{./imágenes/MLP.svg}
-  \caption{TODO}
+  \includesvg[width=0.35\linewidth]{./imágenes/MLP.svg}
+  \caption{Estructura general de un perceptrón multicapa con salidas booleanas.
+  Puede llegar a tener más capas intermedias. La salida se decide típicamente
+  interpretando el valor de cada nodo de salida como un valor de confianza de
+  que esa sea la salida y se escoge la salida con un mayor valor.}
   \label{fig:MLP}
 \end{figure}
 
-\subsubsection{Redes de tablas de búsqueda (LUTs)}
+Para profundizar en el tema del funcionamiento y entrenamiento de perceptrones
+multicapa, se recomienda consultar el Capítulo 5 de \cite{bishop_pattern_2006}.
+
+No es fácil traducir MLPs booleanos a circuitos. Un método sencillo es
+sintetizar módulos aritméticos para realizar las computaciones necesarias, como
+sumadores y multiplicadores. Sin embargo, esto resulta en circuitos muy grandes
+\cite{miyasaka_logic_2021}. En \cite{rai_logic_2021}, el equipo 3 utiliza un
+método donde podan conexiones de baja importancia para reducir el tamaño de la
+red y cada nodo del MLP es transformado en una LUT a través de cuantización de
+su salida, evitando utilizar circuitos aritméticos complejos. Se recomienda
+leer el apéndice de la referencia para más detalles.
 
 \subsubsection{Programación genética cartesiana (CGP)}
+
+El término CGP aparece originalmente en \cite{miller_empirical_1999} como un
+método de programación genética para aprender funciones booleanas. El cromosoma
+utilizado por el algoritmo representa una matriz rectangular de funciones
+primitivas con sus respectivas conexiones y funcionalidades, lo cual constituye
+una representación de un circuito. Se le denomina ``cartesiana'' porque
+organiza los nodos en una rejilla bidimensional identificada mediante
+coordenadas cartesianas.
+
+Un gran beneficio de CGP es que el proceso evolutivo puede empezar desde un
+circuito aleatorio o uno predefinido, lo que permite trabajar a partir de
+circuitos encontrados por otros métodos \cite{berndt_cgp-based_2022}. Esto lo
+hace fácil de combinar con técnicas existentes. Otra ventaja es que su
+cromosoma ya representa directamente un circuito, por lo que convertirlo en uno
+es un proceso simple.
 
 \section{Computación Aproximada}
 
