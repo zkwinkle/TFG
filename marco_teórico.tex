@@ -6,16 +6,15 @@ integración de estas disciplinas permite explorar nuevos métodos para la
 generación de circuitos digitales que intercambien exactitud por eficiencia y
 complejidad.
 
-Se introducen conceptos fundamentales de ML, necesarios para entender los
-mecanismos mediante los cuales un modelo puede ser útil en la generación de
-circuitos aproximados, siendo especialmente relevante su capacidad para
-aprender y generalizar funciones booleanas. Por otro lado, se revisan los
-conceptos básicos de la computación aproximada y las técnicas tradicionales de
-ALS, con el objetivo de contrastarlas con los enfoques basados en ML.
-
-Finalmente, se abordan técnicas para transformar modelos de ML que han
-aprendido funciones booleanas en circuitos lógicos, paso necesario para su
-aplicación práctica dentro del marco de ALS.
+Se revisan los conceptos básicos de la computación aproximada y las técnicas
+tradicionales de ALS, con el objetivo de contrastarlas con los enfoques basados
+en ML. Luego se introducen conceptos fundamentales de ML, necesarios para
+entender los mecanismos mediante los cuales un modelo puede ser útil en la
+generación de circuitos aproximados, siendo especialmente relevante su
+capacidad para aprender y generalizar funciones booleanas. Finalmente, se
+abordan las técnicas de ML más valiosos en la aplicación de ALS, junto con
+los métodos para transformar los modelos de ML a circuitos lógicos, paso
+comúnmente necesario para su aplicación práctica dentro del marco de ALS.
 
 La Figura \ref{fig:mapa_conceptual} mapea los conceptos tratados en
 este capítulo en un mapa conceptual.
@@ -30,7 +29,205 @@ este capítulo en un mapa conceptual.
   \label{fig:mapa_conceptual}
 \end{figure}
 
-\section{Aprendizaje Automático}
+\section{Computación aproximada}
+
+En esta sección se explican los conceptos de computación aproximada más
+fundamentales para este trabajo.
+
+La computación aproximada surgió como un paradigma para diseñar sistemas
+digitales más eficientes en consumo de energía y rendimiento. Muchos sistemas y
+aplicaciones son tolerantes a errores en los resultados computados; por
+ejemplo, el procesamiento multimedia (audio, video, gráficos e imágenes), el
+reconocimiento de patrones y la minería de datos. Al relajar la necesidad de
+realizar operaciones exactas y determinísticas, las técnicas de computación
+aproximada permiten mejorar significativamente la eficiencia de los circuitos.
+\cite{han_approximate_2013}
+
+Se denomina circuito aproximado a este tipo de circuito digital que sacrifica
+precisión en sus resultados a cambio de una mayor eficiencia en su rendimiento,
+área, consumo de potencia o una combinación de estas métricas.
+
+\subsection{Síntesis lógica aproximada}
+
+La construcción automática de circuitos digitales aproximados se realiza
+mediante herramientas de diseño asistido por computador (Computer-Aided Design,
+CAD), disponibles en entornos de diseño electrónico automatizado (Electronic
+Design Automation, EDA). ALS se enfoca en mejorar el comportamiento de un
+circuito (ya sea en consumo de potencia, área o rendimiento) sin necesidad de
+conocer sus detalles de implementación. Este proceso se lleva a cabo de forma
+sistemática, modificando la funcionalidad especificada sin exceder un umbral de
+error predefinido.
+
+Existen métodos para crear circuitos aproximados manualmente, que no caen
+dentro de la categoría de ALS, ya que no son automáticos. Este tipo de diseño
+requiere un profundo conocimiento del comportamiento del circuito para poder
+hacer aproximaciones que no degraden demasiado su precisión. Este nivel alto de
+pericia requerida sobre la topología del circuito a aproximar es la principal
+desventaja de estos métodos y el porqué en los últimos años la investigación se
+ha enfocado hacia métodos de ALS.
+\cite{ammes_two-level_2022}
+
+Los métodos de optimización de circuitos digitales se suelen dividir en métodos
+para dos o para múltiples niveles de profundidad lógica. En este caso la
+profundidad lógica hace referencia a la cantidad máxima de compuertas lógicas
+AND u OR por las que debe pasar una señal de la entrada a la salida del
+circuito \cite{barr_investigation_1960}.
+
+Ya que los circuitos de dos niveles tienen una profundidad lógica fija, su
+optimización se enfoca en reducir la cantidad de operaciones en la
+representación de suma de productos (Sum Of Products, SOP) del circuito. Para
+circuitos de múltiples niveles, el objetivo de optimización depende de la
+estructura booleana utilizada para representarlos y optimizarlos, pero los
+métodos suelen buscar reducir el número de compuertas lógicas y la profundidad
+del circuito. Los métodos de ML se destacan en este contexto, ya que pueden
+manejar circuitos de profundidad arbitraria y son particularmente útiles para
+optimizar circuitos complejos, lo que los convierte en una herramienta valiosa
+para la optimización multi-nivel. \cite{ammes_two-level_2022}
+
+En este contexto, en los últimos años se ha explorado con gran éxito la
+aplicación de técnicas de ML para ALS \cite{pasandi_approximate_2019},
+\cite{rai_logic_2021}, \cite{berndt_review_2022},
+\cite{prats_ramos_impact_2024}. Gracias a su capacidad de generalizar
+funciones, el aprendizaje de funciones booleanas ha sido una de las técnicas de
+ML más exploradas y útiles para la generación de circuitos aproximados. Esta
+efectividad se debe a que, al aprender una función, el modelo busca cubrir
+todas las posibles soluciones de manera eficiente. Así, logra un buen
+equilibrio entre precisión y rendimiento, lo que permite crear circuitos
+eficientes sin perder demasiada exactitud.
+
+\subsection{Métricas de error}
+
+Independientemente de la metodología utilizada para ALS, es necesario definir
+una manera de calcular el error insertado en la síntesis.
+
+Existen dos categorías principales de métricas: de propósito general, que están
+relacionadas con la ocurrencia del error, y métricas aritméticas, que están
+relacionadas con la magnitud del error.
+
+Algunos métodos de ALS calculan el error introducido de manera exacta, mientras
+que otros lo estiman de manera aproximada. Los métodos para calcularlo de
+manera exacta suelen ser más complejos y se pueden basar en el problema de
+satisfaciabilidad booleana, diagramas de decisión binarios (Binary Decision
+Diagram, BDD), álgebra simbólica computacional o incluso revisar todas las
+posibles combinaciones de entradas, con tablas de verdad o simulaciones
+exhaustivas. La estimación aproximada del error se suele implementar aplicando
+simulaciones Monte Carlo, pero existen otras técnicas
+\cite{ammes_two-level_2022}. De particular interés para este trabajo, se han
+aplicado técnicas de ML para la estimación de error de manera aproximada; por
+ejemplo, en \cite{pasandi_deep-powerx_2020} entrenan un modelo de DL para
+predecir el error en las salidas primarias de un circuito al quitar o
+reemplazar compuertas lógicas en la red del circuito.
+
+La decisión de cuál metodología utilizar para el cálculo de error debe tomar en
+cuenta el balance entre la calidad de los resultados y el esfuerzo
+computacional. Un cálculo de error preciso suele resultar en mejores circuitos
+aproximados, porque lleva a mejores decisiones de cuáles aproximaciones aplicar
+durante el proceso de ALS. Sin embargo, un cálculo preciso puede presentar
+costos computacionales altos, especialmente al ejecutarlos sobre cada posible
+modificación a la topología del circuito \cite{ammes_two-level_2022}. Además,
+el costo computacional suele crecer exponencialmente con la complejidad y la
+cantidad de entradas del circuito.
+
+El resto de esta sección introducirá algunas de las métricas de error más
+comúnmente utilizadas para ALS. Para las expresiones presentadas, $n$
+corresponde con la cantidad de bits de entrada del circuito, $N$ con la
+cantidad de combinaciones de entradas siendo tomadas en cuenta, $f(x)$ y
+$f'(x)$ son las salidas del circuito original y el aproximado, respectivamente,
+con $f_i(x)$ y $f'_i(x)$ representando el bit de salida en la posición $i$.
+Nótese que si se toman en cuenta todas las posibles combinaciones de entradas
+del circuito el valor de $N$ sería $2^n$.
+
+\subsubsection{Tasa de error}
+
+La tasa de error (Error Rate, ER) corresponde con la probabilidad de observar
+uno o más bits erróneos en la salida. ER es la métrica más comúnmente utilizada
+en la aproximación de circuitos, siendo aplicada en circuitos tanto generales
+como aritméticos \cite{ammes_two-level_2022}. El cálculo del ER se presenta en
+la ecuación \ref{eq:ER}.
+
+\begin{equation} \label{eq:ER}
+  ER = \frac{1}{N} \sum_{\forall x \in N} f(x) \neq f'(x)
+\end{equation}
+
+\subsubsection{Distancia de Hamming promedio}
+
+La distancia de Hamming promedio (Mean Hamming Distance, MHD), también llamada
+tasa de error de bits, representa la cantidad de bits de salida erróneos en
+promedio. Esta tasa fue propuesta como una variación de ER para evaluar
+aproximaciones con múltiples salidas. El cálculo del MHD se presenta en la
+ecuación \ref{eq:MHD}.
+
+\begin{equation} \label{eq:MHD}
+  MHD = \frac{1}{N} \sum_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
+\end{equation}
+
+\subsubsection{Peor distancia de Hamming}
+
+La peor distancia de Hamming (Worst Hamming Distance, WHD) representa la mayor
+distancia de Hamming entre las salidas originales y las aproximadas. Se utiliza
+para verificar cuál es el peor caso en cantidad de bits de salida erróneos. El
+cálculo del WHD se presenta en la ecuación \ref{eq:WHD}.
+
+\begin{equation} \label{eq:WHD}
+  WHD = \max_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
+\end{equation}
+
+\subsubsection{Error en el peor caso}
+
+El error en el peor caso (Worst Case Error, WCE) representa la mayor diferencia
+absoluta en magnitud entre las salidas del circuito original y el aproximado.
+Es la métrica más comúnmente utilizada en el diseño aritmético
+\cite{ammes_two-level_2022}. El cálculo del WCE se presenta en la ecuación
+\ref{eq:WHD}.
+
+\begin{equation} \label{eq:WCE}
+  WHD = \max_{\forall x \in N} \left| f(x) - f'(x) \right|
+\end{equation}
+
+\subsubsection{Error absoluto medio}
+
+El error absoluto medio (Mean Absolute Error, MAE) representa la diferencia en
+magnitud media entre las salidas del circuito original y el aproximado. El 
+cálculo del MAE se presenta en la ecuación \ref{eq:MAE}.
+
+\begin{equation} \label{eq:MAE}
+  MAE = \frac{1}{N} \sum_{\forall x \in N} \left| f(x) - f'(x) \right|
+\end{equation}
+
+\subsubsection{Error relativo medio}
+
+El error relativo medio (Mean Relative Error, MRE) es similar al MAE, pero el
+resultado se presenta como un porcentaje y es relativo a las salidas del
+circuito original. Formalmente, representa la diferencia en magnitud media
+relativa entre las salidas del circuito original y el aproximado. La ventaja de
+utilizar un método de error relativo es que, como el valor de error es un
+porcentaje, es posible analizar circuitos con cantidades de entradas
+diferentes.
+
+El cálculo del MRE se presenta en la ecuación \ref{eq:MRE}. Se nota que si
+$f(x)$ tiene un valor de $0$, la ecuación se vuelve indefinida; por lo tanto,
+para aplicaciones prácticas se recomienda reemplazar el divisor con la función
+$\max \left( 1, \left| f(x) \right| \right)$.
+
+\begin{equation} \label{eq:MRE}
+  MRE = \frac{1}{N} \sum_{\forall x \in N} \frac{ \left| f(x) - f'(x) \right| }{ \left| f(x) \right| }
+\end{equation}
+
+\subsubsection{Error cuadrático medio}
+
+El error cuadrático medio (Mean Squared Error, MSE) representa la diferencia en
+magnitud cuadrática media entre las salidas del circuito original y el
+aproximado. Se presenta su cálculo en la ecuación \ref{eq:MSE}. Aunque el MAE
+suele ser más intuitivo de interpretar, el MSE ofrece una visión más completa,
+ya que corresponde con el concepto de varianza de los errores. Además, el MSE
+es computacionalmente menos costoso de calcular, lo que lo hace especialmente
+útil cuando se están manejando grandes cantidades de datos.
+
+\begin{equation} \label{eq:MSE}
+  MSE = \frac{1}{N} \sum_{\forall x \in N} \left( f(x) - f'(x) \right)^2
+\end{equation}
+
+\section{Aprendizaje automático}
 
 Según Russel y Norvig \cite{russell2016artificial}, en el aprendizaje
 automático una computadora analiza datos, construye un modelo basado en esos
@@ -62,14 +259,15 @@ muestra las salidas correspondientes a sus entradas.
 
 \subsection{Aprendizaje reforzado}
 
-El aprendizaje reforzado es aprender qué hacer o cómo asociar situaciones con
-acciones, para maximizar una señal de recompensa. No se le dice al agente qué
-acciones tomar, sino que debe descubrir cuáles acciones dan la mayor recompensa
-mediante prueba y error. \cite{sutton_reinforcement_2018}
+El aprendizaje reforzado (Reinforcement Learning, RL) es aprender qué hacer o
+cómo asociar situaciones con acciones, para maximizar una señal de recompensa.
+No se le dice al agente qué acciones tomar, sino que debe descubrir cuáles
+acciones dan la mayor recompensa mediante prueba y error.
+\cite{sutton_reinforcement_2018}
 
 En el contexto de ALS, un agente RL podría ser entrenado para aprender a
 modificar un circuito, realizando modificaciones y recibiendo una recompensa
-basado en parámetros como la reducción en área, en tiempo de ejecución, o el
+basada en parámetros como la reducción en área, en tiempo de ejecución, o el
 aumento en el error del circuito. Así el agente, después de mucho entrenamiento
 se convertirá en un experto en realizar modificaciones a circuitos para generar
 versiones aproximadas de ellos.
@@ -145,10 +343,10 @@ así como los métodos utilizados para adaptarlos a este dominio.
 
 \subsubsection{Árboles de decisión (DT)}
 
-Un arbol de desición es una representación de una función que mapean un vector
+Un árbol de decisión es una representación de una función que mapean un vector
 de atributos a un solo valor de salida, una ``decisión''. Utilizando términos
 que generalmente se utilizan para estructuras de grafo en forma de árbol, un
-arbol de decisión llega a su decisión realizando una secuencia de pruebas,
+árbol de decisión llega a su decisión realizando una secuencia de pruebas,
 iniciando en la raíz del árbol y siguiendo las ramas apropiadas hasta llegar a
 una hoja. Cada nodo interno del árbol corresponde a una prueba del valor de uno
 de sus atributos de entrada, las ramas del nodo son etiquetadas con los
@@ -176,15 +374,15 @@ decisión booleano.
 En el caso de aprender el comportamiento de un circuito nos enfrentamos a un
 problema de clasificación booleana: dependiendo de las entradas del circuito,
 cuál debe ser la salida. Por esto es que, dentro del contexto de ALS, son de
-particular interés lo árboles de decisión booleanos.
+particular interés los árboles de decisión booleanos.
 
 Para transformar un modelo DT booleano a una expresión booleana que puede ser
 expresada con componentes de un circuito se puede emplear el teorema de
 expansión de Boole \cite{boole_investigation_1854}. Aplicando este teorema al
 árbol de la figura \ref{fig:DT}, este se puede representar con la expresión
 booleana $(\bar{X}Y) + (XY\bar{Z})$. Un árbol de decisiones no necesariamente
-se encontrará en la configuración más optima para expresar la función booleana
-que implementa, en el caso de de la Figura \ref{fig:DT} la expresión que
+se encontrará en la configuración más óptima para expresar la función booleana
+que implementa, en el caso de la Figura \ref{fig:DT} la expresión que
 obtuvimos se puede simplificar más para obtener $Y(\bar{X} + \bar{Z})$. Por
 este motivo, se recomienda aplicar técnicas de simplificación a la expresión
 booleana o al circuito derivado de ella.
@@ -203,20 +401,20 @@ modelo base y su combinación modelo de conjunto.
 Crear estos modelos de conjunto puede ser beneficioso para disminuir el
 sobreajuste y sesgo del modelo base.
 Los bosques aleatorios son de los modelos de conjunto más comúnmente aplicados,
-son formados por DTs como modelo base. \cite{russell2016artificial}
+son formados por DT como modelo base. \cite{russell2016artificial}
 
-En el caso de un RF conformado por DTs booleanos, se determina la salida del
+En el caso de un RF conformado por DT booleanos, se determina la salida del
 bosque con un voto de mayoría por parte de los árboles. Para implementar este
-voto por mayoría en un circuito se pueden utilizador sumadores y un comparador.
+voto por mayoría en un circuito se pueden utilizar sumadores y un comparador.
 
 \subsubsection{Perceptrón multicapa / Red neuronal}
 
 Las redes neuronales tienen sus orígenes en \cite{mcculloch_logical_1943},
-donde con inspiración biológica se intentó modelar la red de neurones en el
+donde con inspiración biológica se intentó modelar la red de neuronas en el
 cerebro con circuitos computacionales. A pesar de sus orígenes, al utilizar
 redes neuronales en el contexto de ML el realismo biológico impondría
-restricciones innecesarias que limitarían su practicalidad. Por esto en la
-actualidad las redes neuronales no se tratan como un modelo biológicos, sino
+restricciones innecesarias que limitarían su practicabilidad. Por esto en la
+actualidad las redes neuronales no se tratan como un modelo biológico, sino
 que son de interés como modelos puramente estadísticos para el reconocimiento
 de patrones.
 
@@ -246,8 +444,8 @@ donde $g_j$ es la función de activación no lineal del nodo $j$.
   \centering
   \includesvg[width=0.35\linewidth]{./imágenes/MLP.svg}
   \caption{Estructura general de un perceptrón multicapa con salidas booleanas.
-  Puede llegar a tener más capas intermedias. La salida se decide típicamente
-  interpretando el valor de cada nodo de salida como un valor de confianza de
+    Puede llegar a tener más capas intermedias. La salida se decide típicamente
+    interpretando el valor de cada nodo de salida como un valor de confianza de
   que esa sea la salida y se escoge la salida con un mayor valor.}
   \label{fig:MLP}
 \end{figure}
@@ -255,7 +453,7 @@ donde $g_j$ es la función de activación no lineal del nodo $j$.
 Para profundizar en el tema del funcionamiento y entrenamiento de perceptrones
 multicapa, se recomienda consultar el Capítulo 5 de \cite{bishop_pattern_2006}.
 
-No es fácil traducir MLPs booleanos a circuitos. Un método sencillo es
+No es fácil traducir MLP booleanos a circuitos. Un método sencillo es
 sintetizar módulos aritméticos para realizar las computaciones necesarias, como
 sumadores y multiplicadores. Sin embargo, esto resulta en circuitos muy grandes
 \cite{miyasaka_logic_2021}. En \cite{rai_logic_2021}, el equipo 3 utiliza un
@@ -280,46 +478,3 @@ circuitos encontrados por otros métodos \cite{berndt_cgp-based_2022}. Esto lo
 hace fácil de combinar con técnicas existentes. Otra ventaja es que su
 cromosoma ya representa directamente un circuito, por lo que convertirlo en uno
 es un proceso simple.
-
-\section{Computación Aproximada}
-
-En esta sección se explican los conceptos de computación aproximada más
-revelantes para este trabajo.
-
-La computación aproximada surgió como un paradigma para diseñar sistemas
-digitales más eficientes en consumo de energía y rendimiento. Muchos sistemas y
-aplicaciones son tolerantes a errores en los resultados computados; por
-ejemplo, el procesamiento multimedia (audio, video, gráficos e imágenes), el
-reconocimiento de patrones y la minería de datos. Al relajar la necesidad de
-realizar operaciones exactas y determinísticas, las técnicas de computación
-aproximada permiten mejorar significativamente la eficiencia de los circuitos.
-\cite{han_approximate_2013}
-
-\subsection{Síntesis Lógica Aproximada}
-
-La construcción automática de circuitos digitales aproximados se realiza
-mediante herramientas de diseño asistido por computador (Computer-Aided Design,
-CAD), disponibles en entornos de diseño electrónico automatizado (Electronic
-Design Automation, EDA). ALS se enfoca en mejorar el comportamiento de un
-circuito (ya sea en consumo de potencia, área o rendimiento) sin necesidad de
-conocer sus detalles de implementación. Este proceso se lleva a cabo de forma
-sistemática, modificando la funcionalidad especificada sin exceder un umbral de
-error predefinido.
-\cite{ammes_two-level_2022}
-
-En los últimos años, se ha explorado con gran éxito la aplicación de técnicas
-de ML para ALS
-\cite{pasandi_approximate_2019}, \cite{rai_logic_2021},
-\cite{berndt_review_2022}, \cite{prats_ramos_impact_2024}.
-Gracias a su capacidad de generalizar funciones, el aprendizaje de funciones
-booleanas ha sido una de las técnicas de ML más exploradas y útiles para la
-generación de circuitos aproximados. Esta efectividad se debe a que, al
-aprender una función, el modelo busca cubrir todas las posibles soluciones de
-manera eficiente. Así, logra un buen equilibrio entre precisión y rendimiento,
-lo que permite crear circuitos eficientes sin perder demasiada exactitud.
-
-\subsection{Métodos clásicos}
-
-Principios teóricos
-
-\subsection{Métricas de error}
