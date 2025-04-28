@@ -35,18 +35,6 @@ separar casos aritméticos vs lógicos.
 
 # Requerimientos
 
-ESTO LO HICE ANTES DE PENSAR EN QUÉ RESULTADOS QUIERO GENERAR, VOLVER A
-ESCRIBIR TODO DEBAJO DE ESTO.
-EL SCRIPT / HERRAMIENTA DEBERÍA DE ESTAR PENSADO 100% EN CÓMO GENERAR LOS DATOS
-Y TABLAS QUE QUIERO PRESENTAR. PENSAR EN:
-  - Resumibilidad si algo pasa mal
-  - Facilidad de que funcione rápido
-  - Mostrar datos on the go para saber si algo está durando demasiado o saliendo mal.
-  - Diferentes sets de entrenamiento vs validamiento (excepto para circuitos
-    pequeños que pueden ser exhaustivos)
-
-# RESCRIBIR DEBAJO DE ESTO
-
 - Poder ejecutar cualquiera de los métodos dentro de AxLS.
 
 - Tomar los parámetros de configuración necesarios y que sean especificables
@@ -57,11 +45,18 @@ Y TABLAS QUE QUIERO PRESENTAR. PENSAR EN:
     - DT con resíntesis.
     - Cualquier ejecución de un método de poda.
   - Si ejecutar con o sin resíntesis.
+  - Si usar el set de datos completo o una versión reducida.
+  - Archivo de progreso para reanudar (si no existe empieza uno nuevo y guarda
+  ahí, por default si no se especifica empieza uno nuevo y lo guarda con un
+  nombre default `.run`, si ya existe un `.run` lo guarda como `.run1`, `.run2`
+  y así)
   - (Para DT): Requerir `max_depth`, que puede ser especificado para cada
   benchmark (Lo de un `max_depth` diferente para cada benchmark podría ser solo
   programático si se complica por CLI).
   - (Para DT con resíntesis): Máximo de iteraciones de resíntesis y el umbral
   de error (dado con la configuración normal de umbral de error).
+  - Si mostrar progreso de testbenches o no (Ver TODO abajo sobre probar
+  hipótesis).
 
 - Cronometrar la ejecución de cada método completo (desde tener el circuito
 original hasta evaluar el error final del circuito final aproximado).
@@ -72,23 +67,24 @@ original hasta evaluar el error final del circuito final aproximado).
     - Configuración de la ejecución.
     - Progreso actual de la ejecución.
 
+- Mostrar datos de ejecución (cronómetro y output normal) mientras suceden para
 
 - Poder obtener un set de datos exhaustivos para circuitos de pocas entradas (16 o menos).
 - Poder obtener un set de datos representativo (1-10% de datos) sin sustitucion para circuitos mayores.
 
 - Poder validar el circuito contra la tabla de verdad entera para circuitos de pocas entradas (16 o menos)
 - Poder validar el circuito con un set de datos representativo (1-10% de datos) sin sustitución diferente al set de entrenamiento para circuitos mayores.
+  - El set de validación debería ser lo más grande posible.
+  - Debe usar los mismos sets de entrenamiento y validación para todas las
+  pruebas y métodos.
+  - Poder usar versiones disminuidas de los sets para trabajar más rápido.
+  - Poder controlar si usar testbenches que usan progreso o que no, para
+  ejecutar más rápido maybe (**TODO: Probar esta hipótesis**).
+
+- Poder convertir los datos recolectados a CSV al final de la ejecución.
+  - Posiblemente esto lo puede hacer otro script?
 
 # VIEJO
-
-- Poder correr cualquier método dentro de la herramienta.
-    - Incluyendo poder entrenar un árbol de decisiones para un circuito dado.
-
-
-- Poder correr el método múltiples veces por circuito.
-- Poder correr el método para todos los circuitos, con parámetros diferentes. Ver sección de "Control de parámetros"
-
-- Recolectar los resultados para todos los diferentes métodos en un .txt o .csv
 
 # Plan
 
