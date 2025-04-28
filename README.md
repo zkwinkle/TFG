@@ -1,6 +1,7 @@
 # TFG
 
-El repositorio para mi Trabajo Final de Graduación.
+El repositorio para mi Trabajo Final de Graduación. Incluye apuntes, documentos
+oficiales y submódulo para trabajar los cambios a AxLS.
 
 ## Contenidos
 
