@@ -88,3 +88,12 @@
     - Terminé Marco Teórico. Me tomó mucho tiempo escribirlo.
 - Actividades por realizar:
     - Ponerle a la implementación del método en AxLS.
+
+# 01 de mayo
+
+- Informe semanal a Jorge por mensaje.
+- Avances:
+    - Redacción de plan de implementación.
+    - Tareas en Trello.
+    - PR mejorar parser de `assign`.
+    - Progreso con implementación de DT.
