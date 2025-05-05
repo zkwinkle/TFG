@@ -64,6 +64,7 @@ File 'Anteproyecto-IgnacioVargasCampos.mp4' already exists. Overwrite? [y/N]
   de error (dado con la configuración normal de umbral de error).
   - Si mostrar progreso de testbenches o no (Ver TODO abajo sobre probar
   hipótesis).
+  - (Para DT): Si usar un solo árbol multi-salida o un árbol por salida.
 
 - Cronometrar la ejecución de cada método completo (desde tener el circuito
 original hasta evaluar el error final del circuito final aproximado).
@@ -104,7 +105,8 @@ subirlo a algún lado?
 
 ## ML
 
-- [ ] Revisar si un solo árbol multi-salida se puede.
+- [x] Revisar si un solo árbol multi-salida se puede.
+- [x] Agregar método DT a AxLS formalmente y genérico para circuitos.
 - [ ] Generar sets de datos a utilizar en todos los experimentos.
   - [ ] Adaptar AxLS para poder crear sets de datos exhaustivos.
   - [ ] Adaptar sets de datos aleatorios para que no haya repetición.
@@ -134,40 +136,48 @@ subirlo a algún lado?
 
 Voy a usar la biblioteca de scikit-learn para la implementación de DT.
 
-## OK tengo que reescribir esto con los detalles nuevos que noté en supervised_kelearning.py y también lo quiero reescribir como sin usar constantes y así
+### Pasos
 
-1. Leer set de datos
+1. Leer sets de datos inputs / outputs. `read_values`
+2. Convertir sets de datos a representación binaria correcta.
+3. Llamar `DecisionTreeClassifier.fit()`
+  - Varias veces si muchos trees. Una si single tree multi-output.
+4. Convertir árbol a verilog. `tree_circuit.v`
+5. Instanciar `Circuit` aproximado.
+6. Crear testbench con dataset `tree_circuit.write_tb()`.
+7. Calcular error `tree_circuit.simulate_and_compute_error()`.
+8. Calcular área `tree_circuit.get_area()`.
 
-```python
-def read_values(filename, base, max_lines):
-    with open(filename, "r") as f:
-        return [
-            [int(x, base) for x in line.split()] for _, line in zip(range(max_lines), f)
-        ]
+- Paso 1 puede ser opcional para que alguien pueda importar datos de donde sea.
+  - Puedo proveer método de utilidad para la clase.
+- Paso 2 debería ser parte de la clase:
+  - Requiere saber las cantidades y orden de los bits.
+  - Se pueden pedir los inputs outputs del circuito en formato verilog en orden
+  de MSB -> LSB. Que ahora debería ser el default de circuit.inputs y
+  circuit.outputs.
+- Pasos 3-4 también parte de la clase.
+- Pasos 5-8 se pueden hacer independientes de la clase.
 
-DATASET = f"../ALS-benchmark-circuits/{NAME}/dataset"
-OUTPUT = f"../ALS-benchmark-circuits/{NAME}/output0.txt"
+### Métodos de la clase
 
+- Creación con config: `__init__(parámetros_míos, input_bits, output_bits, **kwargs_para_scikit)`
+- Entrenamiento: `train(X, y)`.
+- Conversión a verilog. `to_verilog_file(filename)`
+  - Mensaje de error si no ha sido entrenado. Ver ejemplo de scikit:
 
-# inputs = [[1, 2, 2], [1, 6, 9], ...]
-inputs = read_values(DATASET, 16, 100)
-# ouputs = [ [5], [16], ... ]
-outputs = read_values(OUTPUT, 10, 100)
 ```
-
-2. Para que el árbol se entrene como un árbol de decisión booleano hay que pasar los datos a binario:
-
-```python
-# TODO: Este procedimiento se tiene que adaptar para funcionar entradas y
-# salidas arbitrarias
-
-# inputs = [ [1, 0, 0, 1, 0, 0, 0, 1, 0], [1, 0, 1, 1, 0, 1, 0, 0, 1], ... ]
-[ [0, 0, 1, 0, 0, 0, 0, 1, 1, 1], [0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1],
-inputs = [
-    [int(b) for num in ([f"{x[0]:01b}"] + [f"{x:04b}" for x in x[1:]]) for b in num]
-    for x in inputs
-]
-
-# outputs = [[0, 0, 1, 0, 1], [1, 0, 0, 0, 0]]
-outputs = [[int(b) for b in f"{y[0]:05b}"] for y in outputs]
-````
+Traceback (most recent call last):
+  File "/home/igna/Documents/U/Semestre 13/TFG/AxLS/supervised_learning.py", li
+ne 79, in <module>
+    print("Prediction:", clf.predict(inputs[0]))
+                         ~~~~~~~~~~~^^^^^^^^^^^
+  File "/home/igna/Documents/U/Semestre 13/TFG/AxLS/venv/lib/python3.13/site-pa
+ckages/sklearn/tree/_classes.py", line 529, in predict
+    check_is_fitted(self)
+    ~~~~~~~~~~~~~~~^^^^^^
+  File "/home/igna/Documents/U/Semestre 13/TFG/AxLS/venv/lib/python3.13/site-pa
+ckages/sklearn/utils/validation.py", line 1757, in check_is_fitted
+    raise NotFittedError(msg % {"name": type(estimator).__name__})
+sklearn.exceptions.NotFittedError: This DecisionTreeClassifier instance is not
+fitted yet. Call 'fit' with appropriate arguments before using this estimator.
+```
