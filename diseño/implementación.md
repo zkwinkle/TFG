@@ -3,7 +3,7 @@
 Quiero generar los próximos resultados que pueden presentarse como tablas
 gigantes (para el apéndice). Luego
 
-- Comparación de DT con diferentes `max_depths`. (Repetir todo 5 veces y poner mejor)
+- Comparación de DT con diferentes `max_depths` y usando one_tree_per_output en False y True. (Repetir todo 5 veces y poner mejor)
 
 - Luego tomamos el `max_depth` mínimo que está por debajo de un threshold de
   error y le aplicamos iteraciones resíntesis. Con un máximo de iteraciones (5?
@@ -181,3 +181,23 @@ ckages/sklearn/utils/validation.py", line 1757, in check_is_fitted
 sklearn.exceptions.NotFittedError: This DecisionTreeClassifier instance is not
 fitted yet. Call 'fit' with appropriate arguments before using this estimator.
 ```
+
+## Problema con diseño de guardar progreso.
+
+Hay que proveer un config válido para poder guardar o cargar un config. Osea,
+hay que proveer campos/flags innecesarios para que se pueda cargar/guardar el
+config y progreso. Creo que hice la herramienta muy complicada.
+
+OK, todo el punto de guardar config y progreso es que se pueda continuar una
+ejecución larga por si sale un error. Pero creo que se podría hacer algo más
+simple como solo permitir correr 1 circuito y permitir que especifiquen un
+`.csv` o algún formato que luego puedan procesar.
+
+Luego uno puede hacer scripts de bash para orquestar más complicado. La
+herramienta no debería tener tantos features extras de comodidad, mejor que se
+enfoque en hacer bien una función: ejecutar alguno de los métodos de ALS.
+
+Puedo hacer que tenga subcomandos y tenga uno solo para generar sets de datos.
+
+Así tengo la facilidad que quiero para la generación de sets de datos y una
+herramienta simple para ejecución.

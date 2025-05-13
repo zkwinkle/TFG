@@ -97,3 +97,11 @@
     - Tareas en Trello.
     - PR mejorar parser de `assign`.
     - Progreso con implementación de DT.
+
+# 8 de mayo
+
+- Reunión semanal con Jorge
+
+# 12 de mayo
+
+- Envío de reporte semanal 7 a Chavarría.
