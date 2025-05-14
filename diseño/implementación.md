@@ -9,10 +9,11 @@ gigantes (para el apéndice). Luego
   error y le aplicamos iteraciones resíntesis. Con un máximo de iteraciones (5?
   10?) o hasta que llegue al threshold. (Repetir 5 veces y poner mejor)
 
-- Comparación de todos los métodos sin resíntesis.
-  - Entre los diferentes resultados de DT (que dependen de `max_depth`), se
-  escoge el que tenga menor área por encima de un threshold de error. Si ninguno
-  está por encima del umbral entonces el que tenga el mejor error.
+- Comparación de todos los métodos.
+  - Entre los diferentes resultados de DT (que dependen de `max_depth`,
+  `one_tree_per_output` y resíntesis), se escoge el que tenga menor área por
+  encima de un threshold de error. Si ninguno está por encima del umbral
+  entonces el que tenga el mejor error.
   - Para los demás métodos podemos aplicar iteraciones hasta que lleguen al
   umbral de error. (Repetir 5 veces y poner mejor)
 
@@ -201,3 +202,47 @@ Puedo hacer que tenga subcomandos y tenga uno solo para generar sets de datos.
 
 Así tengo la facilidad que quiero para la generación de sets de datos y una
 herramienta simple para ejecución.
+
+## Problema con generación de SAIF
+
+Me di cuenta que generar un SAIF de un vcd dura muchísimo tiempo, por lo que
+tengo que poder generarlos una vez y agregar una bandera a la configuración
+para que la herramienta acepte el archivo SAIF, o nunca voy a terminar de
+ejecutar las pruebas.
+
+Aún con esto, me preocupa la cantidad de tiempo que toma la generación de los
+SAIF. Observé que entre más datos uno use en la simulación, más grande el .vcd
+generado y este crece muy rápidamente. Para el circuito "BK_16b", una
+simulación con un set de datos de 4 mil posibles entradas genera un '.vcd' de
+724075 líneas.
+
+Inspeccionando el código de Python para generar el SAIF, no realiza lógica
+complicado, pero itera todo el archivo '.vcd' línea por línea 3 veces
+separadas.
+
+Debido a estos hechos, tuve la hipótesis de que el tiempo de ejecución se debe
+principalmente a la lectura del archivo y ejecución de varios bucles con muchas
+iteraciones.
+
+Para confirmar experimenté con generar el archivo SAIF de un '.vcd' generado
+simulando el circuito 'BK_16b'. Primero usé un set de datos de 1000 entradas
+posibles y duró 7.60s. Seguidamente probé con un set de de datos de 4000
+entradas posibles y la ejecución duró 29.54s, casi 4 veces más. Con esto
+confirmo mi teoría de que la generación del '.vcd' escala con el tamaño del set
+de datos y se debe principalmente a la iteración por todas las líneas del
+'.vcd' generado. También confirmo que la generación del SAIF es muy lenta, ya
+que dura medio minuto con un set de datos considerablemente pequeño, que
+representa apróximadamente un 0.00009% de las posibles entradas totales del
+circuito.
+
+Por lo tanto, decidí re-escribir la función en un lenguaje compilado que sea
+más veloz. Escogí Rust porque soy muy familiar con él, tiene muchas utilidades
+para escribir un CLI rápidamente y es un lenguaje compilado conocido por ser
+veloz.
+
+Al finalizar la traducción, programa escrito en Rust duró 1.43s en generar el
+SAIF basado en el '.vcd' generado por la simulación de 'BK_16b' con 4000 datos,
+alrededor de 20 veces menos.
+
+En el futuro se podría exponer una interfaz de C para el programa en Rust y
+crear bindings.
