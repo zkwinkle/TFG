@@ -30,7 +30,7 @@ BENCHMARKS = [
     Benchmark("square_64b", 64),
     Benchmark("BK_32b", 32 + 32),
     Benchmark("fwrdk2j", 32 + 32),
-    Benchmark("invk2j", 32 + 32),
+    #❌ circuito no sintetiza bien Benchmark("invk2j", 32 + 32),
     Benchmark("KS_32b", 32 + 32),
     Benchmark("Mul_32b", 32 + 32),
     Benchmark("CLA_16b", 16 + 16 + 1),
