@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'AxLS'))
 
@@ -60,6 +61,7 @@ BENCHMARKS = [
 
 VALIDATION_PERCENT = 0.20
 MAX_BITS_EXHAUSTIVE = 16
+total_time = 0
 
 for benchmark in BENCHMARKS:
     rtl = f"AxLS/ALS-benchmark-circuits/{benchmark.name}/{benchmark.name}.v"
@@ -67,6 +69,8 @@ for benchmark in BENCHMARKS:
     dataset = f"{benchmark_dir}/dataset"
 
     print(f"Generating dataset for benchmark {benchmark.name}")
+
+    start_time = time.time()
 
     circuit = Circuit(rtl, "NanGate15nm")
 
@@ -82,3 +86,9 @@ for benchmark in BENCHMARKS:
     else:
         print("10 million samples")
         circuit.generate_dataset(dataset, 10_000_000, "uniform")
+
+    iteration_time = time.time() - start_time
+    total_time += iteration_time
+
+    print(f"Time taken for {benchmark.name}: {iteration_time:.2f} seconds")
+    print(f"Total time so far: {total_time:.2f} seconds")
