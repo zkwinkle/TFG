@@ -1,5 +1,9 @@
-from datetime import datetime
+# Script to get timing information how long it takes to synthesize and simulate
+# each circuit. After executing it will print a dictionary of timing info that
+# can be copy-pasted to other scripts.
+
 import os
+from pprint import pprint
 import sys
 import time
 
@@ -13,6 +17,12 @@ class Benchmark:
     def __init__(self, name: str, input_bits: int):
         self.name = name
         self.input_bits = input_bits
+
+
+def count_lines(file_path):
+    with open(file_path, "rb") as f:
+        line_count = sum(buf.count(b"\n") for buf in iter(lambda: f.read(4096), b""))
+    return line_count
 
 
 BENCHMARKS = [
@@ -49,7 +59,71 @@ BENCHMARKS = [
     Benchmark("dec", 8),
 ]
 
-TIMING_INFO = {
+VALIDATION_PERCENT = 0.20
+MAX_BITS_EXHAUSTIVE = 16
+total_time = 0
+DATASET_SIZE = 1000
+SHOW_PROGRESS = False
+
+results = {}
+
+for benchmark in BENCHMARKS:
+    rtl = f"AxLS/ALS-benchmark-circuits/{benchmark.name}/{benchmark.name}.v"
+    build_dir = f"build/{benchmark.name}"
+    dataset = f"{build_dir}/dataset"
+    saif = f"{build_dir}/.saif"
+    tb = f"{build_dir}/.tb.v"
+    test_output = f"{build_dir}/.saif_tb_output"
+
+    if not os.path.exists(build_dir):
+        os.makedirs(build_dir)
+
+    print(f"\nTiming benchmark {benchmark.name}")
+
+    start_synth_time = time.time()
+    circuit = Circuit(rtl, "NanGate15nm")
+    end_synth_time = time.time()
+
+    synth_time = end_synth_time - start_synth_time
+    print(f"Synthetization time taken: {synth_time}")
+
+    if benchmark.input_bits <= MAX_BITS_EXHAUSTIVE:
+        size = 2**benchmark.input_bits
+        print(f"Exhaustive dataset, {size} samples.")
+        circuit.generate_dataset(dataset, size, "shuffle_bag")
+        circuit.write_tb(tb, dataset, show_progress=SHOW_PROGRESS)
+    else:
+        size = DATASET_SIZE
+        print(f"{size} samples")
+        circuit.generate_dataset(dataset, size, "uniform")
+
+        circuit.write_tb(tb, dataset, iterations=size, show_progress=SHOW_PROGRESS)
+
+    print("Starting simulation...")
+    start_sim_time = time.time()
+    circuit.simulate(tb, test_output)
+    end_sim_time = time.time()
+
+    sim_time = end_sim_time - start_sim_time
+    print(f"Simulation time: {sim_time}")
+
+    time_per_sample = sim_time / size
+
+    print(f"Seconds per sample simulated: {time_per_sample}")
+
+    results[benchmark.name] = {
+        "synth_time": synth_time,
+        "sim_time": sim_time,
+        "time_per_sample": time_per_sample,
+        "samples": size,
+    }
+
+
+pprint(results)
+
+# Add after execution dict here to copy-paste
+
+results = {
     "BK_16b": {
         "samples": 1000,
         "sim_time": 0.04077649116516113,
@@ -202,36 +276,31 @@ TIMING_INFO = {
     },
 }
 
-MAX_BITS_EXHAUSTIVE = 16
-MAX_TIME_PER_SIM = 2  # seconds
-total_time = 0
-
-print(f"Execution starting at {datetime.now().strftime('%I:%M %p')}")
-
-for benchmark in BENCHMARKS:
-    rtl = f"AxLS/ALS-benchmark-circuits/{benchmark.name}/{benchmark.name}.v"
-    benchmark_dir = f"benchmarks/{benchmark.name}"
-    dataset = f"{benchmark_dir}/dataset"
-
-    print(f"Generating dataset for benchmark {benchmark.name}")
-
-    start_time = time.time()
-
-    circuit = Circuit(rtl, "NanGate15nm")
-
-    if not os.path.exists(benchmark_dir):
-        os.makedirs(benchmark_dir)
-
-    if benchmark.input_bits <= MAX_BITS_EXHAUSTIVE:
-        print(f"Exhaustive dataset, {2**benchmark.input_bits} samples.")
-        circuit.generate_dataset(dataset, 2**benchmark.input_bits, "shuffle_bag")
-    else:
-        samples = int(round(MAX_TIME_PER_SIM / TIMING_INFO[benchmark.name]['time_per_sample']))
-        print(f"{samples} samples")
-        circuit.generate_dataset(dataset, samples, "uniform")
-
-    iteration_time = time.time() - start_time
-    total_time += iteration_time
-
-    print(f"Time taken for {benchmark.name}: {iteration_time:.2f} seconds")
-    print(f"Total time so far: {total_time:.2f} seconds")
+# Ordered list
+slowest_to_fastest = [
+    "div_64b",
+    "square_64b",
+    "fwrdk2j",
+    "Mul_32b",
+    "sin_24b",
+    "voter",
+    "RForest",
+    "max_128b",
+    "Mul_16b",
+    "barshift_128b",
+    "adder_128b",
+    "sobel",
+    "dec",
+    "DTree",
+    "KS_32b",
+    "WT_8b",
+    "BK_32b",
+    "KS_16b",
+    "CLA_16b",
+    "CSkipA_16b",
+    "BK_16b",
+    "LFA_16b",
+    "int2float",
+    "RCA_4b",
+    "fir",
+]

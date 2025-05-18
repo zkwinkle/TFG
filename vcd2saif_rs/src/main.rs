@@ -1,6 +1,5 @@
 /// Based on ECASLab implementation.
 /// https://github.com/ECASLab/ALS-benchmark-circuits/blob/main/vcd2saif.py
-
 use chrono::Local;
 use regex::Regex;
 use std::env;
@@ -162,11 +161,14 @@ fn main() {
             let mut parts = line.split_ascii_whitespace();
             let (bits, alias) = (parts.next().unwrap(), parts.next().unwrap());
 
-            let word = format!(
-                "{:0width$b}",
-                usize::from_str_radix(bits.trim_start_matches('b'), 2).unwrap(),
-                width = vars.iter().find(|v| &v.alias == alias).unwrap().len
-            );
+            let raw = bits.trim_start_matches('b');
+
+            if !raw.chars().all(|c| c == '0' || c == '1') {
+                panic!("Invalid bitstring: {}", raw);
+            }
+
+            let width = vars.iter().find(|v| &v.alias == alias).unwrap().len;
+            let word = format!("{:0>width$}", raw, width = width);
             let rev: Vec<char> = word.chars().rev().collect();
             for v in &mut vars {
                 if v.alias == alias {
