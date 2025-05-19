@@ -140,49 +140,51 @@ def inconst_benchmark(benchmark: Benchmark, rtl: str, dataset: str):
     CSV = "inconst_results.csv"
 
     for error in ERROR_THRESHOLDS:
-        config = ApproxSynthesisConfig(
-            method="inconst",
-            circuit=Circuit(rtl, TECH),
-            dataset=dataset,
-            metrics=metrics(benchmark),
-            resynthesis=True,
-            error=error,
-            validation=validation(benchmark),
-            csv=CSV,
-        )
-        print(f"{datetime.now().strftime('%I:%M %p')}: Configuration loaded successfully, starting inconst execution...")
+        for resynthesis in [False, True]:
+            config = ApproxSynthesisConfig(
+                method="inconst",
+                circuit=Circuit(rtl, TECH),
+                dataset=dataset,
+                metrics=metrics(benchmark),
+                resynthesis=resynthesis,
+                error=error,
+                validation=validation(benchmark),
+                csv=CSV,
+            )
+            print(f"{datetime.now().strftime('%I:%M %p')}: Configuration loaded successfully, starting inconst execution...")
 
-        results = run(config)
+            results = run(config)
 
-        print("Finished execution:")
-        print(f"- circuit: {benchmark.name}")
-        print(f"- error: {error}")
+            print("Finished execution:")
+            print(f"- circuit: {benchmark.name}")
+            print(f"- error: {error}")
 
-        print_results(config, results)
+            print_results(config, results)
 
 def outconst_benchmark(benchmark: Benchmark, rtl: str, dataset: str):
     CSV = "outconst_results.csv"
 
     for error in ERROR_THRESHOLDS:
-        config = ApproxSynthesisConfig(
-            method="outconst",
-            circuit=Circuit(rtl, TECH),
-            dataset=dataset,
-            metrics=metrics(benchmark),
-            resynthesis=True,
-            error=error,
-            validation=validation(benchmark),
-            csv=CSV,
-        )
-        print(f"{datetime.now().strftime('%I:%M %p')}: Configuration loaded successfully, starting inconst execution...")
+        for resynthesis in [False, True]:
+            config = ApproxSynthesisConfig(
+                method="outconst",
+                circuit=Circuit(rtl, TECH),
+                dataset=dataset,
+                metrics=metrics(benchmark),
+                resynthesis=True,
+                error=error,
+                validation=validation(benchmark),
+                csv=CSV,
+            )
+            print(f"{datetime.now().strftime('%I:%M %p')}: Configuration loaded successfully, starting outconst execution...")
 
-        results = run(config)
+            results = run(config)
 
-        print("Finished execution:")
-        print(f"- circuit: {benchmark.name}")
-        print(f"- error: {error}")
+            print("Finished execution:")
+            print(f"- circuit: {benchmark.name}")
+            print(f"- error: {error}")
 
-        print_results(config, results)
+            print_results(config, results)
 
 
 total_time = 0
