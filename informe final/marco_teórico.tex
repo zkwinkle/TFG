@@ -56,7 +56,7 @@ Design Automation, EDA). ALS se enfoca en mejorar el comportamiento de un
 circuito (ya sea en consumo de potencia, área o rendimiento) sin necesidad de
 conocer sus detalles de implementación. Este proceso se lleva a cabo de forma
 sistemática, modificando la funcionalidad especificada sin exceder un umbral de
-error predefinido.
+error predefinido. \cite{ammes_two-level_2022}
 
 Existen métodos para crear circuitos aproximados manualmente, que no caen
 dentro de la categoría de ALS, ya que no son automáticos. Este tipo de diseño
@@ -129,13 +129,19 @@ el costo computacional suele crecer exponencialmente con la complejidad y la
 cantidad de entradas del circuito.
 
 El resto de esta sección introducirá algunas de las métricas de error más
-comúnmente utilizadas para ALS. Para las expresiones presentadas, $n$
-corresponde con la cantidad de bits de entrada del circuito, $N$ con la
-cantidad de combinaciones de entradas siendo tomadas en cuenta, $f(x)$ y
-$f'(x)$ son las salidas del circuito original y el aproximado, respectivamente,
-con $f_i(x)$ y $f'_i(x)$ representando el bit de salida en la posición $i$.
-Nótese que si se toman en cuenta todas las posibles combinaciones de entradas
-del circuito el valor de $N$ sería $2^n$.
+comúnmente utilizadas para ALS. Se definen a continuación la notación y variables:
+
+\begin{itemize}
+  \item $n$: Cantidad de bits de entrada del circuito.
+  \item $N$: Cantidad de combinaciones de entradas consideradas.
+  \item $f(x)$: Salida del circuito original.
+  \item $f'(x)$: Salida del circuito aproximado.
+  \item $f_i(x)$: Bit de salida en la posición $i$ del circuito original.
+  \item $f'_i(x)$: Bit de salida en la posición $i$ del circuito aproximado.
+  % comentado porque se salía esta 1 línea de la página.
+  % TODO: Agregar si llega a caber todo en la página.
+  % \item $N = 2^n$: Valor de $N$ cuando se consideran todas las posibles combinaciones de entradas del circuito.
+\end{itemize}
 
 \subsubsection{Tasa de error}
 
@@ -143,7 +149,7 @@ La tasa de error (Error Rate, ER) corresponde con la probabilidad de observar
 uno o más bits erróneos en la salida. ER es la métrica más comúnmente utilizada
 en la aproximación de circuitos, siendo aplicada en circuitos tanto generales
 como aritméticos \cite{ammes_two-level_2022}. El cálculo del ER se presenta en
-la ecuación \ref{eq:ER}.
+la ecuación (\ref{eq:ER}).
 
 \begin{equation} \label{eq:ER}
   ER = \frac{1}{N} \sum_{\forall x \in N} f(x) \neq f'(x)
@@ -155,7 +161,7 @@ La distancia de Hamming promedio (Mean Hamming Distance, MHD), también llamada
 tasa de error de bits, representa la cantidad de bits de salida erróneos en
 promedio. Esta tasa fue propuesta como una variación de ER para evaluar
 aproximaciones con múltiples salidas. El cálculo del MHD se presenta en la
-ecuación \ref{eq:MHD}.
+ecuación (\ref{eq:MHD}).
 
 \begin{equation} \label{eq:MHD}
   MHD = \frac{1}{N} \sum_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
@@ -166,7 +172,7 @@ ecuación \ref{eq:MHD}.
 La peor distancia de Hamming (Worst Hamming Distance, WHD) representa la mayor
 distancia de Hamming entre las salidas originales y las aproximadas. Se utiliza
 para verificar cuál es el peor caso en cantidad de bits de salida erróneos. El
-cálculo del WHD se presenta en la ecuación \ref{eq:WHD}.
+cálculo del WHD se presenta en la ecuación (\ref{eq:WHD}).
 
 \begin{equation} \label{eq:WHD}
   WHD = \max_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
@@ -178,7 +184,7 @@ El error en el peor caso (Worst Case Error, WCE) representa la mayor diferencia
 absoluta en magnitud entre las salidas del circuito original y el aproximado.
 Es la métrica más comúnmente utilizada en el diseño aritmético
 \cite{ammes_two-level_2022}. El cálculo del WCE se presenta en la ecuación
-\ref{eq:WHD}.
+(\ref{eq:WHD}).
 
 \begin{equation} \label{eq:WCE}
   WHD = \max_{\forall x \in N} \left| f(x) - f'(x) \right|
@@ -187,8 +193,8 @@ Es la métrica más comúnmente utilizada en el diseño aritmético
 \subsubsection{Error absoluto medio}
 
 El error absoluto medio (Mean Absolute Error, MAE) representa la diferencia en
-magnitud media entre las salidas del circuito original y el aproximado. El 
-cálculo del MAE se presenta en la ecuación \ref{eq:MAE}.
+magnitud media entre las salidas del circuito original y el aproximado. El
+cálculo del MAE se presenta en la ecuación (\ref{eq:MAE}).
 
 \begin{equation} \label{eq:MAE}
   MAE = \frac{1}{N} \sum_{\forall x \in N} \left| f(x) - f'(x) \right|
@@ -204,7 +210,7 @@ utilizar un método de error relativo es que, como el valor de error es un
 porcentaje, es posible analizar circuitos con cantidades de entradas
 diferentes.
 
-El cálculo del MRE se presenta en la ecuación \ref{eq:MRE}. Se nota que si
+El cálculo del MRE se presenta en la ecuación (\ref{eq:MRE}). Se nota que si
 $f(x)$ tiene un valor de $0$, la ecuación se vuelve indefinida; por lo tanto,
 para aplicaciones prácticas se recomienda reemplazar el divisor con la función
 $\max \left( 1, \left| f(x) \right| \right)$.
@@ -217,7 +223,7 @@ $\max \left( 1, \left| f(x) \right| \right)$.
 
 El error cuadrático medio (Mean Squared Error, MSE) representa la diferencia en
 magnitud cuadrática media entre las salidas del circuito original y el
-aproximado. Se presenta su cálculo en la ecuación \ref{eq:MSE}. Aunque el MAE
+aproximado. Se presenta su cálculo en la ecuación (\ref{eq:MSE}). Aunque el MAE
 suele ser más intuitivo de interpretar, el MSE ofrece una visión más completa,
 ya que corresponde con el concepto de varianza de los errores. Además, el MSE
 es computacionalmente menos costoso de calcular, lo que lo hace especialmente
@@ -427,26 +433,29 @@ acíclico dirigido de nodos llamados neuronas artificiales. Los nodos se
 organizan en capas, como se puede observar en la Figura \ref{fig:MLP}. Hay
 capas de nodos designadas de entrada y de salida, cada nodo le aplica un
 procesamiento a sus entradas y pasa los valores resultantes a sus sucesores en
-la red.
+la red. Estos valores eventualmente se propagan hasta los nodos de salida.
 
 Típicamente, el procesamiento de cada nodo es tomar una suma ponderada de sus
 nodos predecesores y aplicarle una función de activación, la cual en
 perceptrones multicapa modernos es continua y no lineal. Sea $a_j$ la salida
 del nodo $j$ y sea $w_{i,j}$ el factor de ponderación para la conexión entre el
 nodo $i$ y el nodo $j$; entonces se tiene
-
 $$a_j = g_j\left(\sigma_i w_{i,j} a_i \right),$$
-
 donde $g_j$ es la función de activación no lineal del nodo $j$.
 \cite{russell2016artificial}
+
+En un perceptrón clasificador, los nodos de salida corresponden a las posibles
+clases en las que se puede clasificar, como en el caso de salidas booleanas. Un
+MLP con salidas booleanas actúa como un clasificador con posibles clases 1 o 0.
+El valor que se propaga a las salidas típicamente se interpreta como un nivel
+de confianza de que un nodo de salida representa la respuesta correcta, y se
+selecciona el mayor de estos valores.
 
 \begin{figure}[htb]
   \centering
   \includesvg[width=0.35\linewidth]{./imágenes/MLP.svg}
   \caption{Estructura general de un perceptrón multicapa con salidas booleanas.
-    Puede llegar a tener más capas intermedias. La salida se decide típicamente
-    interpretando el valor de cada nodo de salida como un valor de confianza de
-  que esa sea la salida y se escoge la salida con un mayor valor.}
+    Puede llegar a tener más capas intermedias.}
   \label{fig:MLP}
 \end{figure}
 
