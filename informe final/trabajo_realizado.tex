@@ -1,0 +1,303 @@
+\chapter{Descripción del trabajo realizado}
+
+% TODO: Agregar intro
+
+\section{Descripción del proceso de solución}
+
+% TODO: agregar intro
+% TODO: reescribr texto para que suene más como trabajo realizado y no tanto
+%       como marco metrodológico
+
+\section{Experimentación con AxLS}
+
+El objetivo de esta actividad fue familiarizar al autor con la herramienta AxLS,
+sus módulos existentes y formar una mejor idea de lo que tomaría el proyecto.
+Se decidió intentar crear una prueba de concepto de lo que sería la verdadera
+implementación de ML dentro de la herramienta.
+Se decidió que en el lapso de una semana se intentaría implementar un DT. Se
+escogió utilizar un DT porque es una técnica fácil de utilizar correctamente,
+cuya implementación ya existe en la biblioteca \emph{scikit-learn} y que se
+entrena rápidamente.
+La prueba de concepto fue exitosa, se logró realizar una síntesis aproximada de
+uno de los circuitos de benchmark y se identificó cómo realizar los pasos
+necesarios para la implementación de la técnica:
+
+\begin{itemize}
+    \item Sintetización del circuito original.
+    \item Simulación del circuito original para obtener los datos de entrenamiento.
+    \item Lectura de los datos de entrada y salida del circuito original para
+      entrenar el árbol de decisiones.
+    \item Entrenamiento del árbol de decisiones con implementación de
+      \emph{scikit-learn}.
+    \item Mapeo del árbol de decisiones a un circuito Verilog a través de
+      expansión de Boole.
+    \item Sintetización y simulación del circuito aproximado.
+    \item Evaluación de técnicas de error.
+\end{itemize}
+
+Cabe notar que la técnica no estaba realmente integrada dentro de la
+herramienta, ya que fue una implementación ad hoc. Además, presentaba varios
+errores. Se decidió no dedicar más tiempo a intentar corregirlos, porque no
+había certeza de que esa fuera la técnica final que se escogería para agregar
+propiamente a AxLS.
+
+\section{Escogencia de método ML}
+
+Para la escogencia del método ML, como detalla la Tabla de entregables
+\ref{tab:entregables}, se realizó un análisis de diseño explorando las
+diferentes posibles técnicas utilizadas en el estado del arte y justificando
+cuál era más apropiada para este proyecto.
+
+\subsection{Criterios de escogencia}
+
+Se definieron los siguientes criterios que se utilizaron para la escogencia del
+método.
+
+\subsubsection{Viabilidad}
+\begin{itemize}
+    \item No se cuentan con computadores de alto rendimiento para llevar a cabo
+      entrenamientos extensivos.
+    \item AxLS en sí no tiene restricciones que impidan implementar métodos que
+      requieran mucho tiempo y procesamiento. Sin embargo, al ser ``open source'',
+      podría tener una amplia variedad de usuarios, por lo que sería favorable
+      que cualquiera pueda ejecutar la herramienta en su totalidad. Que
+      cualquier usuario pueda probar la mayor variedad de métodos posibles
+      facilitaría una mayor adopción, lo que a su vez podría resultar en más
+      contribuciones y mayor utilidad.
+     \item Si es posible ejecutar las pruebas rápidamente, eso es altamente
+       preferible para facilitar la verificación del funcionamiento del método
+       y su ejecución por cualquier usuario.
+    \begin{itemize}
+        \item Se definió arbitrariamente, como un valor de tiempo bajo, que la
+          ejecución del método escogido preferiblemente dure menos de 5 minutos
+          en un computador personal.
+    \end{itemize}
+
+  \item También se consideró la viabilidad de la implementación, ya que este
+    proyecto cuenta con poco tiempo para desarrollarse.
+\end{itemize}
+
+\subsubsection{Estado del arte}
+\begin{itemize}
+    \item Es preferible implementar un método lo más moderno posible para
+      asegurar una mayor relevancia en el estado del arte.
+
+    \item Es preferible implementar un método con amplia base de estudios
+      previos, como heurística de su relevancia y para contar con más puntos de
+      comparación en la literatura.
+\end{itemize}
+
+\subsubsection{Resultados}
+\begin{itemize}
+    \item Se dará menor importancia a los resultados obtenidos por la técnica
+      en la literatura, ya que este trabajo tiene un rol más fundacional:
+      implementar técnicas de ML en AxLS, y no necesariamente busca obtener los
+      mejores resultados posibles. Sin embargo, en caso de similitud entre
+      métodos en los demás criterios, se podrá considerar cuál ha obtenido
+      mejores resultados en otros estudios.
+\end{itemize}
+
+\subsection{Escogencia de categoría}
+
+En el siguiente paso se hizo una revisión de literatura sobre aplicación de
+métodos de ML en ALS.
+Como se discute en la sección \ref{sec:trabajos_similares}, se identificaron 3
+categorías principales de aplicación de métodos de ML en ALS:
+
+\begin{enumerate}
+    \item Técnicas que entrenan modelos para asistir en otros métodos de ALS,
+      acelerando la evaluación de errores al simular cambios en el circuito.
+    \item Técnicas de ML aplicadas a la exploración del espacio de diseño de
+      circuitos.
+    \item Enfoques supervisados donde se entrena un modelo con entradas/salidas
+      de un circuito, y luego se mapea a hardware.
+\end{enumerate}
+
+Se escogió la categoría 3 debido a las siguientes consideraciones:
+
+\begin{itemize}
+    \item Se descartó completamente la categoría 2 por el criterio de
+      viabilidad, ya que las exploraciones o entrenamientos realizados duran
+      horas y son realizados en estaciones de trabajo considerablemente más
+      potentes que lo que se tiene acceso para este proyecto.
+    \item Luego se evaluaron más detenidamente los criterios de escogencia entre
+      las categorías 1 y 3:
+    \begin{itemize}
+        \item Viabilidad: Por lo general los métodos de la categoría 3 tienen
+          un entrenamiento menos extenso y más fáciles de realizar.
+        \item Estado del arte: Hay considerablemente más trabajos de la
+          categoría 3.
+        \item Resultados: En ambas categorías hay resultados competitivos,
+          ninguna es considerablemente más exitosa que la otra.
+    \end{itemize}
+\end{itemize}
+
+\subsection{Escogencia de método}
+
+Se evaluaron los métodos disponibles dentro de la categoría 3, y sus
+consideraciones se discuten a continuación. En la sección
+\ref{sec:trabajos_similares} se adentra más en los métodos de las otras
+categorías.
+
+\subsubsection{Árbol de decisiones}
+
+\begin{itemize}
+    \item Es el método más estudiado en la literatura, 7 de las 10 referencias
+      utilizadas lo estudian \cite{de_abreu_fast_2021},
+      \cite{miyasaka_logic_2021}, \cite{rai_logic_2021},
+      \cite{zeng_sampling-based_2021}, \cite{huang_circuit_2023},
+      \cite{hu_optdtals_2024}, \cite{prats_ramos_impact_2024}.
+    \item Es muy viable debido a su fácil implementación, disponibilidad en
+      bibliotecas de alto grado como \emph{scikit-learn} y bajo tiempo de
+      entrenamiento. En efecto, ya se había realizado una implementación ad hoc
+      como una prueba de concepto a inicios del proyecto.
+    \item Tiene resultados competitivos. No siempre los mejores, pero por lo
+      general la literatura lo menciona como una de las técnicas más efectivas
+      o la base que están intentando superar con un método más avanzado.
+\end{itemize}
+
+Se consideró la posibilidad de implementar alguna de las versiones modificadas
+que se han estudiado, como en \cite{hu_optdtals_2024} o
+\cite{zeng_sampling-based_2021}, pero se decidió sería mejor implementar el
+método más general para tener una base de comparación y dejar cualquier mejora
+para un trabajo futuro.
+
+\subsubsection{Bosque aleatorio}
+
+\begin{itemize}
+    \item Fue explorada en 2 de las referencias estudiadas, las cuales son del
+      2021 \cite{miyasaka_logic_2021}, \cite{rai_logic_2021}.
+    \item Son fáciles de implementar, ya que están compuestos por DT.
+    \item Sí ha obtenido mejores resultados que los DT en algunas de las tareas
+      evaluadas dentro de las referencias, particularmente a la hora de
+      generalizar circuitos lógicos y para algunos circuitos aritméticos en
+      específico.
+\end{itemize}
+
+\subsubsection{Programación genética cartesiana}
+
+\begin{itemize}
+    \item Esta técnica usa algoritmos evolutivos para generar circuitos,
+      representando sus elementos como un \emph{genotipo} fácilmente mapeable
+      al circuito final.
+    \item Ha sido estudiada en 2 de las referencias utilizadas, las cuales son
+      bastante modernas con la última siendo del 2024
+      \cite{berndt_cgp-based_2022}, \cite{prats_ramos_impact_2024}.
+    \item Esta técnica obtiene resultados muy exitosos en términos del
+      intercambio entre área de circuito y error introducido.
+    \item Se descartó por su alto costo computacional: incluso con un clúster
+      mucho más potente que el equipo disponible, en
+      \cite{berndt_cgp-based_2022} las ejecuciones tomaron hasta un día
+      completo.
+\end{itemize}
+
+\subsubsection{Perceptrón multicapa}
+
+\begin{itemize}
+    \item Esta técnica es explorada en 4 de las referencias utilizadas, con 3
+      de ellas siendo del 2021 y la última del 2024
+      \cite{boroumand_learning_2021}, \cite{miyasaka_logic_2021},
+      \cite{rai_logic_2021}, \cite{prats_ramos_impact_2024}
+    \item Su viabilidad es limitada por la dificultad de traducirlas a
+      circuitos. Suelen requerir módulos complejos como sumadores y
+      multiplicadores, lo que aumenta mucho el tamaño. Reducir esto implica
+      técnicas como podar conexiones poco importantes o convertir cada nodo del
+      MLP en una LUT mediante cuantización.
+    \item Tienen buenos resultados en sus estudios, particularmente con
+      circuitos aritméticos de adición y multiplicación y aprendiendo la
+      operación lógica de XOR, tareas en las que los otros métodos suelen
+      fallar.
+\end{itemize}
+
+\subsubsection{Método escogido}
+
+Tomando en cuenta las consideraciones dadas para cada método se decidió
+implementar el DT, principalmente por su alta viabilidad y relevancia dentro de
+la literatura.
+
+Se considera que además es una buena base para trabajo futuro en el que se implemente alguna variación de la técnica como RF, o las presentadas en \cite{hu_optdtals_2024}, \cite{zeng_sampling-based_2021} o \cite{huang_circuit_2023}.
+
+
+\section{Implementación de técnica de ML}
+
+Debido a la implementación previa de la técnica de DT como prueba de concepto,
+la implementación real fue más fácil. Aun así, fue necesario integrarla
+correctamente en AxLS, corregir errores y generalizarla para que funcionara con
+cualquier circuito, no solo uno específico.
+
+Se creó una clase llamada \texttt{DecisionTreeCircuit} que abstrae sobre la
+implementación de DT de \emph{scikit-learn} para dar las utilidades necesarias
+para realizar ALS. Esta solo expone los siguientes métodos:
+
+\begin{itemize}
+  \item \texttt{train(X, y)}: Acepta vectores con los datos obtenidos de la
+    simulación del circuito original que utiliza para entrenar el árbol de
+    decisiones interno.
+  \item \texttt{to\_verilog\_file(topmodule, filename)}: Después de entrenar el
+    árbol de decisiones, este método mapea el árbol entrenado a un circuito de
+    Verilog y lo escribe en un archivo de texto especificado por el usuario. El
+    parámetro de \texttt{topmodule} permite al usuario controlar el nombre del
+    módulo de Verilog para el circuito.
+\end{itemize}
+
+Para que el árbol se adapte al circuito que se está aproximando y el módulo de
+Verilog se genere correctamente, se deben suplir listas con las entradas y
+salidas del circuito.
+También se agregó el parámetro \texttt{one\_tree\_per\_output}, que permite
+elegir entre un solo árbol multi-salida o uno por cada salida del circuito.
+Esto se incluyó tras notar en la prueba de concepto que ambas opciones eran
+posibles y afectaban el resultado.
+
+La clase, sus propiedades y métodos se muestran en formato UML en la Figura
+\ref{fig:UML}.
+
+\begin{figure}[htb]
+  \centering
+  % El inkscapelatex=false evita que LaTeX trate de renderizar el texto,
+  % necesario porque estaba tirando error por los underscores '_' en el svg.
+  \includesvg[inkscapelatex=false, width=0.3\linewidth]{./imágenes/DecisionTreeCircuit_UML.svg}
+  \caption{Representación de UML de \texttt{DecisionTreeCircuit}.}
+  \label{fig:UML}
+\end{figure}
+
+El flujo completo de utilizar esta clase con las utilidades de AxLS conlleva los siguientes pasos, los cuales se representan visualmente en la Figura \ref{fig:flow}.
+
+\begin{enumerate}
+  \item Sintetizar circuito original con la clase \texttt{Circuit} ya existente dentro de AxLS.
+  \item Simular el circuito original con un set de datos de entrada, generando las salidas correspondientes.
+  \item Leer los archivos del set de datos de entrada y sus salidas correspondientes y entrenar el árbol de decisiones con estos.
+  \item Mapear el árbol de decisiones a un circuito aproximado de Verilog.
+  \item Sintetizar el circuito aproximado de Verilog con la clase \texttt{Circuit}. Con este objeto se pueden realizar simulaciones para obtener las métricas de área y error del circuito aproximado.
+\end{enumerate}
+
+\begin{figure}[htb]
+  \centering
+  % El inkscapelatex=false evita que LaTeX trate de renderizar el texto,
+  % necesario porque estaba tirando error por los underscores '_' en el svg.
+  \includesvg[width=0.6\linewidth]{./imágenes/decision_tree_method.svg}
+  \caption{Representación visual de cómo utilizar \texttt{DecisionTreeCircuit} dentro de AxLS.}
+  \label{fig:flow}
+\end{figure}
+
+\section{Recolección de resultados.}
+
+% TODO
+%
+% 1. Se definieron las tablas de resultados que se deseaban generar.
+% 2. Se implementaron utilidades para fácilmente generar sets de datos para cada circuito y para ejecutar cualquier método de la herramienta.
+% 3. Se creó una utilidad para pasar de vcd a saif en Rust para realizarlo más rápido.
+%   - Incluir banderas de configuración.
+%   - Incluir facilidad para separar el set de datos en prueba y verificación.
+% 4. Después de exprimentar con todos los métodos de la herramienta, se
+% decidieron excluir ccarving y significance del estudio porque requieren mucha
+% configuración y prueba y error para obtener los mejores resultados y se decidió
+% que esto se sale del alcance.
+% 5. Se decidió limitar los sets de datos dependiendo de cuánto duren en simularse.
+%   - Primero dar introducción de los circuitos benchmarks a utilizar y el tipo de nombres con el que se refieren.
+% 6. Se realizaron simulaciones cortas de todos los circuitos para obtener información del tiempo que duran en simularse.
+% 7. Se ajustaron los sets de datos para ser de 2 segundos, debido a los métodos de poda.
+% 8. Bajo esta métrica, los circuitos grandes tendrían sets de datos muy pequeños y no representativos, entonces se excluyeron.
+% 9. También se excluyeron el fir y el invk2j debido a implementaciones erróneas.
+% 10. También se excluyeron algunos por durar demasiado en la poda, culpa de usar métrica mred con valores muy grandes.
+
+\section{Análisis de los resultados obtenidos}
