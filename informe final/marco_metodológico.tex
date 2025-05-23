@@ -1,14 +1,233 @@
 \chapter{Marco metodológico}
 
 Este capítulo detalla la metodología seguida para el desarrollo del
-proyecto.
+proyecto. Busca que el lector comprenda cómo se estructuró el proceso
+de diseño, implementación y validación de la solución propuesta.
 
 El proyecto contó con las siguientes etapas principales:
 
 \begin{enumerate}
-    \item Experimentación y familiarización con AxLS.
-    \item Escogencia del método ML a implementar dentro de AxLS.
-    \item Implementación de técnica de ML dentro de AxLS.
-    \item Diseño de experimentos y recolección de resultados.
+  \item Experimentación y familiarización con AxLS.
+  \item Selección del método ML a implementar dentro de AxLS.
+  \item Implementación de técnica de ML dentro de AxLS.
+  \item Diseño de experimentos y recolección de resultados.
 \end{enumerate}
 
+
+\section{Estrategia para la solución}
+
+En alineación con los objetivos específicos, este proyecto cumplió con las
+siguientes tareas clave:
+
+\begin{itemize}
+  \item Escoger una técnica de ML para ALS lo más del estado del arte posible.
+  \item Implementar esta técnica como un método de ALS disponible dentro de la
+    herramienta de fuente abierta AxLS.
+  \item Utilizar AxLS para comparar los resultados obtenidos por la nueva
+    técnica ML con los de otras técnicas ya previamente disponibles dentro de
+    la herramienta.
+\end{itemize}
+
+
+\begin{figure}[htb]
+  \begin{center}
+    \includesvg[width=0.95\textwidth]{./imágenes/diagrama_marco_metodológico.svg}
+  \end{center}
+  \caption{Diagrama de la secuencia de pasos seguidos y los productos de cada etapa.}
+  \label{fig:diagrama_metodológico}
+\end{figure}
+
+Cada tarea involucró tanto actividades de diseño como de ejecución, incluyendo
+revisión bibliográfica e implementación de código.
+
+Adicionalmente, se designó un tiempo en las semanas iniciales para
+experimentación y familiarización con AxLS, con el único objetivo de que el
+autor se familiarizara con los flujos de la herramienta y obtuviera una mejor
+claridad en los pasos que llegaran a ser necesarios en la implementación e
+integración de una técnica ML.
+Este fue un periodo puramente exploratorio por lo que no se definió ningún
+entregable o actividades claras como tal.
+
+
+La Figura \ref{fig:diagrama_metodológico} contiene un diagrama que muestra las
+diferentes etapas, sus actividades y productos principales.
+En el resto de esta sección se entra en más detalles sobre cada una de las tareas clave, las
+actividades realizadas y productos generados.
+También, la Tabla \ref{tab:actividades} muestra un resumen de las principales actividades asociadas a
+cada objetivo específico y los entregables producidos.
+
+\subsubsection{Selección de técnica ML}
+
+Para la selección de la técnica ML, primero se realizó un estudio exhaustivo
+de la literatura disponible sobre aplicación de métodos ML en ALS. Estas
+referencias son las mencionadas en la sección \ref{sec:trabajos_similares}.
+Para este estudio bibliográfico se empleó la herramienta Zotero para un manejo
+más fácil de las referencias utilizadas.
+
+Seguidamente, se definieron los criterios para la selección de la técnica ML
+más apropiada a implementar en AxLS. Basado en estos criterios de selección, se
+elaboró un documento de diseño evaluando los métodos identificados en el
+estudio bibliográfico y concluyendo cuál era el más apropiado.
+
+A continuación se detallan los criterios definidos para la selección del método.
+
+\paragraph{Viabilidad}
+\begin{itemize}
+  \item No se cuentan con computadores de alto rendimiento para llevar a cabo
+    entrenamientos extensivos.
+  \item AxLS en sí no tiene restricciones que impidan implementar métodos que
+    requieran mucho tiempo y procesamiento. Sin embargo, al ser de fuente abierta, podría tener una amplia variedad de usuarios, por lo que sería
+    favorable que cualquiera pueda ejecutar la herramienta en su totalidad.
+    Que cualquier usuario pueda probar la mayor variedad de métodos posibles
+    facilitaría una mayor adopción, lo que a su vez podría resultar en más
+    contribuciones y mayor utilidad.
+  \item Si es posible ejecutar las pruebas rápidamente, eso es altamente
+    preferible para facilitar la verificación del funcionamiento del método
+    y su ejecución por cualquier usuario.
+    \begin{itemize}
+      \item Se definió arbitrariamente, como un valor de tiempo bajo, que la
+        ejecución del método seleccionado preferiblemente dure menos de 5
+        minutos en un computador personal.
+    \end{itemize}
+
+  \item También se consideró la viabilidad de la implementación, ya que este
+    proyecto cuenta con poco tiempo para desarrollarse.
+\end{itemize}
+
+\paragraph{Estado del arte}
+\begin{itemize}
+  \item Es preferible implementar un método lo más moderno posible para
+    asegurar una mayor relevancia en el estado del arte.
+
+  \item Es preferible implementar un método con amplia base de estudios
+    previos, como heurística de su relevancia y para contar con más puntos de
+    comparación en la literatura.
+\end{itemize}
+
+\paragraph{Resultados}
+\begin{itemize}
+  \item Se dará menor importancia a los resultados obtenidos por la técnica
+    en la literatura, ya que este trabajo tiene un rol más fundacional:
+    implementar técnicas de ML en AxLS, y no necesariamente busca obtener los
+    mejores resultados posibles. Sin embargo, en caso de similitud entre
+    métodos en los demás criterios, se podrá considerar cuál ha obtenido
+    mejores resultados en otros estudios.
+\end{itemize}
+
+\subsection{Implementación de técnica ML}
+
+Para la implementación de la técnica ML dentro de AxLS se redactó un documento
+de diseño detallando la API para utilizar esta técnica, ejemplos de uso y
+diagramas visuales para ayudar la comprensión del flujo para utilizarla.
+
+El flujo debe de tomar en cuenta los siguientes pasos:
+
+\begin{itemize}
+  \item Obtención de los datos de entrenamiento.
+  \item Entrenamiento del modelo ML.
+  \item Utilización del modelo ML dentro de AxLS para obtener circuitos
+    aproximados.
+    \begin{itemize}
+      \item Dependiendo de la técnica seleccionada, este paso puede implicar
+        mapear el modelo ML directamente a un circuito. En ese caso, se genera un
+        archivo Verilog que luego puede ser procesado por AxLS. Alternativamente,
+        el modelo puede integrarse directamente en AxLS como parte de un flujo
+        más complejo, por ejemplo, para estimación de error o exploración del
+        espacio de diseño.
+    \end{itemize}
+\end{itemize}
+
+Para verificar la correcta operación de la implementación, se deberá diseñar
+una prueba enfocada en validar dos aspectos: primero, que el modelo ML logra
+entrenarse y modelar el comportamiento deseado; segundo, que su integración en
+AxLS permite generar circuitos aproximados funcionales y comparables en
+métricas de área y error introducido frente a otros métodos existentes. Esta
+prueba será de escala reducida y con fines de verificación interna, distinta de
+los experimentos usados para el análisis cuantitativo presentado en este
+informe. Su diseño dependerá de la técnica ML seleccionada.
+
+Para realizar esta implementación y su validación se utilizará el lenguaje
+Python, ya que es el lenguaje en el que está escrito la herramienta AxLS.
+
+\subsection{Diseño de experimentos y recolección de resultados}
+
+\begin{figure}[b]
+  \begin{center}
+    \includesvg[width=0.6\textwidth]{./imágenes/Diagrama runner.svg}
+  \end{center}
+  \caption{Componentes creados para la ejecución de métodos de AxLS. Los bloques azules corresponden a elementos que son parte de AxLS, el script de Python para recolección de resultados sería externo a la herramienta.}
+  \label{fig:runner}
+\end{figure}
+
+Como parte de esta tarea se definieron los resultados necesarios para comparar
+la técnica de ML implementada con los métodos ya disponibles en AxLS.
+
+Aunque los resultados específicos dependerían de la técnica seleccionada, por
+ejemplo en caso de requerir variaciones en hiperparámetros, se estableció
+desde el inicio que las métricas clave serían: error introducido al circuito,
+reducción de área, y tiempo de ejecución.
+
+AxLS no cuenta con una interfaz de ejecución automatizada, sino que funciona
+como una biblioteca que debe integrarse manualmente mediante código en Python.
+Esto representa un reto al momento de ejecutar múltiples pruebas con distintos
+métodos, parámetros y benchmarks.
+
+Por ello, se decidió diseñar una API interna que permitiera configurar y
+ejecutar cada técnica de forma simplificada. Esta API fue pensada para
+facilitar su exposición a través de una interfaz de línea de comandos (CLI), lo
+que permite una experimentación más ágil sin necesidad de escribir código
+adicional. Además de facilitar los experimentos, esta interfaz puede fomentar
+la adopción de AxLS al reducir la curva de aprendizaje para nuevos usuarios.
+
+Con esta infraestructura, fue posible generar todos los resultados de forma
+automatizada mediante un script sencillo en Python.
+Además, la CLI resultó fundamental para la ejecución de pruebas de verificación
+y la exploración ágil de distintos escenarios.
+
+La Figura \ref{fig:runner} muestra cómo se relacionan los distintos componentes
+desarrollados.
+
+Para verificar el funcionamiento correcto de la API y la CLI, se implementaron
+scripts de validación que utilizan directamente la biblioteca de AxLS y se
+compararon sus resultados con los generados por la nueva interfaz. Dado que
+algunos métodos de AxLS no son determinísticos, se consideró válido que las
+ejecuciones tengan diferencias menores, tanto en tiempo como en resultados. Se
+aceptó un margen de variación del 5\% en métricas de área y error.
+
+\begin{table}[htb]
+  \caption{Actividades principales del proyecto. La Tabla \ref{tab:entregables} resume las herramientas utilizadas para cada entregable y sus estrategias de verificación.}
+
+  \label{tab:actividades}
+  \resizebox{\textwidth}{!}{
+
+    \begin{tabular}{M{0.32\linewidth}M{0.6\linewidth}M{0.12\linewidth}}
+      \toprule
+      Entregable & \centering Principales actividades & Objetivo Específico \\
+      \midrule
+      Documento de diseño que justifica la selección de la técnica ML a implementar en AxLS.
+      & \bulletspace Revisión bibliográfica.
+        \newline \bulletspace Definición de criterios de selección.
+        \newline \bulletspace Selección justificada de técnica ML.
+      & 1 \\ \\
+      Documento de diseño que explica el plan de implementación de la técnica escogida dentro de la herramienta AxLS.
+      & \bulletspace Diseño de API para técnica ML.
+      & 2 \\ \\
+      Código de herramienta AxLS con técnica de ML integrada.
+      & \bulletspace Implementación de técnica ML en AxLS.
+        \newline \bulletspace Verificación de método ML.
+      & 2 \\ \\
+        Código adaptado de herramienta AxLS con adaptaciones para fácil ejecución.
+      & \bulletspace Implementación de API simplificada.
+        \newline \bulletspace Exponer API simplificada con una CLI.
+        \newline \bulletspace Verificación de API simplificada y CLI.
+      & 3 \\ \\
+      Informe final sobre el proyecto realizado y los resultados encontrados al comparar la
+      técnica de ML con las ya existentes en la herramienta AxLS
+      & \bulletspace Creación de script para generar resultados.
+        \newline \bulletspace Presentación de datos con elementos gráficos.
+        \newline \bulletspace Análisis de resultados.
+      & 3 \\
+      \bottomrule
+    \end{tabular}
+  }
+\end{table}

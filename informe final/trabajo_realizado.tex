@@ -1,10 +1,16 @@
 \chapter{Descripción del trabajo realizado}
 
+CAPÍTULO EN PROGRESO NO TERMINADO.
+
+La mayoría que escribí aquí iba a ir en el Marco Metodológico y luego me di
+cuenta que iba a calzar mejor en este capítulo.
+
 % TODO: Agregar intro
 
 \section{Descripción del proceso de solución}
 
 % TODO: agregar intro
+
 % TODO: reescribr texto para que suene más como trabajo realizado y no tanto
 %       como marco metrodológico
 
@@ -43,59 +49,12 @@ propiamente a AxLS.
 
 \section{Escogencia de método ML}
 
-Para la escogencia del método ML, como detalla la Tabla de entregables
-\ref{tab:entregables}, se realizó un análisis de diseño explorando las
-diferentes posibles técnicas utilizadas en el estado del arte y justificando
-cuál era más apropiada para este proyecto.
+Para la escogencia del método ML, como se discutió en el Marco Metodológico, se
+realizó un análisis de diseño explorando las diferentes posibles técnicas
+utilizadas en el estado del arte y justificando cuál era más apropiada para
+este proyecto.
 
-\subsection{Criterios de escogencia}
-
-Se definieron los siguientes criterios que se utilizaron para la escogencia del
-método.
-
-\subsubsection{Viabilidad}
-\begin{itemize}
-    \item No se cuentan con computadores de alto rendimiento para llevar a cabo
-      entrenamientos extensivos.
-    \item AxLS en sí no tiene restricciones que impidan implementar métodos que
-      requieran mucho tiempo y procesamiento. Sin embargo, al ser ``open source'',
-      podría tener una amplia variedad de usuarios, por lo que sería favorable
-      que cualquiera pueda ejecutar la herramienta en su totalidad. Que
-      cualquier usuario pueda probar la mayor variedad de métodos posibles
-      facilitaría una mayor adopción, lo que a su vez podría resultar en más
-      contribuciones y mayor utilidad.
-     \item Si es posible ejecutar las pruebas rápidamente, eso es altamente
-       preferible para facilitar la verificación del funcionamiento del método
-       y su ejecución por cualquier usuario.
-    \begin{itemize}
-        \item Se definió arbitrariamente, como un valor de tiempo bajo, que la
-          ejecución del método escogido preferiblemente dure menos de 5 minutos
-          en un computador personal.
-    \end{itemize}
-
-  \item También se consideró la viabilidad de la implementación, ya que este
-    proyecto cuenta con poco tiempo para desarrollarse.
-\end{itemize}
-
-\subsubsection{Estado del arte}
-\begin{itemize}
-    \item Es preferible implementar un método lo más moderno posible para
-      asegurar una mayor relevancia en el estado del arte.
-
-    \item Es preferible implementar un método con amplia base de estudios
-      previos, como heurística de su relevancia y para contar con más puntos de
-      comparación en la literatura.
-\end{itemize}
-
-\subsubsection{Resultados}
-\begin{itemize}
-    \item Se dará menor importancia a los resultados obtenidos por la técnica
-      en la literatura, ya que este trabajo tiene un rol más fundacional:
-      implementar técnicas de ML en AxLS, y no necesariamente busca obtener los
-      mejores resultados posibles. Sin embargo, en caso de similitud entre
-      métodos en los demás criterios, se podrá considerar cuál ha obtenido
-      mejores resultados en otros estudios.
-\end{itemize}
+% TODO: Moví los criterios de diseño, modificar párrafo de arriba
 
 \subsection{Escogencia de categoría}
 
@@ -281,23 +240,35 @@ El flujo completo de utilizar esta clase con las utilidades de AxLS conlleva los
 
 \section{Recolección de resultados.}
 
-% TODO
-%
-% 1. Se definieron las tablas de resultados que se deseaban generar.
-% 2. Se implementaron utilidades para fácilmente generar sets de datos para cada circuito y para ejecutar cualquier método de la herramienta.
-% 3. Se creó una utilidad para pasar de vcd a saif en Rust para realizarlo más rápido.
-%   - Incluir banderas de configuración.
-%   - Incluir facilidad para separar el set de datos en prueba y verificación.
-% 4. Después de exprimentar con todos los métodos de la herramienta, se
-% decidieron excluir ccarving y significance del estudio porque requieren mucha
-% configuración y prueba y error para obtener los mejores resultados y se decidió
-% que esto se sale del alcance.
-% 5. Se decidió limitar los sets de datos dependiendo de cuánto duren en simularse.
-%   - Primero dar introducción de los circuitos benchmarks a utilizar y el tipo de nombres con el que se refieren.
-% 6. Se realizaron simulaciones cortas de todos los circuitos para obtener información del tiempo que duran en simularse.
-% 7. Se ajustaron los sets de datos para ser de 2 segundos, debido a los métodos de poda.
-% 8. Bajo esta métrica, los circuitos grandes tendrían sets de datos muy pequeños y no representativos, entonces se excluyeron.
-% 9. También se excluyeron el fir y el invk2j debido a implementaciones erróneas.
-% 10. También se excluyeron algunos por durar demasiado en la poda, culpa de usar métrica mred con valores muy grandes.
+ TODO
+
+ 1. Se definieron las tablas de resultados que se deseaban generar.
+
+ 2. Se implementaron utilidades para fácilmente generar sets de datos para cada circuito y para ejecutar cualquier método de la herramienta.
+
+ 3. Se creó una utilidad para pasar de vcd a saif en Rust para realizarlo más rápido.
+
+   - Incluir banderas de configuración.
+
+   - Incluir facilidad para separar el set de datos en prueba y verificación.
+
+ 4. Después de exprimentar con todos los métodos de la herramienta, se
+ decidieron excluir ccarving y significance del estudio porque requieren mucha
+ configuración y prueba y error para obtener los mejores resultados y se decidió
+ que esto se sale del alcance.
+
+ 5. Se decidió limitar los sets de datos dependiendo de cuánto duren en simularse.
+   - Primero dar introducción de los circuitos benchmarks a utilizar y el tipo de nombres con el que se refieren.
+
+ 6. Se realizaron simulaciones cortas de todos los circuitos para obtener información del tiempo que duran en simularse.
+
+ 7. Se ajustaron los sets de datos para ser de 2 segundos, debido a los métodos de poda.
+
+ 8. Bajo esta métrica, los circuitos grandes tendrían sets de datos muy pequeños y no representativos, entonces se excluyeron.
+
+ 9. También se excluyeron el fir y el invk2j debido a implementaciones erróneas.
+
+ 10. También se excluyeron algunos por durar demasiado en la poda, culpa de usar métrica mred con valores muy grandes.
 
 \section{Análisis de los resultados obtenidos}
+
