@@ -85,15 +85,14 @@ optimizar circuitos complejos, lo que los convierte en una herramienta valiosa
 para la optimización multi-nivel. \cite{ammes_two-level_2022}
 
 En este contexto, en los últimos años se ha explorado con gran éxito la
-aplicación de técnicas de ML para ALS \cite{pasandi_approximate_2019},
-\cite{rai_logic_2021}, \cite{berndt_review_2022},
-\cite{prats_ramos_impact_2024}. Gracias a su capacidad de generalizar
-funciones, el aprendizaje de funciones booleanas ha sido una de las técnicas de
-ML más exploradas y útiles para la generación de circuitos aproximados. Esta
-efectividad se debe a que, al aprender una función, el modelo busca cubrir
-todas las posibles soluciones de manera eficiente. Así, logra un buen
-equilibrio entre precisión y rendimiento, lo que permite crear circuitos
-eficientes sin perder demasiada exactitud.
+aplicación de técnicas de ML para ALS \cite{pasandi_approximate_2019,
+rai_logic_2021, berndt_review_2022, prats_ramos_impact_2024}. Gracias a su
+capacidad de generalizar funciones, el aprendizaje de funciones booleanas ha
+sido una de las técnicas de ML más exploradas y útiles para la generación de
+circuitos aproximados. Esta efectividad se debe a que, al aprender una función,
+el modelo busca cubrir todas las posibles soluciones de manera eficiente. Así,
+logra un buen equilibrio entre precisión y rendimiento, lo que permite crear
+circuitos eficientes sin perder demasiada exactitud.
 
 \subsection{Métricas de error}
 
@@ -149,10 +148,10 @@ La tasa de error (Error Rate, ER) corresponde con la probabilidad de observar
 uno o más bits erróneos en la salida. ER es la métrica más comúnmente utilizada
 en la aproximación de circuitos, siendo aplicada en circuitos tanto generales
 como aritméticos \cite{ammes_two-level_2022}. El cálculo del ER se presenta en
-la ecuación (\ref{eq:ER}).
+la ecuación (\ref{eq:ER}),
 
 \begin{equation} \label{eq:ER}
-  ER = \frac{1}{N} \sum_{\forall x \in N} f(x) \neq f'(x)
+  ER = \frac{1}{N} \sum_{\forall x \in N} f(x) \neq f'(x).
 \end{equation}
 
 \subsubsection{Distancia de Hamming promedio}
@@ -161,10 +160,10 @@ La distancia de Hamming promedio (Mean Hamming Distance, MHD), también llamada
 tasa de error de bits, representa la cantidad de bits de salida erróneos en
 promedio. Esta tasa fue propuesta como una variación de ER para evaluar
 aproximaciones con múltiples salidas. El cálculo del MHD se presenta en la
-ecuación (\ref{eq:MHD}).
+ecuación (\ref{eq:MHD}),
 
 \begin{equation} \label{eq:MHD}
-  MHD = \frac{1}{N} \sum_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
+  MHD = \frac{1}{N} \sum_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x).
 \end{equation}
 
 \subsubsection{Peor distancia de Hamming}
@@ -172,10 +171,10 @@ ecuación (\ref{eq:MHD}).
 La peor distancia de Hamming (Worst Hamming Distance, WHD) representa la mayor
 distancia de Hamming entre las salidas originales y las aproximadas. Se utiliza
 para verificar cuál es el peor caso en cantidad de bits de salida erróneos. El
-cálculo del WHD se presenta en la ecuación (\ref{eq:WHD}).
+cálculo del WHD se presenta en la ecuación (\ref{eq:WHD}),
 
 \begin{equation} \label{eq:WHD}
-  WHD = \max_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x)
+  WHD = \max_{\forall x \in N} \sum_{i=0}^{n-1} f_i(x) \oplus f'_i(x).
 \end{equation}
 
 \subsubsection{Error en el peor caso}
@@ -184,20 +183,20 @@ El error en el peor caso (Worst Case Error, WCE) representa la mayor diferencia
 absoluta en magnitud entre las salidas del circuito original y el aproximado.
 Es la métrica más comúnmente utilizada en el diseño aritmético
 \cite{ammes_two-level_2022}. El cálculo del WCE se presenta en la ecuación
-(\ref{eq:WHD}).
+(\ref{eq:WHD}),
 
 \begin{equation} \label{eq:WCE}
-  WHD = \max_{\forall x \in N} \left| f(x) - f'(x) \right|
+  WHD = \max_{\forall x \in N} \left| f(x) - f'(x) \right|.
 \end{equation}
 
 \subsubsection{Error absoluto medio}
 
 El error absoluto medio (Mean Absolute Error, MAE) representa la diferencia en
 magnitud media entre las salidas del circuito original y el aproximado. El
-cálculo del MAE se presenta en la ecuación (\ref{eq:MAE}).
+cálculo del MAE se presenta en la ecuación (\ref{eq:MAE}),
 
 \begin{equation} \label{eq:MAE}
-  MAE = \frac{1}{N} \sum_{\forall x \in N} \left| f(x) - f'(x) \right|
+  MAE = \frac{1}{N} \sum_{\forall x \in N} \left| f(x) - f'(x) \right|.
 \end{equation}
 
 \subsubsection{Error relativo medio}
