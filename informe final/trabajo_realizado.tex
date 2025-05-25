@@ -1,26 +1,24 @@
 \chapter{Descripción del trabajo realizado}
 
-CAPÍTULO EN PROGRESO NO TERMINADO.
-
-La mayoría que escribí aquí iba a ir en el Marco Metodológico y luego me di
-cuenta que iba a calzar mejor en este capítulo.
-
-% TODO: Agregar intro
+Este capítulo consta de dos secciones principales. La primera presenta el
+proceso seguido en función del marco metodológico: actividades realizadas,
+retos encontrados, decisiones de diseño tomadas. La segunda sección presenta el
+análisis de los resultados obtenidos por el proyecto, enfocado en comparar el
+método de ML integrado en AxLS con otros métodos previamente existentes.
 
 \section{Descripción del proceso de solución}
 
-% TODO: agregar intro
+El proceso para llegar a la solución siguió la estructura planteada en el marco
+metodológico, que la Figura \ref{fig:diagrama_metodológico} resume visualmente.
 
-% TODO: reescribr texto para que suene más como trabajo realizado y no tanto
-%       como marco metrodológico
+\subsection{Experimentación con AxLS}
 
-\section{Experimentación con AxLS}
-
-El objetivo de esta actividad fue familiarizar al autor con la herramienta AxLS,
-sus módulos existentes y formar una mejor idea de lo que tomaría el proyecto.
-Se decidió intentar crear una prueba de concepto de lo que sería la verdadera
-implementación de ML dentro de la herramienta.
-Se decidió que en el lapso de una semana se intentaría implementar un DT. Se
+El objetivo de esta actividad fue familiarizar al autor con la herramienta
+AxLS, sus módulos existentes y formar una mejor idea de lo que tomaría el
+proyecto. Se decidió intentar crear una prueba de concepto de lo que sería la
+verdadera implementación de ML dentro de la herramienta, como ejercicio de
+familiarización.
+En el lapso de una semana se intentaría implementar un DT. Se
 escogió utilizar un DT porque es una técnica fácil de utilizar correctamente,
 cuya implementación ya existe en la biblioteca \emph{scikit-learn} y que se
 entrena rápidamente.
@@ -47,21 +45,19 @@ errores. Se decidió no dedicar más tiempo a intentar corregirlos, porque no
 había certeza de que esa fuera la técnica final que se escogería para agregar
 propiamente a AxLS.
 
-\section{Escogencia de método ML}
+\subsection{Escogencia de método ML}
 
-Para la escogencia del método ML, como se discutió en el Marco Metodológico, se
-realizó un análisis de diseño explorando las diferentes posibles técnicas
-utilizadas en el estado del arte y justificando cuál era más apropiada para
-este proyecto.
+Para escoger el método de ML, se siguieron los criterios planteados en el marco
+metodológico, en la sección \ref{sec:seleccion_ml}. Después de una revisión
+bibliográfica exhaustiva sobre técnicas de ML aplicadas a ALS, se realizó un
+análisis explorando las diferentes técnicas utilizadas en el estado del arte.
+Finalmente, se justificó cuál era la más apropiada para este proyecto.
 
-% TODO: Moví los criterios de diseño, modificar párrafo de arriba
+\subsubsection{Escogencia de categoría}
 
-\subsection{Escogencia de categoría}
-
-En el siguiente paso se hizo una revisión de literatura sobre aplicación de
-métodos de ML en ALS.
-Como se discute en la sección \ref{sec:trabajos_similares}, se identificaron 3
-categorías principales de aplicación de métodos de ML en ALS:
+Como se discute en la sección \ref{sec:trabajos_similares}, en la bibliografía
+se identificaron 3 categorías principales de aplicación de métodos de ML en
+ALS:
 
 \begin{enumerate}
     \item Técnicas que entrenan modelos para asistir en otros métodos de ALS,
@@ -72,7 +68,8 @@ categorías principales de aplicación de métodos de ML en ALS:
       de un circuito, y luego se mapea a hardware.
 \end{enumerate}
 
-Se escogió la categoría 3 debido a las siguientes consideraciones:
+Para el método a implementar en la herramienta AxLS se escogió la categoría 3
+debido a las siguientes consideraciones:
 
 \begin{itemize}
     \item Se descartó completamente la categoría 2 por el criterio de
@@ -91,14 +88,14 @@ Se escogió la categoría 3 debido a las siguientes consideraciones:
     \end{itemize}
 \end{itemize}
 
-\subsection{Escogencia de método}
+\subsubsection{Escogencia de método}
 
 Se evaluaron los métodos disponibles dentro de la categoría 3, y sus
 consideraciones se discuten a continuación. En la sección
 \ref{sec:trabajos_similares} se adentra más en los métodos de las otras
 categorías.
 
-\subsubsection{Árbol de decisiones}
+\paragraph{Árbol de decisiones}
 
 \begin{itemize}
     \item Es el método más estudiado en la literatura, 7 de las 10 referencias
@@ -120,7 +117,7 @@ que se han estudiado, como en \cite{hu_optdtals_2024} o
 método más general para tener una base de comparación y dejar cualquier mejora
 para un trabajo futuro.
 
-\subsubsection{Bosque aleatorio}
+\paragraph{Bosque aleatorio}
 
 \begin{itemize}
     \item Fue explorada en 2 de las referencias estudiadas, las cuales son del
@@ -132,7 +129,7 @@ para un trabajo futuro.
       específico.
 \end{itemize}
 
-\subsubsection{Programación genética cartesiana}
+\paragraph{Programación genética cartesiana}
 
 \begin{itemize}
     \item Esta técnica usa algoritmos evolutivos para generar circuitos,
@@ -149,7 +146,7 @@ para un trabajo futuro.
       completo.
 \end{itemize}
 
-\subsubsection{Perceptrón multicapa}
+\paragraph{Perceptrón multicapa}
 
 \begin{itemize}
     \item Esta técnica es explorada en 4 de las referencias utilizadas, con 3
@@ -167,11 +164,11 @@ para un trabajo futuro.
       fallar.
 \end{itemize}
 
-\subsubsection{Método escogido}
+\paragraph{Método escogido}
 
 Tomando en cuenta las consideraciones dadas para cada método se decidió
-implementar el DT, principalmente por su alta viabilidad y relevancia dentro de
-la literatura.
+implementar DT, principalmente por su alta viabilidad y relevancia dentro de la
+literatura.
 
 Se considera que además es una buena base para trabajo futuro en el que se implemente alguna variación de la técnica como RF, o las presentadas en \cite{hu_optdtals_2024}, \cite{zeng_sampling-based_2021} o \cite{huang_circuit_2023}.
 
@@ -237,7 +234,32 @@ El flujo completo de utilizar esta clase con las utilidades de AxLS conlleva los
   \label{fig:flow}
 \end{figure}
 
-\section{Recolección de resultados.}
+Para validar la implementación se hicieron pruebas con un circuito sumador de 9
+bits de entrada (dos entradas de 4 bits y 1 bit de acarreo). Las pruebas
+examinaron los productos intermedios generados y el rendimiento del circuito
+final para verificar su correcta implementación. Varias de las pruebas se
+hicieron utilizando un DT sin profundidad máxima, que para este pequeño
+circuito es capaz de memorizar todos los pares de entradas y salidas, generando
+resultados exactos.
+
+\begin{itemize}
+  \item Se verificó que las entradas y salidas del circuito de Verilog generado
+    calzaban correctamente a través de inspección manual y revisando que las
+    salidas al simular el circuito coinciden con las salidas al manipular el DT
+    en software directamente.
+  \item Utilizando un DT sin profundidad máxima, se verificó en software que
+    las salidas correspondían con lo esperado dependiendo de las entradas. Por
+    ejemplo si las entradas son ${3, 4, 1}$, la salida sería $8$ en binario.
+  \item Utilizando un DT sin profundidad máxima, el circuito aproximado debería
+    tener error de $0\%$ y se esperaría que tenga un área mayor al circuito
+    original, ya que memorizar los pares de entradas y salidas es menos
+    eficiente que programar la estructura de un sumador.
+  \item Al reducir la profundidad máxima del DT, el área del circuito generado
+    debía disminuir y el error aumentar.
+\end{itemize}
+
+
+\subsection{Recolección de resultados.}
 
  TODO
 
