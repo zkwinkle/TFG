@@ -27,16 +27,16 @@ uno de los circuitos de benchmark y se identificó cómo realizar los pasos
 necesarios para la implementación de la técnica:
 
 \begin{itemize}
-    \item Sintetización del circuito original.
-    \item Simulación del circuito original para obtener los datos de entrenamiento.
-    \item Lectura de los datos de entrada y salida del circuito original para
-      entrenar el árbol de decisiones.
-    \item Entrenamiento del árbol de decisiones con implementación de
-      \emph{scikit-learn}.
-    \item Mapeo del árbol de decisiones a un circuito Verilog a través de
-      expansión de Boole.
-    \item Sintetización y simulación del circuito aproximado.
-    \item Evaluación de técnicas de error.
+  \item Sintetización del circuito original.
+  \item Simulación del circuito original para obtener los datos de entrenamiento.
+  \item Lectura de los datos de entrada y salida del circuito original para
+    entrenar el árbol de decisiones.
+  \item Entrenamiento del árbol de decisiones con implementación de
+    \emph{scikit-learn}.
+  \item Mapeo del árbol de decisiones a un circuito Verilog a través de
+    expansión de Boole.
+  \item Sintetización y simulación del circuito aproximado.
+  \item Evaluación de técnicas de error.
 \end{itemize}
 
 Cabe notar que la técnica no estaba realmente integrada dentro de la
@@ -60,31 +60,31 @@ se identificaron 3 categorías principales de aplicación de métodos de ML en
 ALS:
 
 \begin{enumerate}
-    \item Técnicas que entrenan modelos para asistir en otros métodos de ALS,
-      acelerando la evaluación de errores al simular cambios en el circuito.
-    \item Técnicas de ML aplicadas a la exploración del espacio de diseño de
-      circuitos.
-    \item Enfoques supervisados donde se entrena un modelo con entradas/salidas
-      de un circuito, y luego se mapea a hardware.
+  \item Técnicas que entrenan modelos para asistir en otros métodos de ALS,
+    acelerando la evaluación de errores al simular cambios en el circuito.
+  \item Técnicas de ML aplicadas a la exploración del espacio de diseño de
+    circuitos.
+  \item Enfoques supervisados donde se entrena un modelo con entradas/salidas
+    de un circuito, y luego se mapea a hardware.
 \end{enumerate}
 
 Para el método a implementar en la herramienta AxLS se escogió la categoría 3
 debido a las siguientes consideraciones:
 
 \begin{itemize}
-    \item Se descartó completamente la categoría 2 por el criterio de
-      viabilidad, ya que las exploraciones o entrenamientos realizados duran
-      horas y son realizados en estaciones de trabajo considerablemente más
-      potentes que lo que se tiene acceso para este proyecto.
-    \item Luego se evaluaron más detenidamente los criterios de escogencia entre
-      las categorías 1 y 3:
+  \item Se descartó completamente la categoría 2 por el criterio de
+    viabilidad, ya que las exploraciones o entrenamientos realizados duran
+    horas y son realizados en estaciones de trabajo considerablemente más
+    potentes que lo que se tiene acceso para este proyecto.
+  \item Luego se evaluaron más detenidamente los criterios de escogencia entre
+    las categorías 1 y 3:
     \begin{itemize}
-        \item Viabilidad: Por lo general los métodos de la categoría 3 tienen
-          un entrenamiento menos extenso y más fáciles de realizar.
-        \item Estado del arte: Hay considerablemente más trabajos de la
-          categoría 3.
-        \item Resultados: En ambas categorías hay resultados competitivos,
-          ninguna es considerablemente más exitosa que la otra.
+      \item Viabilidad: Por lo general los métodos de la categoría 3 tienen
+        un entrenamiento menos extenso y más fáciles de realizar.
+      \item Estado del arte: Hay considerablemente más trabajos de la
+        categoría 3.
+      \item Resultados: En ambas categorías hay resultados competitivos,
+        ninguna es considerablemente más exitosa que la otra.
     \end{itemize}
 \end{itemize}
 
@@ -98,17 +98,17 @@ categorías.
 \paragraph{Árbol de decisiones}
 
 \begin{itemize}
-    \item Es el método más estudiado en la literatura, 7 de las 10 referencias
-      utilizadas lo estudian \cite{de_abreu_fast_2021, miyasaka_logic_2021,
+  \item Es el método más estudiado en la literatura, 7 de las 10 referencias
+    utilizadas lo estudian \cite{de_abreu_fast_2021, miyasaka_logic_2021,
       rai_logic_2021, zeng_sampling-based_2021, huang_circuit_2023,
-      hu_optdtals_2024, prats_ramos_impact_2024}.
-    \item Es muy viable debido a su fácil implementación, disponibilidad en
-      bibliotecas de alto grado como \emph{scikit-learn} y bajo tiempo de
-      entrenamiento. En efecto, ya se había realizado una implementación ad hoc
-      como una prueba de concepto a inicios del proyecto.
-    \item Tiene resultados competitivos. No siempre los mejores, pero por lo
-      general la literatura lo menciona como una de las técnicas más efectivas
-      o la base que están intentando superar con un método más avanzado.
+    hu_optdtals_2024, prats_ramos_impact_2024}.
+  \item Es muy viable debido a su fácil implementación, disponibilidad en
+    bibliotecas de alto grado como \emph{scikit-learn} y bajo tiempo de
+    entrenamiento. En efecto, ya se había realizado una implementación ad hoc
+    como una prueba de concepto a inicios del proyecto.
+  \item Tiene resultados competitivos. No siempre los mejores, pero por lo
+    general la literatura lo menciona como una de las técnicas más efectivas
+    o la base que están intentando superar con un método más avanzado.
 \end{itemize}
 
 Se consideró la posibilidad de implementar alguna de las versiones modificadas
@@ -120,48 +120,48 @@ para un trabajo futuro.
 \paragraph{Bosque aleatorio}
 
 \begin{itemize}
-    \item Fue explorada en 2 de las referencias estudiadas, las cuales son del
-      2021 \cite{miyasaka_logic_2021}, \cite{rai_logic_2021}.
-    \item Son fáciles de implementar, ya que están compuestos por DT.
-    \item Sí ha obtenido mejores resultados que los DT en algunas de las tareas
-      evaluadas dentro de las referencias, particularmente a la hora de
-      generalizar circuitos lógicos y para algunos circuitos aritméticos en
-      específico.
+  \item Fue explorada en 2 de las referencias estudiadas, las cuales son del
+    2021 \cite{miyasaka_logic_2021}, \cite{rai_logic_2021}.
+  \item Son fáciles de implementar, ya que están compuestos por DT.
+  \item Sí ha obtenido mejores resultados que los DT en algunas de las tareas
+    evaluadas dentro de las referencias, particularmente a la hora de
+    generalizar circuitos lógicos y para algunos circuitos aritméticos en
+    específico.
 \end{itemize}
 
 \paragraph{Programación genética cartesiana}
 
 \begin{itemize}
-    \item Esta técnica usa algoritmos evolutivos para generar circuitos,
-      representando sus elementos como un \emph{genotipo} fácilmente mapeable
-      al circuito final.
-    \item Ha sido estudiada en 2 de las referencias utilizadas, las cuales son
-      bastante modernas con la última siendo del 2024
-      \cite{berndt_cgp-based_2022}, \cite{prats_ramos_impact_2024}.
-    \item Esta técnica obtiene resultados muy exitosos en términos del
-      intercambio entre área de circuito y error introducido.
-    \item Se descartó por su alto costo computacional: incluso con un clúster
-      mucho más potente que el equipo disponible, en
-      \cite{berndt_cgp-based_2022} las ejecuciones tomaron hasta un día
-      completo.
+  \item Esta técnica usa algoritmos evolutivos para generar circuitos,
+    representando sus elementos como un \emph{genotipo} fácilmente mapeable
+    al circuito final.
+  \item Ha sido estudiada en 2 de las referencias utilizadas, las cuales son
+    bastante modernas con la última siendo del 2024
+    \cite{berndt_cgp-based_2022}, \cite{prats_ramos_impact_2024}.
+  \item Esta técnica obtiene resultados muy exitosos en términos del
+    intercambio entre área de circuito y error introducido.
+  \item Se descartó por su alto costo computacional: incluso con un clúster
+    mucho más potente que el equipo disponible, en
+    \cite{berndt_cgp-based_2022} las ejecuciones tomaron hasta un día
+    completo.
 \end{itemize}
 
 \paragraph{Perceptrón multicapa}
 
 \begin{itemize}
-    \item Esta técnica es explorada en 4 de las referencias utilizadas, con 3
-      de ellas siendo del 2021 y la última del 2024
-      \cite{boroumand_learning_2021}, \cite{miyasaka_logic_2021},
-      \cite{rai_logic_2021}, \cite{prats_ramos_impact_2024}
-    \item Su viabilidad es limitada por la dificultad de traducirlas a
-      circuitos. Suelen requerir módulos complejos como sumadores y
-      multiplicadores, lo que aumenta mucho el tamaño. Reducir esto implica
-      técnicas como podar conexiones poco importantes o convertir cada nodo del
-      MLP en una LUT mediante cuantización.
-    \item Tienen buenos resultados en sus estudios, particularmente con
-      circuitos aritméticos de adición y multiplicación y aprendiendo la
-      operación lógica de XOR, tareas en las que los otros métodos suelen
-      fallar.
+  \item Esta técnica es explorada en 4 de las referencias utilizadas, con 3
+    de ellas siendo del 2021 y la última del 2024
+    \cite{boroumand_learning_2021}, \cite{miyasaka_logic_2021},
+    \cite{rai_logic_2021}, \cite{prats_ramos_impact_2024}
+  \item Su viabilidad es limitada por la dificultad de traducirlas a
+    circuitos. Suelen requerir módulos complejos como sumadores y
+    multiplicadores, lo que aumenta mucho el tamaño. Reducir esto implica
+    técnicas como podar conexiones poco importantes o convertir cada nodo del
+    MLP en una LUT mediante cuantización.
+  \item Tienen buenos resultados en sus estudios, particularmente con
+    circuitos aritméticos de adición y multiplicación y aprendiendo la
+    operación lógica de XOR, tareas en las que los otros métodos suelen
+    fallar.
 \end{itemize}
 
 \paragraph{Método escogido}
@@ -171,7 +171,6 @@ implementar DT, principalmente por su alta viabilidad y relevancia dentro de la
 literatura.
 
 Se considera que además es una buena base para trabajo futuro en el que se implemente alguna variación de la técnica como RF, o las presentadas en \cite{hu_optdtals_2024}, \cite{zeng_sampling-based_2021} o \cite{huang_circuit_2023}.
-
 
 \section{Implementación de técnica de ML}
 
@@ -247,7 +246,7 @@ resultados exactos.
     calzaban correctamente a través de inspección manual y revisando que las
     salidas al simular el circuito coinciden con las salidas al manipular el DT
     en software directamente.
-  \item Utilizando un DT sin profundidad máxima, se verificó en software que
+  \item Utilizando un DT sin profundidad máxima, se validó en software que
     las salidas correspondían con lo esperado dependiendo de las entradas. Por
     ejemplo si las entradas son ${3, 4, 1}$, la salida sería $8$ en binario.
   \item Utilizando un DT sin profundidad máxima, el circuito aproximado debería
@@ -258,38 +257,340 @@ resultados exactos.
     debía disminuir y el error aumentar.
 \end{itemize}
 
-
 \subsection{Recolección de resultados.}
 
- TODO
+Para la recolección de resultados, como se describió en la sección
+\ref{sec:metodologia_resultados}, se definieron los resultados deseados y los
+experimentos necesarios, se creó una API para proveer un uso más abstraído de
+la herramienta AxLS, se creó una CLI que exponía la API para terminal y se
+escribió software externo a la herramienta para la generación programática de
+los resultados.
 
- 1. Se definieron las tablas de resultados que se deseaban generar.
+\subsubsection{Definición de experimentos}
 
- 2. Se implementaron utilidades para fácilmente generar sets de datos para cada circuito y para ejecutar cualquier método de la herramienta.
+El primer paso que se tomó como parte de la etapa de recolección de resultados
+fue definir los resultados que se deseaban generar. Este paso era esencial para
+definir las capacidades que debía exponer la API y los scripts externos que la
+utilizarían.
 
- 3. Se creó una utilidad para pasar de vcd a saif en Rust para realizarlo más rápido.
+En concordancia con el tercer objetivo específico, se buscó recolectar datos de
+ejecución de la técnica de DT y de otros métodos dentro de la herramienta. Las
+métricas medidas serían todas para las que la herramienta AxLS tiene soporte:
 
-   - Incluir banderas de configuración.
+\begin{itemize}
+  \item Área del circuito.
+  \item Métricas de error del circuito:
+    \begin{itemize}
+      \item ER.
+      \item MHD.
+      \item WHD.
+      \item MAE.
+      \item MSE.
+    \end{itemize}
+\end{itemize}
 
-   - Incluir facilidad para separar el set de datos en prueba y verificación.
+También se decidió medir el tiempo de ejecución de cada método. La herramienta
+AxLS no proveía soporte para esto directamente, ya que Python ofrece muchas
+utilidades para medición de tiempo. Pero para la facilidad de los usuarios esta
+métrica se agregó a la API de ejecución simplificada.
 
- 4. Después de exprimentar con todos los métodos de la herramienta, se
- decidieron excluir ccarving y significance del estudio porque requieren mucha
- configuración y prueba y error para obtener los mejores resultados y se decidió
- que esto se sale del alcance.
+Los resultados recolectados siempre incluirían estas métricas. Se busca obtener
+los mejores resultados posibles para cada uno de los métodos para realizar
+una comparación justa. Se compararon los siguientes métodos, considerando las
+variaciones a probar para sistemática intentar obtener los mejores resultados
+para cada uno:
 
- 5. Se decidió limitar los sets de datos dependiendo de cuánto duren en simularse.
-   - Primero dar introducción de los circuitos benchmarks a utilizar y el tipo de nombres con el que se refieren.
+\begin{itemize}
+  \item Métodos de poda: Esto incluye el resto de métodos previamente
+    disponibles en AxLS. Para estos métodos se selecciona un umbral de error y
+    se poda el circuito hasta alcanzar el umbral. Se probarían con y sin
+    resíntesis, aunque según \cite{morales-monge_improving_2024}, la resíntesis
+    casi siempre debería de ser beneficiosa.
+  \item DT: Se decidió variar la máxima profundidad del árbol, si utilizar un
+    solo árbol multi-salida o múltiples árboles con uno por salida y si aplicar
+    resíntesis o no.
+\end{itemize}
 
- 6. Se realizaron simulaciones cortas de todos los circuitos para obtener información del tiempo que duran en simularse.
+La intención era probar todos los métodos de poda disponibles dentro de la
+herramienta AxLS, pero al experimentar se notó que \texttt{ccarving} y
+\texttt{significance} requerirían mucha configuración para obtener resultados
+óptimos. Esto es debido a que estos métodos se basan en una métrica de
+``significancia'' para escoger cuáles nodos de un circuito podar, la cual se
+asigna a los nodos del circuito basado en una entrada de las significancias de
+cada salida. Se decidió que seleccionar manualmente la significancia de las
+salidas de manera óptima para todos los circuitos que se probarían se sale del
+alcance de este proyecto. El método \texttt{ccarving} también podría utilizar
+métricas diferentes, pero también se decidió que evaluar diferentes métricas
+para este método se sale del alcance del proyecto.
 
- 7. Se ajustaron los sets de datos para ser de 2 segundos, debido a los métodos de poda.
+Como los métodos de poda tienen un umbral de error controlable, pero el método
+de DT no, es que se prueban múltiples profundidades máximas para este método.
+Al permitir mayor profundidad de árbol, se espera que el árbol haga un mejor
+trabajo de aprender la función, reduciendo su error a pesar de que el circuito
+final requiera más área.
 
- 8. Bajo esta métrica, los circuitos grandes tendrían sets de datos muy pequeños y no representativos, entonces se excluyeron.
+\subsubsection{Creación de API simplificada y CLI}
 
- 9. También se excluyeron el fir y el invk2j debido a implementaciones erróneas.
+Para la creación de la API simplificada para la ejecución de AxLS, en base con
+los resultados que se desean generar y en general permitir una ejecución
+configurable de los métodos de AxLS, se definieron los siguientes
+requerimientos:
 
- 10. También se excluyeron algunos por durar demasiado en la poda, culpa de usar métrica mred con valores muy grandes.
+\begin{itemize}
+  \item Poder ejecutar cualquiera de los métodos dentro de AxLS:
+    \begin{itemize}
+      \item \texttt{ccarving}: Tallado de circuitos, como se presenta en
+        \cite{scarabottolo_circuit_2018}.
+      \item \texttt{significance}: Poda a nivel de compuertas basado en
+        significancia, como se presenta en \cite{schlachter_design_2017}.
+      \item \texttt{inconst}: Poda nodos del circuito bajo la suposición de que
+        algunas entradas son constantes. Al ejecutarlo a través de la API se
+        inicia asumiendo que los bits de entrada menos significativos son
+        constantes y al podar todos los nodos sugeridos se asume que el
+        siguiente bit es constante y se continúa hasta alcanzar alguna
+        condición de parada.
+      \item \texttt{outconst}: Igual que \texttt{inconst}, pero asumiendo que
+        algunas de las salidas son constantes.
+      \item \texttt{probprun}: Basado en información de temporización adquirida
+        a través de la simulación de circuitos, recomienda podar nodos en función
+        del tiempo que permanecieron en un valor específico, 0 o 1, lo que
+        indica los nodos que asumieron un valor particular la mayor parte del
+        tiempo.
+      \item \texttt{decision\_tree}: El método de DT.
+    \end{itemize}
+  \item Aceptar todos los parámetros de configuración necesarios de cada
+    método.
+    \begin{itemize}
+      \item Parámetros que todos los métodos aceptan: Si utilizar resíntesis, si
+        separar el set de datos en un set de prueba y otro de validación.
+      \item En común para todos los métodos de poda: Umbral de error, cuántos
+        nodos podar en cada iteración.
+      \item \texttt{ccarving} y \texttt{significance}: Una lista de las
+        significancias de cada bit de salida.
+      \item \texttt{decision\_tree}: Profundidad máxima del árbol, si utilizar un
+        árbol multi-salida o múltiples árboles con uno para cada salida.
+    \end{itemize}
+  \item Medir el tiempo de las ejecuciones y ofrecerlo como una de las métricas
+    medibles al ejecutar un método.
+  \item Controlar mostrar el progreso de las simulaciones de los circuitos.
+  \item Capacidad de generar un CSV con los resultados de la ejecución, o
+    agregar los datos a un CSV existente.
+\end{itemize}
+
+Se decidió separar el set de datos en uno de prueba y otro de validación
+porque, en circuitos grandes, no es posible generar todas las combinaciones
+posibles de entradas. Esto se debe a que la cantidad de entradas crece de forma
+exponencial con la fórmula $2^n$ donde $n$ es la cantidad de bits de entrada.
+Por eso, se permite dividir el set de datos para usar una parte en validar si
+el método funciona bien con entradas que no se vieron durante la ejecución.
+
+Esta técnica es común en el dominio de ML, ya que ayuda a saber si un modelo
+generaliza bien o si está muy ajustado a los datos con los que fue entrenado.
+En este caso se usó principalmente para evaluar la capacidad de generalización del método de DT, pero también sirve con los métodos de poda.
+Ahí ayuda a ver si el umbral de error alcanzado se debe solo al set de prueba o
+si en realidad representa bien lo que haría el circuito con cualquier entrada.
+En el caso de \texttt{probprun}, que trabaja con datos simulados, el set de
+validación permite comprobar si el circuito aproximado solo funciona bien con
+esos datos o si generaliza bien a cualquier entrada.
+
+El requerimiento de poder controlar si se muestra el progreso de las
+simulaciones se agregó porque AxLS solía siempre mostrar el progreso de las
+simulaciones a través de la terminal, pero con experimentación se notó que si
+no mostraba el progreso entonces la simulación se ejecuta más velozmente. Igual
+se mantuvo la opción de mostrar el progreso si se desea para motivos de depurar
+errores o simplemente querer saber el progreso de una ejecución.
+
+La opción para agregar los resultados obtenidos a un CSV se agregó por motivos
+de generación de resultados. Se decidió utilizar el formato CSV porque es
+ampliamente utilizado, legible por humanos y por máquinas, fácil de entender,
+fácil de generar y tiene soporte de muchas herramientas.
+
+Todas estas opciones fueron fáciles de exponer a través de una CLI. A la API
+simplificada no se le agregaron opciones para generación de sets de datos porque
+AxLS ya previamente proveía una API muy simple para esto, la cual
+adicionalmente se expuso a través de la CLI para fácil generación de sets de
+datos para simulación.
+
+Para validar la implementación de la API se probó ejecutar todos los métodos de
+manera manual con programas de Python que utilizan AxLS como biblioteca y a
+través de la CLI. Al utilizar el mismo set de datos al aproximar un circuito
+con el programa y con la CLI, todos generaron circuitos idénticos.
+
+\subsubsection{Generación de resultados}
+
+Al finalizar la API para ejecutar los métodos de AxLS, se empezó a trabajar en
+la generación de los resultados deseados.
+
+El primer paso era generar los sets de datos que se utilizarían para cada
+circuito. Para circuitos pequeños, aquellos con 16 bits de entrada o menos, se
+pueden generar todas las entradas posibles que pueden tener.
+Por lo tanto, para los circuitos pequeños se generaron sets de datos
+exhaustivos, que contienen todas las entradas posibles del circuito.
+Para lograr esto se tuvo que agregar funcionalidad adicional a AxLS para poder
+generar sets de datos sin repetición.
+
+Para circuitos grandes se vuelve imposible utilizar sets de datos exhaustivos o
+representativos. Por ejemplo, en un circuito de 32 bits de entrada, hay \num{4.3e9}
+posibles entradas al circuito. Aunque se utilice un set de datos de 1 millón de
+entradas, eso solo representaría un $2.3\%$ de las entradas posibles del
+circuito. Para circuitos mayores es mucho peor, debido al crecimiento
+exponencial de la cantidad de posibles entradas, para un circuito de 64 bits o
+128 bits de entrada se vuelve completamente inviable generar un set de datos
+representativo. Generar un $1\%$ de sus posibles entradas requeriría más memoria
+de la que tiene cualquier disco duro moderno.
+
+Otro motivo que complica usar grandes sets de datos es que entre más grande sea
+el circuito, más procesamiento requiere simularlo. Un circuito siempre se tiene
+que simular al final de una ejecución para medir sus métricas de error. Además,
+el método \texttt{probprun} requiere una simulación previa para recolectar
+datos de temporización. Y posiblemente lo peor es que todos los métodos de poda
+requieren múltiples simulaciones debido al proceso que siguen:
+
+\begin{enumerate}
+  \item Podar uno o múltiples nodos.
+  \item Simular el circuito podado para evaluar el error introducido.
+  \item Si el error introducido es menor al umbral definido, volver al paso 1.
+  \item Si el error es mayor al umbral definido, se reincorporan los últimos
+    nodos podados hasta que el error vuelva a estar por debajo del umbral.
+\end{enumerate}
+
+Este procedimiento también se muestra visualmente en la Figura
+\ref{fig:flow_poda}.
+
+\begin{figure}[htb]
+  \begin{center}
+    \includesvg[width=0.5\textwidth]{./imágenes/prune_flowchart.svg}
+  \end{center}
+  \caption{Diagrama de flujo del proceso seguido con los métodos de poda.}
+  \label{fig:flow_poda}
+\end{figure}
+
+Tomando en cuenta estas limitaciones, se tuvo que definir de qué tamaño hacer
+los sets de datos para evitar problemas durante la ejecución. Como la
+simulación de los circuitos es una de las etapas que más tiempo consume,
+especialmente en los métodos de poda, se decidió que el tamaño del set de datos
+dependiera de cuánto tardaba la simulación.
+
+Con eso en mente, se hicieron simulaciones de \num{1000} elementos para medir
+cuánto tardaba, en promedio, cada circuito en procesar un solo elemento. Con
+ese dato se estimó el tamaño adecuado de los sets de datos. Los resultados de
+esta prueba se muestran en el apéndice, en la Tabla \ref{tab:timing_info}. Se
+escogió arbitrariamente un tiempo de simulación de $\SI{2}{\second}$ como un
+límite corto que permitiera ejecutar los métodos de poda en un tiempo razonable.
+Para el método \texttt{decision\_tree} se utilizó un set de datos más grande,
+ya que no tiene que realizar tantas simulaciones y un método ML se beneficia
+mucho más de tener mayor cantidad de datos. Se optó por un set de datos que
+correspondiera con una simulación de $\SI{20}{\second}$, como un tamaño
+considerablemente más grande pero que no fuese a causar tiempos de ejecución
+demasiado largos.
+
+Basado en esa prueba, se decidió excluir algunos circuitos del resto del
+proceso de recolección de resultados. La mayoría se descartaron por ser
+demasiado lentos en simulación; algunos incluso se cancelaron sin terminar.
+Otros sí completaron la prueba, pero fueron eliminados porque el set de datos
+que se podía generar para $\SI{2}{\second}$ de simulación era demasiado pequeño
+y no podría representar bien el error introducido. También se excluyeron algunos
+porque no estaban funcionando bien. Finalmente, unos pocos se descartaron
+aunque sí se podían simular en $\SI{2}{\second}$, ya que los métodos de poda
+nunca lograron completarse y fue necesario cancelarlos después de horas sin
+alcanzar el umbral de error. La Tabla \ref{tab:exclusiones} detalla las razones
+por las que se excluyó cada circuito.
+
+
+\begin{table}[htb]
+  \centering
+  \caption{Circuitos excluidos de la recolección de resultados y sus motivos.}
+  \label{tab:exclusiones}
+  \begin{tabular}{M{0.2\linewidth}M{0.5\linewidth}}
+    \toprule
+    Circuito & Motivo de exclusión \\
+    \midrule
+    hyp\_128b &  \multirow{4}{\linewidth}{Demasiado lentos en simular, no
+    terminaron la prueba de \num{1000} datos de entrada.} \\
+    sqrt\_128b & \\
+    mul\_64b & \\
+    log2\_32b & \\
+    \midrule
+
+    div\_64b &        \multirow{7}{\linewidth}{Lentos en simular, el set de
+    datos generado para una simulación de $\SI{2}{\second}$ sería de menos de
+    mil datos.} \\
+    square\_64b &            \\
+    fwrdk2j &                \\
+    Mul\_32b &              \\
+    sin\_24b &              \\
+    voter &                  \\
+    RForest &                \\
+    \midrule
+
+    max\_128b &       \multirow{2}{\linewidth}{Por su complejidad, los métodos
+    de poda duraron demasiado y se cancelaron. }       \\
+    adder\_128b &            \\
+    \midrule
+    invk2j & \multirow{2}{\linewidth}{Tienen errores que no permiten sintetizar
+    o simular correctamente.} \\
+    fir &  \\
+    \bottomrule
+  \end{tabular}
+
+\end{table}
+
+Otro cuello de botella identificado es la creación de archivos en formato SAIF
+\cite{amd_vivado_2024}. Estos archivos contienen la información de
+temporización que usa el método \texttt{probprun}. Para generarlos, primero se
+debe simular el circuito deseado. Durante esta simulación, se escribe la
+información de ejecución en un archivo VCD. Este archivo guarda los cambios de
+valor de cada nodo del circuito \cite{noauthor_ieee_nodate}, así que su tamaño
+crece dependiendo del tamaño del circuito y de cuántos datos de entrada se usen
+en la simulación.
+
+Una vez generado el archivo VCD, este se utiliza como base para crear el
+archivo SAIF.
+
+Para convertir un archivo VCD a SAIF, AxLS incluye un script en Python llamado
+\texttt{vcd2saif.py}. Se verificó mediante una prueba sencilla que, entre más
+grande sea el set de datos, más tiempo toma ejecutar esta conversión. Los
+resultados de esa prueba se muestran en la Tabla \ref{tab:vcd2saif}.
+
+\begin{table}[htb]
+  \centering
+  \caption{Pruebas de tiempo de ejecución de \texttt{vcd2saif.py} en el archivo VCD generado con el circuito BK\_16b.}
+  \label{tab:vcd2saif}
+
+  \begin{tabular}{M{0.2\linewidth}M{0.2\linewidth}}
+    \toprule
+    Tamaño de set de datos simulado & Tiempo de ejecución (\si{\milli\second}) \\
+    \midrule
+    \num{1000} & \num{7.60} \\
+    \num{4000} & \num{29.54} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Tomando en cuenta que la simulación de \num{4000} datos para este circuito dura
+menos de $\SI{200}{\milli\second}$, pero la generación del archivo SAIF toma
+casi medio minuto, se decidió que valía la pena intentar acelerar este proceso.
+Al revisar la función en Python, se notó que no hace nada muy complejo, pero sí
+recorre línea por línea todo el archivo VCD. Estos archivos crecen muy rápido.
+Por ejemplo, para el circuito BK\_16b, con una simulación de \num{4000}
+combinaciones de entrada, el archivo VCD llega a tener \num{724000} líneas.
+
+Como Python es conocido por ser lento, se decidió reescribir la utilidad
+\texttt{vcd2saif} en un lenguaje más rápido. Los principales candidatos fueron
+lenguajes compilados como C, Go y Rust. Se eligió Rust porque el autor ya tenía
+experiencia con él, ofrece buen rendimiento y tiene muchas herramientas útiles
+para escribir una CLI de forma rápida \cite{bugden2022rust}.
+
+Una vez terminada la nueva versión en Rust, se repitió el experimento con el
+circuito BK\_16b y \num{4000} datos de entrada. La utilidad en Rust tardó solo
+$\SI{1.43}{\second}$ en una tarea que con la versión en Python tomaba casi
+medio minuto. Gracias a esto, el tiempo de generación del archivo SAIF se
+redujo a aproximadamente una vigésima parte del original.
+
+Finalmente, tras realizar los experimentos definidos previamente, se
+recolectaron los datos necesarios para evaluar el desempeño de la técnica
+implementada. A continuación, se presenta un análisis detallado de los
+resultados obtenidos.
 
 \section{Análisis de los resultados obtenidos}
 
