@@ -480,8 +480,8 @@ límite corto que permitiera ejecutar los métodos de poda en un tiempo razonabl
 Para el método \texttt{decision\_tree} se utilizó un set de datos más grande,
 ya que no tiene que realizar tantas simulaciones y un método ML se beneficia
 mucho más de tener mayor cantidad de datos. Se optó por un set de datos que
-correspondiera con una simulación de $\SI{20}{\second}$, como un tamaño
-considerablemente más grande pero que no fuese a causar tiempos de ejecución
+correspondiera con una simulación de $\SI{20}{\second}$ como un tamaño
+considerablemente más grande, pero que no fuese a causar tiempos de ejecución
 demasiado largos.
 
 Basado en esa prueba, se decidió excluir algunos circuitos del resto del
@@ -581,11 +581,20 @@ lenguajes compilados como C, Go y Rust. Se eligió Rust porque el autor ya tení
 experiencia con él, ofrece buen rendimiento y tiene muchas herramientas útiles
 para escribir una CLI de forma rápida \cite{bugden2022rust}.
 
-Una vez terminada la nueva versión en Rust, se repitió el experimento con el
-circuito BK\_16b y \num{4000} datos de entrada. La utilidad en Rust tardó solo
-$\SI{1.43}{\second}$ en una tarea que con la versión en Python tomaba casi
-medio minuto. Gracias a esto, el tiempo de generación del archivo SAIF se
-redujo a aproximadamente una vigésima parte del original.
+Una vez terminada la nueva versión en Rust, llamada \texttt{vcd2saif\_rs}, se
+repitió el experimento con el circuito BK\_16b y \num{4000} datos de entrada.
+La utilidad en Rust tardó solo $\SI{1.43}{\second}$ en una tarea que con la
+versión en Python tomaba casi medio minuto. Gracias a esto, el tiempo de
+generación del archivo SAIF se redujo a aproximadamente una vigésima parte del
+original.
+
+Se cronometraron las ejecuciones de \texttt{vcd2saif\_rs} para todos los
+circuitos con archivo SAIF generado; los resultados se incluyen en el apéndice,
+en la Tabla \ref{tab:vcd2saif_rs}.
+Si se suman esas ejecuciones la generación de archivos SAIF duró hora y media.
+Asumiendo que el script de Python dura 20 veces más, hubiera durado alrededor
+de 31 horas. Con estos datos se evidencia que traducir el script a Rust fue
+sumamente beneficioso para la realización del proyecto.
 
 Finalmente, tras realizar los experimentos definidos previamente, se
 recolectaron los datos necesarios para evaluar el desempeño de la técnica
@@ -594,3 +603,58 @@ resultados obtenidos.
 
 \section{Análisis de los resultados obtenidos}
 
+En esta sección se analizan los resultados de los experimentos descritos
+previamente. Primero se comparan variantes del método DT: con o sin resíntesis,
+y usando un solo árbol multi-salida o uno por salida. Luego se contrasta DT
+contra otros métodos de AxLS, evaluando métricas de área, error y tiempo.
+También se discute en qué tipos de circuitos la técnica de DT destaca y en
+cuáles no funciona.
+
+\subsubsection{Variaciones en DT}
+
+La primera variación que se evaluó fue si utilizar resíntesis en el circuito
+apróximado generado por el método \texttt{decision\_tree} es beneficioso.
+
+La Figura \ref{fig:resynth} muestra una comparación en métricas de error, área y
+tiempo de ejecución.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/mred_resynth_comparison.svg}
+    \caption{Comparación del error introducido.}
+    \label{fig:resynth_mred}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/area_resynth_comparison.svg}
+    \caption{Comparación del área resultante.}
+    \label{fig:resynth_area}
+  \end{subfigure}
+  \begin{subfigure}{\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/time_resynth_comparison.svg}
+    \caption{Comparación del tiempo de ejecución.}
+    \label{fig:resynth_time}
+  \end{subfigure}
+  \caption{Resultados de aplicación de resíntesis con método \texttt{decision\_tree}.}
+  \label{fig:resynth}
+\end{figure}
+
+
+
+
+% # DT
+
+% - Comparación de DT con/sin resíntesis
+% - Comparación de DT con/sin one_tree_per_output
+
+% # DT vs otros métodos
+
+% - Hablar de capacidad de controlar error
+% - Hablar de efectividad con circuitos grandes
+% - Gráficos generales de error/área para diferentes umbrales: 0.5, 0.25, 0.1
+% - Comparación de tiempos de ejecución para diferentes umbrales
+% - Qué tipos de circuitos sobresale DT
+% - Qué tipos de circuitos DT no sirve
