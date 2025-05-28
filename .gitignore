@@ -1,2 +1,7 @@
 apuntes.md
 reportes semanales.md
+
+__pycache__
+benchmarks/
+build/
+flow.py

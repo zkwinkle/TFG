@@ -72,7 +72,7 @@ Refs (entre paréntesis métodos utilizados):
  - Logic Synthesis for Generalization and Learning Addition (NN - MLP, DT, RF, LUT network)
  - Logic Synthesis Meets Machine Learning: Trading Exactness for Generalization (IWLS 2020, DT, RF, LUT networks, Espresso, NN - MLP, CGP)
  - Sampling-Based Approximate Logic Synthesis: An Explainable Machine Learning Approach ( "Adaptive" DT, SHAP explainability metric )
- - Circuit Learning: From Decision Trees to Decision Graphs ( DG/BDD )
+ - Circuit Learning: From Decision Trees to Decision Graphs ( DT, DG/BDD )
  - OPTDTALS: Approximate Logic Synthesis via Optimal Decision Trees Approach ( Variación de DT, parece que el entrenamiento dura mucho? )
  - Impact on Delay, Power and Area of Machine Learning-based Approximate Logic Synthesis ( CGP, DT, "Mixed-ML" neural network + LUT )
  - CGP-based Logic Flow: Optimizing Accuracy and Size of Approximate Circuits ( CGP )

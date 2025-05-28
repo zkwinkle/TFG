@@ -17,23 +17,23 @@ class Benchmark:
 
 BENCHMARKS = [
     # name, input bits, validation set
-    Benchmark("voter", 1001),
-    Benchmark("RForest", 52 * 10),
+    # # ⚠️ muy poquitos samples Benchmark("voter", 1001),
+    # # ⚠️ muy poquitos samples Benchmark("RForest", 52 * 10),
     Benchmark("DTree", 10 * 30),
-    Benchmark("max_128b", 128 * 4),
-    Benchmark("adder_128b", 128 + 128),
-    # ❌ duró más de 1h en simular (interrumpí temprano) Benchmark("hyp_128b", 128 + 128),
+    # ⚠️ incluso después de agregar prunes_per_iteration, el inconst dura demasiado (1h+) Benchmark("max_128b", 128 * 4),
+    # ⚠️ incluso después de agregar prunes_per_iteration, el inconst dura demasiado (1h+) Benchmark("adder_128b", 128 + 128),
+    # ❌ no sirve? o es tan lento que no lo he visto iterar 1 sample Benchmark("hyp_128b", 128 + 128),
     Benchmark("barshift_128b", 128 + 7),
-    # ❌ como en 10 mins avanzó 100 datos 😬 (duraría como 267 horas) Benchmark("sqrt_128b", 128),
-    Benchmark("div_64b", 64 + 64),  # dura como ~70 mins
+    # ❌ como en 10 mins avanzó 100 datos 😬  Benchmark("sqrt_128b", 128),
+    # ⚠️ muy poquitos samples Benchmark("div_64b", 64 + 64),
     # ❌ duraría como 4 horas Benchmark("mul_64b", 64 + 64),
     Benchmark("sobel", 9 * 9),
-    Benchmark("square_64b", 64),
+    # ⚠️ muy poquitos samples Benchmark("square_64b", 64),
     Benchmark("BK_32b", 32 + 32),
-    Benchmark("fwrdk2j", 32 + 32),
+    # ⚠️ muy poquitos samples Benchmark("fwrdk2j", 32 + 32),
     # ❌ circuito no sintetiza bien Benchmark("invk2j", 32 + 32),
     Benchmark("KS_32b", 32 + 32),
-    Benchmark("Mul_32b", 32 + 32),
+    # ⚠️ muy poquitos samples Benchmark("Mul_32b", 32 + 32),
     Benchmark("CLA_16b", 16 + 16 + 1),
     Benchmark("Mul_16b", 16 + 16),
     Benchmark("BK_16b", 16 + 16),
@@ -41,10 +41,10 @@ BENCHMARKS = [
     Benchmark("KS_16b", 16 + 16),
     Benchmark("LFA_16b", 16 + 16),
     # ❌ duraría como 13 horas (???) Benchmark("log2_32b", 32),
-    Benchmark("sin_24b", 24),
+    # ⚠️ muy poquitos samples Benchmark("sin_24b", 24),
     Benchmark("WT_8b", 8 + 8),
     Benchmark("int2float", 11),
-    Benchmark("fir", 8 + 1 + 1),
+    # ❌ no puede generar el output exacto, tira puras 'X' Benchmark("fir", 8 + 1 + 1),
     Benchmark("RCA_4b", 4 + 4 + 1),
     Benchmark("dec", 8),
 ]
@@ -203,7 +203,7 @@ TIMING_INFO = {
 }
 
 MAX_BITS_EXHAUSTIVE = 16
-MAX_TIME_PER_SIM = 2  # seconds
+MAX_TIME_PER_SIM = 20  # seconds
 total_time = 0
 
 print(f"Execution starting at {datetime.now().strftime('%I:%M %p')}")
@@ -211,7 +211,7 @@ print(f"Execution starting at {datetime.now().strftime('%I:%M %p')}")
 for benchmark in BENCHMARKS:
     rtl = f"AxLS/ALS-benchmark-circuits/{benchmark.name}/{benchmark.name}.v"
     benchmark_dir = f"benchmarks/{benchmark.name}"
-    dataset = f"{benchmark_dir}/dataset"
+    dataset = f"{benchmark_dir}/10s_dataset" # mal nombre son 20s
 
     print(f"Generating dataset for benchmark {benchmark.name}")
 
