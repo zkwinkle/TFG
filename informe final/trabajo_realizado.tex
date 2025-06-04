@@ -496,7 +496,6 @@ nunca lograron completarse y fue necesario cancelarlos después de horas sin
 alcanzar el umbral de error. La Tabla \ref{tab:exclusiones} detalla las razones
 por las que se excluyó cada circuito.
 
-
 \begin{table}[htb]
   \centering
   \caption{Circuitos excluidos de la recolección de resultados y sus motivos.}
@@ -513,7 +512,7 @@ por las que se excluyó cada circuito.
     \midrule
 
     div\_64b &        \multirow{7}{\linewidth}{Lentos en simular, el set de
-    datos generado para una simulación de $\SI{2}{\second}$ sería de menos de
+      datos generado para una simulación de $\SI{2}{\second}$ sería de menos de
     mil datos.} \\
     square\_64b &            \\
     fwrdk2j &                \\
@@ -612,29 +611,31 @@ cuáles no funciona.
 
 \subsubsection{Variaciones en DT}
 
+\paragraph{Resíntesis}
+
 La primera variación que se evaluó fue si utilizar resíntesis en el circuito
-apróximado generado por el método \texttt{decision\_tree} es beneficioso.
+aproximado generado por el método \texttt{decision\_tree} es beneficioso.
 
 La Figura \ref{fig:resynth} muestra una comparación en métricas de error, área y
 tiempo de ejecución.
 
 \begin{figure}
   \centering
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.95\textwidth}
     \centering
-    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/mred_resynth_comparison.svg}
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/mred_resynthesis_comparison.svg}
     \caption{Comparación del error introducido.}
     \label{fig:resynth_mred}
   \end{subfigure}
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.95\textwidth}
     \centering
-    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/area_resynth_comparison.svg}
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/area_resynthesis_comparison.svg}
     \caption{Comparación del área resultante.}
     \label{fig:resynth_area}
   \end{subfigure}
-  \begin{subfigure}{\textwidth}
+  \begin{subfigure}{0.95\textwidth}
     \centering
-    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/time_resynth_comparison.svg}
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/time_resynthesis_comparison.svg}
     \caption{Comparación del tiempo de ejecución.}
     \label{fig:resynth_time}
   \end{subfigure}
@@ -642,19 +643,589 @@ tiempo de ejecución.
   \label{fig:resynth}
 \end{figure}
 
+El patrón observado en el error
+es que hay algunas variaciones mínimas, puede ser ligeramente mayor
+o menor con resíntesis. Como las variaciones son tan pequeñas y no son
+constantes se atribuyen a un elemento aleatorio en el entrenamiento del DT.
+Esto es el comportamiento esperado, ya que la resíntesis no debería de afectar
+las salidas que produce un circuito.
 
+En un entorno práctico no interesarían los casos donde el área del circuito
+resultante sobrepase el 100\% del área del circuito original, pero igualmente
+se incluyeron esos casos en la gráfica para mejor estudiar el efecto de
+resintetizar un circuito. Se observa el mismo patrón que con el error, los
+valores son muy parecidos en la mayoría de casos con variaciones pequeñas que
+no son consistentes entre los casos de con y sin resíntesis, por lo que se
+atribuyen a la aleatoriedad del DT.
 
+En el caso del área sí se esperaba obtener más
+beneficios de la resíntesis, ya que se esperaba que el DT generara estructuras
+no tan eficientes y el proceso de resintetizar el circuito pudiera reacomodar
+los nodos de mejor manera y evitando algunas redundancias. Sin embargo, parece
+que este no fue el caso, implicando que el resultado del DT no se puede reducir
+más.
+
+Finalmente, para la comparación de tiempo se tiene un resultado similar, no hay
+variaciones muy significativas en la mayoría de casos, con la excepción de
+árboles muy profundos en circuitos muy complejos. Conforme el árbol crece en
+complejidad, es de esperarse que el tiempo de ejecución aumente
+considerablemente. Esto se debe a que el tiempo de síntesis crece respecto a la
+complejidad del circuito. Como se ha mencionado previamente, el DT crece en
+complejidad exponencialmente con su profundidad. Además, un circuito complejo
+resulta en tiempos de síntesis muy largos, lo que opaca, en términos de tiempo,
+el resto de los procesos de la ejecución de ALS.
+
+Sin embargo, los casos donde la resíntesis tiene un efecto considerable en el
+tiempo de ejecución son los casos donde el área del circuito resultante
+sobrepasa el 100\% del área del circuito original, por lo que no son casos de
+interés práctico.
+
+En general, se observó que resintetizar el circuito resultante generado por el
+método \texttt{decision\_tree} no tiene efectos significativos, ni positivos ni
+negativos.
+
+\paragraph{Múltiples árboles}
+
+La otra variación que se estudió para el método \texttt{decision\_tree} fue si
+entrenar un solo árbol multi-salida para representar el circuito completo, o si
+entrenar un árbol diferente que solo aprendiera una de las salidas del
+circuito.
+
+La Figura \ref{fig:one_tree_per_output} muestra una comparación en métricas de
+error, área y tiempo de ejecución.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.95\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/mred_one_tree_per_output_comparison.svg}
+    \caption{Comparación del error introducido.}
+    \label{fig:one_tree_per_output_mred}
+  \end{subfigure}
+  \begin{subfigure}{0.95\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/area_one_tree_per_output_comparison.svg}
+    \caption{Comparación del área resultante.}
+    \label{fig:one_tree_per_output_area}
+  \end{subfigure}
+  \begin{subfigure}{0.95\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/time_one_tree_per_output_comparison.svg}
+    \caption{Comparación del tiempo de ejecución.}
+    \label{fig:one_tree_per_output_time}
+  \end{subfigure}
+  \caption{Resultados de utilizar un árbol por salida comparado con un solo árbol multi-salida usando el método \texttt{decision\_tree}.}
+  \label{fig:one_tree_per_output}
+\end{figure}
+
+En la gráfica de error se observa que por lo general produce mejores resultados
+utilizar un solo árbol multi-salida. Esto es lo que se esperaba, ya que al
+utilizar un solo árbol este explota mejor las correlaciones entre las salidas
+del circuito dada una entrada. Si no hubiese correlaciones entre las salidas
+entonces no habría beneficio, pero los bits de salida de un circuito se
+esperaría que estén altamente correlacionados entre sí.
+Cabe notar el caso del circuito \texttt{WT\_8b}, que es el único que ve una
+clara mejora al usar árboles separados para cada salida. Este circuito es un
+multiplicador, lo cual implica que las salidas de la operación de multiplicación
+no presenta correlación entre sus salidas.
+
+Por otro lado, el área del circuito siempre se ve afectada negativamente, i.e.
+al utilizar un árbol diferente por salida, el área siempre resulta mayor. Esto
+incluso con el circuito \texttt{WT\_8b}, significando que su disminución en
+error fue un compromiso al costo de mayor área.
+
+% TODO: Frente pareto para WT_8b donde los nodos de un árbol y los de muchos
+% árboles tienen colores diferentes?
+
+Utilizar un árbol por salida resultó en tiempos de ejecución considerablemente
+más lentos. Esto se atribuye a que se deben entrenar varios DT en vez de solo
+uno y probablemente producen un circuito más complejo que el que produce un
+solo árbol resultando en tiempos de síntesis mayores.
+
+\subsubsection{DT contra métodos de poda}
+
+A continuación se compara el método \texttt{decision\_tree} agregado a la
+herramienta contra métodos de poda ya previamente disponibles:
+\texttt{inconst}, \texttt{outconst}, \texttt{probprun}.
+
+También se discute en qué circuitos \texttt{decision\_tree} funciona mejor y en
+cuáles no funciona.
+
+Una característica clave de los métodos de poda en comparación al método de DT
+es que ellos permiten controlar el error introducido al circuito con un umbral
+de error definido por el usuario y realizan cambios incrementales en el
+circuito hasta alcanzarlo. A diferencia del método DT que reemplaza el circuito
+entero y el área y error del circuito aproximado producido no se puede
+controlar más allá de variar los parámetros del DT hasta obtener los resultados
+más cercanos a los deseados.
+
+Por esta limitación del DT, para poder realizar comparaciones lo más
+equivalentes posible, los métodos de poda se ejecutaron con múltiples umbrales
+de error diferentes: \num{1}\%, \num{5}\%, \num{10}\%, \num{25}\% y \num{50}\%.
+Así se pueden escoger las ejecuciones de métodos de poda que tengan un umbral de
+error similar a los resultados obtenidos por DT.
+
+La Tabla \ref{tab:1_porciento} muestra los mejores resultados de cada método
+evaluado con un umbral de error del 1\%. Para esta y próximas tablas, el mejor
+resultado sería aquel con la menor área entre los resultados con error menor al
+umbral. En general también solo se incluirán los circuitos en los que el método
+\texttt{decision\_tree} logró producir un resultado con error por debajo del
+umbral y con área menor al 100\% del área original. En el caso de la Tabla
+\ref{tab:1_porciento} solo se incluyen los circuitos RCA\_4b e int2float porque
+en ningún otro el método \texttt{decision\_tree} pudo producir un circuito
+aproximado con error tan bajo. Esta incapacidad del método de DT de producir
+resultados con un error controlado limita los circuitos en los que puede ser
+efectivo. Sin embargo, vemos que los circuitos con los que el método
+\texttt{decision\_tree} sí obtiene un error por debajo de 1\% tienen resultados
+muy positivos en términos de la reducción del área.
+
+Para el circuito RCA\_4b todos los métodos encontraron una variación del
+circuito que tenía 0\% de error, pero tenía área reducida, con el método de DT
+sobresaliendo en la reducción del área. Cabe tomar en cuenta que este circuito
+tiene solo 9 bits de entrada, por lo que se utilizó el set de datos exhaustivo
+de las posibles entradas del circuito para medir el error, lo que significa que
+realmente el circuito original tenía redundancias.
+
+Con el circuito int2float la diferencia es más marcada, \texttt{outconst} y
+\texttt{probprun} reducen el área en \num{1.46}\%, \texttt{inconst} en
+\num{19.57}\% y \texttt{decision\_tree} en \num{33.95}\%. Esto indica que
+cuando el método basado en DT sí funciona, obtiene muy buenos resultados en
+comparación a los métodos de poda.
+Algo sorprendente en este caso es que los mejores resultados provienen de
+ejecuciones con un árbol diferente por salida y de mucha profundidad.
+
+Estos dos circuitos son de naturaleza diferente, int2float es un circuito
+lógico y RCA\_4b es un sumador aritmético. Lo que tienen en común es ser de los
+circuitos más pequeños entre los benchmarks disponibles para AxLS. Solo hay
+otro circuito de menos de 16 bits de entradas disponible para pruebas: un
+decodificador de 8 bits con 256 bits de salida. Con el decodificador el DT solo
+pudo generar un circuito con más área que el original con 0\% de error, o
+generar un circuito que solo genera valores de 0 en la salida, por lo que no se incluyó
+en los resultados.
+
+Esto indica que el DT es especialmente efectivo para circuitos pequeños y
+posiblemente con el decodificador no pudo ser efectivo debido a su gran
+cantidad de bits de salida. También, se observa que si se tiene la necesidad de
+mantener un bajo error para estos circuitos pequeños, es posible que
+permitirle al método de DT formar estructuras más complejas (con mayor
+profundidad y usando árboles separados por cada salida) le puede permitir
+encontrar caminos más eficientes para aprender el set de datos limitado.
+
+\begin{table}[htb]
+  \centering
+  \caption{Comparación de métodos de AxLS para umbral de 1\% de error.}
+
+  % LTeX: enabled=false
+
+  \label{tab:1_porciento}
+
+  %\resizebox{\textwidth}{!}{
+
+  \begin{tabular}{c S c S<{\%}S<{\%}S<{\%}S<{\%}}
+    \toprule
+    \multirow{2}{*}[-5pt]{Circuito} &
+    \multicolumn{3}{c}{\texttt{decision\_tree}} &
+    \multicolumn{1}{c}{\texttt{inconst}} &
+    \multicolumn{1}{c}{\texttt{outconst}} &
+    \multicolumn{1}{c}{\texttt{probprun}} \\
+    \cmidrule(lr){2-4}
+    \cmidrule(lr){5-5}
+    \cmidrule(lr){6-6}
+    \cmidrule(lr){7-7}
+    &
+    \multicolumn{1}{M{2cm}}{Profundidad máxima} &
+    \multicolumn{1}{M{2cm}}{Un árbol por salida} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} \\
+    \midrule
+
+    RCA\_4b & 10 & Sí & 94.78 & 98.51 & 98.51 & 98.51 \\
+    int2float & 8  & Sí & 66.05 & 80.43 & 98.54 & 98.54 \\
+
+    \bottomrule
+  \end{tabular}
+
+  %}
+\end{table}
+% LTeX: enabled=true
+
+De aquí saltamos al umbral de 25\%, ya que \texttt{decision\_tree} no logró
+generar resultados para nuevos circuitos en los umbrales de 5\% y 10\%. Se
+presentan los mejores resultados obtenidos en la Tabla \ref{tab:25_porciento}.
+
+\begin{table}[htb]
+  \centering
+  \caption{Comparación de métodos de AxLS para umbral de 25\% de error.}
+
+  % LTeX: enabled=false
+
+  \label{tab:25_porciento}
+
+  %\resizebox{\textwidth}{!}{
+
+  \begin{tabular}{c S c S<{\%}S<{\%}S<{\%}S<{\%}}
+    \toprule
+    \multirow{2}{*}[-5pt]{Circuito} &
+    \multicolumn{3}{c}{\texttt{decision\_tree}} &
+    \multicolumn{1}{c}{\texttt{inconst}} &
+    \multicolumn{1}{c}{\texttt{outconst}} &
+    \multicolumn{1}{c}{\texttt{probprun}} \\
+    \cmidrule(lr){2-4}
+    \cmidrule(lr){5-5}
+    \cmidrule(lr){6-6}
+    \cmidrule(lr){7-7}
+    &
+    \multicolumn{1}{M{2cm}}{Profundidad máxima} &
+    \multicolumn{1}{M{2cm}}{Un árbol por salida} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} \\
+    \midrule
+
+    int2float & 3 & No & 5.19 & 7.57 & 36.09 & 20.91 \\
+    BK\_16b & 3 & No & 26.85 & 10.51 & 49.42 & 84.44 \\
+    KS\_16b & 4 & No & 44.15 & 8.00 & 35.41 & 58.07 \\
+    CSkipA\_16b & 3 & No & 29.57 & 10.51 & 49.22 & 87.94 \\
+    LFA\_16b & 4 & No & 54.86 & 8.75 & 48.44 & 98.83 \\
+    CLA\_16b & 3 & No & 29.60 & 8.27 & 43.93 & 73.53 \\
+    BK\_32b & 3 & No & 23.22 & 4.28 & 42.06 & 80.88 \\
+    KS\_32b & 4 & No & 43.01 & 3.44 & 35.91 & 52.48 \\
+
+    \bottomrule
+  \end{tabular}
+
+  %}
+\end{table}
+% LTeX: enabled=true
+
+Cabe notar que para este umbral, todos los mejores resultados dados por el
+método \texttt{decision\_tree} son utilizando un solo árbol multi-salida. Esto
+se alinea más con lo observado previamente respecto al uso de un árbol
+multi-salida comparado a múltiples árboles.
+Para este nuevo umbral el método de DT sigue generando el mejor resultado para
+int2float, en el resto se mantiene competitivo respecto a \texttt{outconst} y
+\texttt{probprun}, pero \texttt{inconst} es el ganador por mucho.
+
+El circuito RCA\_4b no fue incluido porque la mejor respuesta de
+\texttt{decision\_tree} para el umbral de 25\% continúa siendo la misma
+presentada en la Tabla \ref{tab:1_porciento}.
+
+Todos los circuitos incluidos con los que \texttt{decision\_tree} logró obtener
+un error de menos del 25\%, aparte de int2float, son circuitos sumadores que
+reciben dos entradas de 32 o 16 bits.
+Los circuitos con los que no logró obtener resultados por debajo de este error
+son:
+
+\begin{itemize}
+  \item WT\_8b: Un multiplicador de 2 entradas de 8 bits.
+  \item sobel: Un circuito que aplica un filtro detector de bordes que recibe
+    una entrada de 81 bits.
+  \item DTree: Un DT entrenado que recibe 30 entradas de 10 bits cada una.
+  \item barshift\_128b: Desplazador de barril de 7 bits a la izquierda para entradas de 128 bits.
+\end{itemize}
+
+% TODO: Podría probar DT con otros circuitos que los de poda no terminaron
+% nunca. Ponerlo como un beneficio del método DT o poder analizar mejor cuáles
+% circuitos sirven vs cuáles no.
+
+La imposibilidad de generar un resultado para WT\_8b que pudiera incluirse en la
+Tabla \ref{tab:25_porciento} sugiere que a un árbol de decisión (DT) le cuesta
+especialmente aprender la operación de multiplicación, incluso cuando se trata
+de un circuito relativamente pequeño. Esto indica que a un DT le resulta más
+sencillo aprender sumas que multiplicaciones, ya que los circuitos sumadores
+que sí aparecen en la tabla manejan entradas mucho más grandes que el WT\_8b.
+Lo reportado en \cite{miyasaka_logic_2021} concuerda con esta observación,
+donde se muestra que los RF, formados por múltiples DT, también fallan al
+intentar aprender multiplicaciones. Esta dificultad se atribuye a que los bits
+de salida en una multiplicación suelen depender de operaciones XOR, las cuales
+presentan poca información mutua entre entradas y salidas, complicando su
+aprendizaje para modelos como los DT, que se basan precisamente en la
+información mutua para dividir los datos.
+
+La exclusión de los circuitos sobel, barshift\_128b y DTree parece indicar que
+el método falla en crear circuitos satisfactorios para circuitos muy grandes.
+La exclusión del método DTree es especialmente sorprendente porque es una
+estructura de DT y lo estamos aproximando con un DT.
+
+Se podría analizar más el porqué no se logra crear una aproximación útil.
+Algunos posibles motivos son que se requiere un DT bastante más complejo que
+los que se probaron, debido a la gran cantidad de información de entrada.
+También podría ser que faltó utilizar más datos de entrenamiento o que se usó
+una estrategia diferente para sintetizar el DT original a un circuito, como
+reutilizar módulos comparadores en vez de convertir el árbol en un SOP, que es
+la estrategia utilizada por \texttt{decision\_tree}.
+
+La exclusión de los circuitos sobel, barshift\_128b y DTree sugiere que el
+método no logra generar aproximaciones satisfactorias para circuitos muy
+grandes. La exclusión del circuito DTree resulta especialmente sorprendente, ya
+que originalmente es una estructura de DT adaptada a circuito, y estamos
+intentando aproximarla precisamente con un DT. Esto podría deberse a varios
+factores: tal vez se requiere un DT más complejo que los evaluados,
+debido a la alta cantidad de entradas; podría ser que se necesitaban más datos
+de entrenamiento; o también podría ser que la síntesis del DT original se hizo
+con una estrategia distinta, como reutilizar módulos comparadores en lugar de
+convertir el árbol a una forma SOP, que es la estrategia empleada por
+\texttt{decision\_tree}.
+
+% TODO: Relacionado al TODO anterior, podría probar con circuitos grandes que no
+% la dieron para los de poda para ver si se mantiene la hipótesis.
+% No sirve porque no el DT no lograba generar soluciones validas anyways.
+
+El circuito barshift\_128b es de naturaleza lógica, lo cual refuerza la teoría
+de que el fallo en aproximarlo se debe a su tamaño, ya que el circuito
+int2float, con el que el método DT fue altamente exitoso, es el otro circuito
+que se probó de naturaleza lógica. Pero de igual forma es inconcluso si se debe
+solo a su tamaño, puede ser que la función de desplazar bits sea especialmente
+difícil para un DT de aprender. Habría que realizar pruebas con más
+desplazadores para estudiar el comportamiento del DT aprendiéndolos.
+
+Finalmente, el circuito Sobel tiene un comportamiento bastante único entre los
+circuitos probados, ya que es el único que aplica un filtro digital. Sin
+embargo, comparte con los circuitos que no fueron efectivos el hecho de tener
+muchos bits de entrada.
+
+Para evaluar si los métodos generalizan bien fuera del set de datos que se usó
+de prueba, se apartó un 20\% de los datos para hacer una evaluación final de
+validación. Los valores de error de prueba y validación que obtuvieron las
+ejecuciones de la Tabla \ref{tab:25_porciento} se presentan en la Tabla
+\ref{tab:validacion_25}. Nótese que con circuitos pequeños no se usa un set de
+validación porque se puede evaluar el set de datos completo de entradas
+posibles al circuito.
+
+Se observa que todos los métodos generalizan bien. Particularmente importante para
+\texttt{decision\_tree}, que entrena basado en los datos de prueba, y el
+\texttt{probprun}, que se basa en información de simulación de los datos de
+prueba.
+
+\begin{table}[htb]
+  \centering
+  \caption{Valores de MRzED en los sets de prueba y validación para los resultados obtenidos.}
+
+  % LTeX: enabled=false
+
+  \label{tab:validacion_25}
+
+  \resizebox{\textwidth}{!}{
+
+    \begin{tabular}{c S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}}
+      \toprule
+      \multirow{2}{*}[-5pt]{Circuito} &
+      \multicolumn{2}{c}{\texttt{decision\_tree}} &
+      \multicolumn{2}{c}{\texttt{inconst}} &
+      \multicolumn{2}{c}{\texttt{outconst}} &
+      \multicolumn{2}{c}{\texttt{probprun}} \\
+      \cmidrule(lr){2-3}
+      \cmidrule(lr){4-5}
+      \cmidrule(lr){6-7}
+      \cmidrule(lr){8-9}
+      &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} \\
+      \midrule
+      int2float & 17.90 & \multicolumn{1}{c}{\textemdash} & 24.60 & \multicolumn{1}{c}{\textemdash} & 14.60 & \multicolumn{1}{c}{\textemdash} & 21.90 & \multicolumn{1}{c}{\textemdash} \\
+      BK\_16b & 24.10 & 24.10 & 20.00 & 21.00 & 8.60 & 8.70 & 21.60 & 21.80 \\
+      KS\_16b & 18.60 & 18.40 & 19.00 & 19.50 & 16.80 & 17.20 & 24.20 & 23.90 \\
+      CSkipA\_16b & 23.70 & 24.00 & 20.10 & 20.10 & 17.00 & 16.80 & 22.70 & 23.00 \\
+      LFA\_16b & 22.60 & 23.10 & 12.70 & 12.80 & 16.80 & 16.60 & 9.50 & 9.50 \\
+      CLA\_16b & 23.40 & 24.10 & 16.30 & 16.20 & 16.70 & 16.30 & 20.80 & 20.50 \\
+      BK\_32b & 21.80 & 21.80 & 16.40 & 16.30 & 16.90 & 16.90 & 10.10 & 10.00 \\
+      KS\_32b & 18.90 & 18.90 & 13.80 & 14.80 & 8.60 & 8.60 & 20.50 & 20.50 \\
+      \bottomrule
+    \end{tabular}
+
+  }
+\end{table}
+% LTeX: enabled=true
+
+Finalmente, se evalúan los resultados de reducción de área para un umbral de
+50\% en la Tabla \ref{tab:50_porciento}. Solo incluye circuitos para los que
+\texttt{decision\_tree} obtuvo algún resultado entre 25\% y 50\% de error, con
+menor área que el resultado presentado en la Tabla \ref{tab:25_porciento}.
+
+\begin{table}[htb]
+  \centering
+  \caption{Comparación de métodos de AxLS para umbral de 50\% de error.}
+
+  % LTeX: enabled=false
+
+  \label{tab:50_porciento}
+
+  %\resizebox{\textwidth}{!}{
+
+  \begin{tabular}{c S c S<{\%}S<{\%}S<{\%}S<{\%}}
+    \toprule
+    \multirow{2}{*}[-5pt]{Circuito} &
+    \multicolumn{3}{c}{\texttt{decision\_tree}} &
+    \multicolumn{1}{c}{\texttt{inconst}} &
+    \multicolumn{1}{c}{\texttt{outconst}} &
+    \multicolumn{1}{c}{\texttt{probprun}} \\
+    \cmidrule(lr){2-4}
+    \cmidrule(lr){5-5}
+    \cmidrule(lr){6-6}
+    \cmidrule(lr){7-7}
+    &
+    \multicolumn{1}{M{2cm}}{Profundidad máxima} &
+    \multicolumn{1}{M{2cm}}{Un árbol por salida} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} &
+    \multicolumn{1}{c}{Área} \\
+    \midrule
+
+    RCA\_4b & 3 & No & 26.12 & 6.72 & 47.76 & 70.15 \\
+    WT\_8b & 3 & Sí & 14.20 & 63.68 & 91.27 & 52.16 \\
+    KS\_16b & 3 & No & 20.74 & 2.22 & 30.81 & 53.63 \\
+    LFA\_16b & 3 & No & 27.04 & 2.92 & 41.44 & 82.88 \\
+    KS\_32b & 3 & No & 17.72 & 1.15 & 35.91 & 50.73 \\
+
+    \bottomrule
+  \end{tabular}
+
+  %}
+\end{table}
+% LTeX: enabled=true
+
+En la mayoría de circuitos incluidos, el método \texttt{decision\_tree} entra
+en segundo lugar en reducción de área, con el método \texttt{inconst} ganando.
+El circuito WT\_8b es la excepción, lo cual es interesante porque el DT no
+había logrado obtener un resultado por encima del umbral de las tablas previas.
+El método \texttt{probprun} obtuvo un resultado similar con el circuito WT\_8b,
+pero los métodos \texttt{inconst} y \texttt{outconst} obtuvieron resultados
+mucho peores en ese circuito específico. Todos los circuitos incluidos son
+sumadores excepto por el WT\_8b, lo cual ayuda a explicar esta diferencia en
+comportamiento.
+
+Se incluye la Tabla \ref{tab:validacion_50}, que muestra los valores de error
+alcanzados por las ejecuciones de la Tabla \ref{tab:50_porciento}.
+Se nota que todos los métodos generalizan bien. También se observa que la
+mayoría de ejecuciones no se acercaron al umbral de 50\%. En el caso de los
+métodos de poda esto significa que llegaron a un punto donde podar el siguiente
+nodo del circuito incurriría muchísimo error, haciéndolos sobrepasar el umbral.
+
+\begin{table}[htb]
+  \centering
+  \caption{Valores de MRED en los sets de prueba y validación para los resultados obtenidos para el umbral de 50\%.}
+
+  % LTeX: enabled=false
+
+  \label{tab:validacion_50}
+
+  \resizebox{\textwidth}{!}{
+
+    \begin{tabular}{c S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}S<{\%}}
+      \toprule
+      \multirow{2}{*}[-5pt]{Circuito} &
+      \multicolumn{2}{c}{\texttt{decision\_tree}} &
+      \multicolumn{2}{c}{\texttt{inconst}} &
+      \multicolumn{2}{c}{\texttt{outconst}} &
+      \multicolumn{2}{c}{\texttt{probprun}} \\
+      \cmidrule(lr){2-3}
+      \cmidrule(lr){4-5}
+      \cmidrule(lr){6-7}
+      \cmidrule(lr){8-9}
+      &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} &
+      \multicolumn{1}{c}{Prueba} &
+      \multicolumn{1}{c}{Validación} \\
+      \midrule
+      RCA\_4b & 32.60 & \multicolumn{1}{c}{\textemdash} & 45.60 & \multicolumn{1}{c}{\textemdash} & 30.20 & \multicolumn{1}{c}{\textemdash} & 37.00 & \multicolumn{1}{c}{\textemdash} \\
+      WT\_8b & 48.40 & \multicolumn{1}{c}{\textemdash} & 42.90 & \multicolumn{1}{c}{\textemdash} & 22.10 & \multicolumn{1}{c}{\textemdash} & 47.70 & \multicolumn{1}{c}{\textemdash} \\
+      KS\_16b & 25.40 & 25.20 & 28.90 & 29.50 & 32.80 & 32.90 & 42.00 & 41.50 \\
+      LFA\_16b & 27.50 & 28.10 & 27.20 & 27.20 & 32.80 & 32.50 & 49.90 & 49.50 \\
+      KS\_32b & 27.60 & 27.60 & 28.50 & 30.10 & 8.60 & 8.60 & 41.20 & 42.40 \\
+      \bottomrule
+    \end{tabular}
+
+  }
+\end{table}
+% LTeX: enabled=true
+
+% TODO: Hablar de que el error ya es muy alto y que no usa comúnmente: ocupo
+% alguna referencia para esto.
+% En vez de referencia puedo construir un ejemplo con una imagen!!
+
+En la Figura \ref{fig:comparacion_tiempos} se comparan
+tiempos de ejecución para obtener los resultados mostrados en las tablas
+anteriores. Se observa que el método \texttt{decision\_tree} es el que tuvo
+ejecuciones más largas. Cabe notar que para \texttt{decision\_tree} se utilizó
+un set de datos ajustado para que la simulación durase $\SI{20}{\second}$, en
+vez de los $\SI{2}{\second}$ de simulación a los que se ajustaron los otros
+métodos. Esto se hizo porque el método \texttt{decision\_tree} solo realiza 2
+simulaciones por ejecución, a diferencia de los otros métodos que realizan una
+por iteración y realizan múltiples iteraciones. De igual forma, la diferencia
+en tiempos para circuitos más grandes supera los $\SI{40}{\second}$ que el
+método \texttt{decision\_tree} tomaría en simular, sumado a esto que el método
+\texttt{decision\_tree} fue el más lento en circuitos pequeños como RCA\_4b e
+int2float, donde todos los métodos realizan una simulación con el set de
+entradas exhaustivas que pueden tener los circuitos, se puede concluir que la
+diferencia en tiempos de ejecución no se debe a los tiempos de simulación.
+
+Dado esto, parece indicar que el método \texttt{decision\_tree} dura más tiempo
+que los otros debido a los tiempos de sintetización. Durante las ejecuciones se
+observó que sintetizar el circuito generado por el DT tomaba mucho tiempo. Se
+teoriza que esto se da porque el DT genera circuitos donde a cada bit de salida
+se le asigna una SOP compleja directamente, lo cual resulta en una descripción
+de un circuito muy inusual y compleja que no tiene variables intermedias que
+reutilice.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.75\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/0.01_threshold_time_comparison.svg}
+    \caption{Tiempos de ejecución para resultados de Tabla \ref{tab:1_porciento}.}
+    \label{fig:01_tiempo}
+  \end{subfigure}
+  \begin{subfigure}{0.75\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/0.25_threshold_time_comparison.svg}
+    \caption{Tiempos de ejecución para resultados de Tabla \ref{tab:25_porciento}.}
+    \label{fig:25_tiempo}
+  \end{subfigure}
+  \begin{subfigure}{0.75\textwidth}
+    \centering
+    \includesvg[inkscapelatex=false, width=\textwidth]{./imágenes/0.5_threshold_time_comparison.svg}
+    \caption{Tiempos de ejecución para resultados de Tabla \ref{tab:50_porciento}.}
+    \label{fig:50_tiempo}
+  \end{subfigure}
+  \caption{Resultados de aplicación de resíntesis con método \texttt{decision\_tree}.}
+  \label{fig:comparacion_tiempos}
+\end{figure}
+
+% Agregar algo de tiempos de ejecución. Posiblemente incluyendo lo de los
+% circuitos no incluidos
 
 % # DT
 
-% - Comparación de DT con/sin resíntesis
-% - Comparación de DT con/sin one_tree_per_output
+% - ✅ Comparación de DT con/sin resíntesis
+% - ✅ Comparación de DT con/sin one_tree_per_output
 
 % # DT vs otros métodos
 
-% - Hablar de capacidad de controlar error
-% - Hablar de efectividad con circuitos grandes
-% - Gráficos generales de error/área para diferentes umbrales: 0.5, 0.25, 0.1
-% - Comparación de tiempos de ejecución para diferentes umbrales
-% - Qué tipos de circuitos sobresale DT
-% - Qué tipos de circuitos DT no sirve
+% 🌀 = un poco pero podría más
+
+% ✅ Hablar de capacidad de controlar error
+% ✅ Tablas generales de error/área para diferentes umbrales:
+%    ✅ 0.01
+%    ✅ 0.25
+%    ✅ 0.5
+% ✅ Hablar de que no hay circuitos nuevos para los umbrales de 5% y 10%
+% 🌀 Hablar de circuitos para los que no funcionó.
+% 🌀 Hablar de (no) efectividad con circuitos grandes
+% 🌀 Qué tipos de circuitos sobresale DT
+% 🌀 Qué tipos de circuitos DT no sirve
+% ✅ Hablar de valores de error de validación
