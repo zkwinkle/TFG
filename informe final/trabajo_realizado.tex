@@ -100,7 +100,7 @@ categorías.
 \begin{itemize}
   \item Es el método más estudiado en la literatura, 7 de las 10 referencias
     utilizadas lo estudian \cite{de_abreu_fast_2021, miyasaka_logic_2021,
-      rai_logic_2021, zeng_sampling-based_2021, huang_circuit_2023,
+    rai_logic_2021, zeng_sampling-based_2021, huang_circuit_2023,
     hu_optdtals_2024, prats_ramos_impact_2024}.
   \item Es muy viable debido a su fácil implementación, disponibilidad en
     bibliotecas de alto grado como \emph{scikit-learn} y bajo tiempo de
@@ -512,7 +512,7 @@ por las que se excluyó cada circuito.
     \midrule
 
     div\_64b &        \multirow{7}{\linewidth}{Lentos en simular, el set de
-      datos generado para una simulación de $\SI{2}{\second}$ sería de menos de
+    datos generado para una simulación de $\SI{2}{\second}$ sería de menos de
     mil datos.} \\
     square\_64b &            \\
     fwrdk2j &                \\
@@ -815,7 +815,7 @@ encontrar caminos más eficientes para aprender el set de datos limitado.
   \centering
   \caption{Comparación de métodos de AxLS para umbral de 1\% de error.}
 
-  % LTeX: enabled=false
+% LTeX: enabled=false
 
   \label{tab:1_porciento}
 
@@ -1002,7 +1002,7 @@ prueba.
 
 \begin{table}[htb]
   \centering
-  \caption{Valores de MRzED en los sets de prueba y validación para los resultados obtenidos.}
+  \caption{Valores de MRED en los sets de prueba y validación para los resultados obtenidos para el umbral de 25\%.}
 
   % LTeX: enabled=false
 
@@ -1154,9 +1154,141 @@ nodo del circuito incurriría muchísimo error, haciéndolos sobrepasar el umbra
 \end{table}
 % LTeX: enabled=true
 
-% TODO: Hablar de que el error ya es muy alto y que no usa comúnmente: ocupo
-% alguna referencia para esto.
-% En vez de referencia puedo construir un ejemplo con una imagen!!
+Algo interesante a notar es la profundidad máxima de los resultados presentados
+en las tablas anteriores. Para el método \texttt{decision\_tree}, los mejores
+resultados se obtienen con árboles de una profundidad máxima de 3, a pesar de
+que las entradas son de 16 o hasta 32 bits. Con esta cantidad limitada de
+niveles, el árbol solo puede dividir el conjunto de datos basado en unos pocos
+bits de las entradas.
+
+En la Figura \ref{fig:KS_16b_50} se muestra la estructura adoptada por el DT
+que aproximó el circuito KS\_16b con un umbral del \num{50}\%. Como se puede
+observar, el nodo hoja con el valor más pequeño es \num{26115}, lo que indica
+que este sumador no es apto para sumar números pequeños. El valor de MRED, que
+es del \num{25.4}\% para este circuito, no es representativo del error en
+cualquier suma que se pueda realizar con él; por ejemplo, este circuito
+aproximado indicaría que $1+1=26115$. Esto demuestra algo que se podría
+considerar una  falla en la forma en que se llevaron a cabo los experimentos
+para los circuitos más grandes, que no podían utilizar un conjunto de datos
+exhaustivo. Dado que se usaron conjuntos de datos con una distribución
+aleatoria uniforme, los valores grandes, que se acercan a utilizar todos los
+bits de entrada del circuito, están sobrerrepresentados en comparación con los
+valores pequeños. Si la distribución de los datos que va a recibir el circuito
+es uniforme respecto al set de entradas posibles, si se tendría el
+comportamiento deseado. Pero, es más probable que el usuario quiera poder tener
+un porcentaje de aproximación que sea más consistente a través del rango entero
+de valores.
+
+\begin{figure}[htb]
+  \centering
+  % El inkscapelatex=false evita que LaTeX trate de renderizar el texto,
+  % necesario porque estaba tirando error por los underscores '_' en el svg.
+  \includesvg[inkscapelatex=false, width=0.9\linewidth]{./imágenes/KS_16b_50.svg}
+  \caption{Estructura del árbol utilizado para aproximar sumador KS\_16b en el resultado de la Tabla \ref{tab:50_porciento}.}
+  \label{fig:KS_16b_50}
+\end{figure}
+
+Una ventaja del método \texttt{decision\_tree} es que permite generar un
+circuito adecuado a cierto rango de datos, dependiendo del conjunto de datos
+utilizado para el entrenamiento. Con los otros métodos también se puede usar un
+conjunto de datos representativo de los valores que se desean manejar, lo cual
+daría una métrica de MRED más alineada con el uso real; sin embargo, tienen
+mayor probabilidad de mantener partes del circuito que no son tan útiles para
+la tarea específica.
+
+\begin{figure}
+  \centering
+  \begin{subfigure}{0.7\textwidth}
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/blurred.png}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/edged.png}
+    \end{subfigure}
+    \caption{Aplicación de filtros con sumador exacto.}
+  \end{subfigure}
+  % MAX DEPTH 3
+  \begin{subfigure}{0.7\textwidth}
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/blurred_approx_3_one_tree_per_output.png}
+      \caption*{SSIM=0.18}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/edged_approx_3_one_tree_per_output.png}
+      \caption*{SSIM=0.17}
+    \end{subfigure}
+    \centering
+    \caption{Profundidad máxima=3; Un árbol por salida=sí; MRED=27.3\%; MED=149.2; Área=59.73\%}
+  \end{subfigure}
+
+  % MAX DEPTH 4
+  \begin{subfigure}{0.7\textwidth}
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/blurred_approx_4.png}
+      \caption*{SSIM=0.05}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+      \includegraphics[width=\textwidth]{./imágenes/edged_approx_4.png}
+      \caption*{SSIM=0.17}
+    \end{subfigure}
+    \centering
+    \caption{Profundidad máxima=4; Un árbol por salida=no; MRED=24.2\%; MED=161.4; Área=49.61\%}
+  \end{subfigure}
+
+  \caption{Uso de sumadores aproximados con método de DT para la aplicación del filtro de desenfoque gaussiano (izquierda) y el filtro de detección de bordes Sobel (derecha).}
+\label{fig:filters}
+\end{figure}
+
+Para demostrar una aplicación real del método de DT para la generación de
+circuitos aproximados, en la Figura \ref{fig:filters} se presentan ejemplos de
+su uso en aplicaciones de procesamiento de imágenes. Se muestran los resultados
+de aplicar un filtro de desenfoque gaussiano y un filtro de detección de bordes
+Sobel a una imagen, primero con un sumador exacto y luego con dos sumadores
+aproximados distintos generados con DT. Los porcentajes de área mostrados en la
+imagen son relativos al circuito BK\_16b, que era el sumador de 16 bits de menor
+área entre los disponibles.
+
+Para estos ejemplos, los DT se entrenaron con un conjunto de datos que contenía
+todas las parejas de sumas posibles de 8 bits, y luego valores aleatorios
+seleccionados entre 9 y 12 bits, ya que no era necesario sumar valores mayores.
+Esto se debe a que los píxeles individuales tienen valores de 8 bits, pero las
+sumas requeridas alcanzaban un valor máximo de \num{4080}, el cual requiere 12
+bits para su representación.
+
+El kernel utilizado para el filtro gaussiano se presenta en la siguiente matriz:
+
+$$K = \begin{pmatrix} 1 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 1 \end{pmatrix}.$$
+
+Este kernel fue escogido porque permite aplicar el filtro sin necesidad de un
+multiplicador, ya que las multiplicaciones pueden realizarse únicamente con
+corrimientos a la izquierda. Esto lo hace más representativo de una aplicación
+real donde se utilice un sumador aproximado. Como un multiplicador es
+considerablemente más complejo que un sumador, usar un sumador aproximado junto
+con un multiplicador exacto resultaría en ganancias mínimas de área. Para el
+filtro Sobel también se evitó el uso de multiplicaciones.
+
+Como se puede observar, al utilizar un DT de profundidad 3 con un árbol
+diferente por salida, se obtiene un resultado visualmente muy distinto al
+obtenido con un DT de profundidad 4 que usa un solo árbol multi-salida. Esto
+ocurre a pesar de que ambos circuitos aproximados tienen métricas similares de
+MRED y MED.
+
+También se incluyó en la figura la métrica SSIM (Índice de similitud
+estructural) como una medida objetiva de la similitud entre los resultados
+obtenidos con un sumador aproximado y el resultado exacto. Se aprecia que,
+aunque el circuito generado por el DT con profundidad máxima 4 tiene un valor
+de MRED bajo, el resultado del filtro de desenfoque gaussiano presenta un valor
+de SSIM mucho menor que el obtenido con el DT de profundidad máxima 3, y
+visualmente la imagen resultante apenas se puede distinguir. Esto constituye
+otro ejemplo de cómo las métricas pueden ocultar detalles importantes. También
+muestra que, aunque usar un árbol por salida suele generar peores métricas,
+puede ser altamente beneficioso dependiendo de la aplicación.
 
 En la Figura \ref{fig:comparacion_tiempos} se comparan
 tiempos de ejecución para obtener los resultados mostrados en las tablas
