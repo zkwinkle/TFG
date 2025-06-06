@@ -62,7 +62,7 @@ for threshold, circuits in groups.items():
     ax.set_xticks([p + 1.5 * bar_width for p in x_pos])
     ax.set_xticklabels(x)
     ax.set_ylabel("Time (s)")
-    ax.set_title(f"Execution Time Comparison (MRED ≤ {int(threshold*100)}%)")
+    ax.set_title(f"(MRED ≤ {int(threshold*100)}%)")
     ax.legend()
     plt.tight_layout()
     fig.savefig(f"informe final/imágenes/{threshold}_threshold_time_comparison.svg")

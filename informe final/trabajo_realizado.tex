@@ -26,7 +26,7 @@ La prueba de concepto fue exitosa, se logró realizar una síntesis aproximada d
 uno de los circuitos de benchmark y se identificó cómo realizar los pasos
 necesarios para la implementación de la técnica:
 
-\begin{itemize}
+\begin{enumerate}
   \item Sintetización del circuito original.
   \item Simulación del circuito original para obtener los datos de entrenamiento.
   \item Lectura de los datos de entrada y salida del circuito original para
@@ -37,13 +37,13 @@ necesarios para la implementación de la técnica:
     expansión de Boole.
   \item Sintetización y simulación del circuito aproximado.
   \item Evaluación de técnicas de error.
-\end{itemize}
+\end{enumerate}
 
 Cabe notar que la técnica no estaba realmente integrada dentro de la
 herramienta, ya que fue una implementación ad hoc. Además, presentaba varios
-errores. Se decidió no dedicar más tiempo a intentar corregirlos, porque no
-había certeza de que esa fuera la técnica final que se escogería para agregar
-propiamente a AxLS.
+errores. En el momento que se detectaron, se decidió no dedicar tiempo a
+intentar corregirlos, porque no había certeza de que esa fuera la técnica final
+que se escogería para agregar propiamente a AxLS.
 
 \subsection{Escogencia de método ML}
 
@@ -476,25 +476,49 @@ cuánto tardaba, en promedio, cada circuito en procesar un solo elemento. Con
 ese dato se estimó el tamaño adecuado de los sets de datos. Los resultados de
 esta prueba se muestran en el apéndice, en la Tabla \ref{tab:timing_info}. Se
 escogió arbitrariamente un tiempo de simulación de $\SI{2}{\second}$ como un
-límite corto que permitiera ejecutar los métodos de poda en un tiempo razonable.
-Para el método \texttt{decision\_tree} se utilizó un set de datos más grande,
-ya que no tiene que realizar tantas simulaciones y un método ML se beneficia
-mucho más de tener mayor cantidad de datos. Se optó por un set de datos que
-correspondiera con una simulación de $\SI{20}{\second}$ como un tamaño
-considerablemente más grande, pero que no fuese a causar tiempos de ejecución
-demasiado largos.
+límite corto que permitiera ejecutar los métodos de poda en un tiempo
+razonable; asumiendo que el proceso podría llegar a requerir alrededor de
+\num{1000} iteraciones (estimación tentativa en ese momento), esto daría
+tiempos de ejecución aproximados de media hora, lo cual se consideró aceptable
+para el contexto del proyecto.
+
+Para el método \texttt{decision\_tree} se utilizó un conjunto de datos más
+grande, ya que requiere menos simulaciones y los métodos de ML se benefician de
+contar con más datos. Se eligió un set basado en una simulación de
+$\SI{20}{\second}$, un tamaño 10 veces mayor que el de los otros conjuntos de
+datos. No se tenía un análisis formal sobre el impacto en los tiempos de
+entrenamiento, pero se optó por no aumentarlo más, guiados por la intuición de
+que podría alargar el entrenamiento sin aportar beneficios significativos. Sí
+se sabía que un tiempo de simulación de $\SI{20}{\second}$ implicaba alrededor
+de un minuto simulando por ejecución.
 
 Basado en esa prueba, se decidió excluir algunos circuitos del resto del
 proceso de recolección de resultados. La mayoría se descartaron por ser
-demasiado lentos en simulación; algunos incluso se cancelaron sin terminar.
-Otros sí completaron la prueba, pero fueron eliminados porque el set de datos
-que se podía generar para $\SI{2}{\second}$ de simulación era demasiado pequeño
-y no podría representar bien el error introducido. También se excluyeron algunos
-porque no estaban funcionando bien. Finalmente, unos pocos se descartaron
-aunque sí se podían simular en $\SI{2}{\second}$, ya que los métodos de poda
-nunca lograron completarse y fue necesario cancelarlos después de horas sin
-alcanzar el umbral de error. La Tabla \ref{tab:exclusiones} detalla las razones
-por las que se excluyó cada circuito.
+demasiado lentos en simulación; algunos incluso se cancelaron tras 4 horas de
+ejecución sin progreso aparente. Otros sí completaron la prueba, pero fueron
+eliminados porque el set de datos que se podía generar para $\SI{2}{\second}$
+de simulación era demasiado pequeño (se definió arbitrariamente un mínimo
+aceptable de 1000 datos) y no podría representar bien el error introducido.
+También se excluyeron algunos porque no estaban funcionando correctamente, la
+sintetización del circuito fallaba o no generaba bien las salidas. Finalmente,
+unos pocos se descartaron aunque sí se podían simular en $\SI{2}{\second}$, ya
+que los métodos de poda nunca lograron completarse y fue necesario cancelarlos
+después de varias horas sin alcanzar el umbral de error. La Tabla
+\ref{tab:exclusiones} detalla las razones por las que se excluyó cada circuito.
+
+Basado en esa prueba, se decidió excluir algunos circuitos del resto del
+proceso de recolección de resultados. La mayoría se descartaron por ser
+demasiado lentos en simulación; algunos incluso se cancelaron tras 4 horas de
+ejecución sin progreso aparente. Otros sí completaron la prueba, pero fueron
+eliminados porque el set de datos que se podía generar para $\SI{2}{\second}$
+de simulación era demasiado pequeño (se definió arbitrariamente un mínimo
+aceptable de 1000 datos) y no podría representar bien el error introducido.
+También se excluyeron algunos porque no estaban funcionando correctamente.
+Finalmente, unos pocos se descartaron aunque sí se podían simular en
+$\SI{2}{\second}$, ya que los métodos de poda nunca lograron completarse y fue
+necesario cancelarlos después de 4 o más horas sin alcanzar el umbral de error.
+La Tabla \ref{tab:exclusiones} detalla las razones por las que se excluyó cada
+circuito.
 
 \begin{table}[htb]
   \centering
@@ -1308,11 +1332,13 @@ diferencia en tiempos de ejecución no se debe a los tiempos de simulación.
 
 Dado esto, parece indicar que el método \texttt{decision\_tree} dura más tiempo
 que los otros debido a los tiempos de sintetización. Durante las ejecuciones se
-observó que sintetizar el circuito generado por el DT tomaba mucho tiempo. Se
-teoriza que esto se da porque el DT genera circuitos donde a cada bit de salida
-se le asigna una SOP compleja directamente, lo cual resulta en una descripción
-de un circuito muy inusual y compleja que no tiene variables intermedias que
-reutilice.
+observó que la etapa de sintetización del circuito generado por el DT
+contribuía de forma importante al tiempo total de ejecución, que es
+notablemente mayor que en los demás métodos (como se muestra en la Figura
+\ref{fig:comparacion_tiempos}). Se teoriza que esto se debe a que el DT genera
+circuitos donde a cada bit de salida se le asigna una SOP compleja
+directamente, lo cual resulta en una descripción del circuito inusual y difícil
+de optimizar, sin variables intermedias reutilizables.
 
 \begin{figure}
   \centering
