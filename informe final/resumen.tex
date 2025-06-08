@@ -1,0 +1,43 @@
+\chapter*{Resumen}
+
+Este trabajo integra por primera vez técnicas de aprendizaje automático en la
+herramienta de síntesis lógica aproximada AxLS para facilitar la generación de
+circuitos aproximados. Se identificó y justificó la elección de implementar un
+método basado en árboles de decisión por su rapidez de entrenamiento, facil
+mapeo a Verilog y relevancia en la literatura. Se extendió AxLS con una clase
+para el fácil entrenamiento de árboles de decisiones y generación de módulos de
+Verilog aproximados, posibilitando comparaciones directas en métricas de error,
+área y tiempo de ejecución. Para evaluar la solución se diseñaron experimentos
+automáticos sobre un conjunto de circuitos de referencia, cuantificando la tasa
+de error, la reducción de área y la duración del proceso de síntesis.
+
+Los resultados muestran que el método basado en árboles de decisión es
+competitivo frente a los métodos de poda existentes en AxLS y puede descubrir
+soluciones más eficientes en diversos casos. Sin embargo, presenta menor
+control sobre el error introducido y, dependiendo del circutio, no siempre
+logra generar aproximaciones más compactas que el diseño original.
+
+Esta implementación no solo amplía las capacidades de AxLS, sino que sienta las
+bases para incorporar otras técnicas de ML y fomentar la adopción de técnicas
+ML dentro de flujos de ALS.
+
+
+\chapter*{Abstract}
+
+This work integrates machine learning techniques into the AxLS approximate
+logic synthesis tool to enable the generation of approximate circuits. A
+decision tree based method was selected and justified due to its fast training,
+straightforward mapping to Verilog, and strong presence in the literature. AxLS
+was extended with a class for easy training of decision trees and automated
+generation of approximate Verilog modules, allowing direct comparisons in
+error, area, and synthesis time metrics. To evaluate the approach, automated
+experiments were conducted on a set of benchmark circuits, measuring error
+rates, area reduction, and synthesis duration.
+
+Results show that decision trees are competitive with existing pruning methods
+in AxLS and can yield more efficient solutions in several cases. However, they
+provide less control over the introduced error and may not always produce
+smaller approximations than the original design, depending on the circuit.
+
+This work extends the AxLS framework and opens the door to incorporating a
+wider range of ML based approaches into ALS workflows.
