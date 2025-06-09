@@ -105,3 +105,9 @@
 # 12 de mayo
 
 - Envío de reporte semanal 7 a Chavarría.
+
+# Faltan muchas entradas intermedias
+
+# 8 de junio
+
+- Envío informe final completo a Chavarría.

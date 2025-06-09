@@ -1,0 +1,130 @@
+\chapter{Conclusiones y recomendaciones}
+
+%%% Lineamientos:
+%%% Debe reflejar de forma contundente y ordenada si se lograron los objetivos
+%%% propuestos y si se cumplieron los entregables que se habían definido
+
+%%% Lineamientos:
+%%% Además, debe mostrar aquellos hallazgos que se consideran relevantes como
+%%% experiencia que deja en proyecto desde la perspectiva de la práctica
+%%% ingenieril.
+
+% Se evaluaron la mayoría de técnicas de ALS basadas en ML del estado del arte.
+
+Se lograron los objetivos planteados en el proyecto.
+% Se escogió DT porque ...
+Se evaluaron técnicas de ALS basadas en ML del estado del arte, considerando su
+viabilidad práctica y relevancia en el estado del arte.
+Basado en esto se escogió la técnica DT por su rapidez de entrenamiento, fácil
+mapeo a circuitos y presencia destacada en la literatura.
+% Se agregó una clase para el entrenamiento fácil de un DT y mapeo a verilog
+Se implementó una clase que facilita el entrenamiento de un DT y su conversión
+a un circuito en forma de un módulo de Verilog. Esta clase también sirve como
+un ejemplo que sienta las bases de cómo implementar métodos de aprendizaje
+supervisado dentro de AxLS a futuro.
+% Creación de API simplificada para ejecutar diferentes métodos y CLI para
+% experimentación
+Además, se creó una API simplificada y una CLI para ejecutar diferentes
+métodos, lo que permite una experimentación mucho más ágil y una curva de
+aprendizaje menor para utilizar AxLS de manera básica.
+
+% Se comparó el método DT contra métodos de poda disponibles. En métricas salió
+% competitivo y en algunos casos dando los mejores resultados.
+El método basado en DT fue evaluado frente a tres técnicas de poda disponibles
+en AxLS. Los resultados muestran que es competitivo, y en algunos casos logra
+los mejores resultados en términos de reducción de área bajo cierto umbral de
+error.
+
+% También se evaluó las diferencias en el método DT, se vio que la resíntesis
+% puede dar algunas mejoras pequeñas en algunos casos pero no da mucho
+% beneficio.
+Se exploraron variantes del método DT. La resíntesis aportó pequeñas mejoras en
+algunos casos, pero no fue decisiva.
+% Se vio que 1 arbol multi-salida genera circuitos más pequeños pero no es
+% contundentemente mejor.
+Usar un único árbol multi-salida genera circuitos más pequeños y con menor
+error que utilizar un árbol diferente para cada bit de salida de un circuito,
+pero no de manera contundente. Se observó que utilizar múltiples árboles puede
+generar circuitos que a pesar de ser más grandes, capturan mejor los
+comportamientos complejos de un circuito.
+% En aplicación práctica se vio que puede generar circuitos mejor adaptados
+% usar un árbol diferente por salida.
+Por ejemplo, en un sumador aproximado aplicado a un filtro de desenfoque
+gaussiano, el circuito generado con múltiples árboles tenía peor MRED y
+ocupaba más área que el circuito aproximado con un solo árbol. Sin embargo,
+visualmente logró preservar mejor el brillo y los colores de la imagen
+original.
+
+% En muchos circuitos el método de DT no pudo generar resultados aceptables (de
+% área menor a 100% y error menor a 50%)
+Se encontró que en varios circuitos el método DT no logró resultados aceptables
+bajo las métricas de producir un circuito con área menor al 100\% de la
+original con error MRED menor al 50\%. Esto se vio con tres circuitos de
+aplicación muy diferente, al ser los circuitos más grandes y complejos.
+% En general es difícil generar un circuito aproximado que sí reduzca el área
+% con un umbral de error controlado. ESTO ES MUY IMPORTANTE ES EL DOWNSIDE MÁS
+% Y MUY CRÍTICO DEL MÉTODO
+La limitación más importante identificada en el método de DT es la dificultad
+para controlar el error introducido en el circuito generado.
+Sin embargo, una ventaja es que es posible ajustar parcialmente el rendimiento
+del circuito sobre ciertos rangos de datos, controlando el set de entrenamiento
+del DT.
+Se recomienda que futuros estudios indaguen más sobre esta propiedad,
+explorando la capacidad de manipular los datos de entrenamiento para adaptar el
+rendimiento del circuito generado a las necesidades específicas de su
+aplicación final.
+Esta misma estrategia puede ser relevante para otros métodos de aprendizaje
+supervisado.
+
+% (No sé bien en qué parte poner esto) Para el método probprun generar el SAIF
+% es un cuello de botella que se mejoro con Rust pero aún podría mejorarse. Si
+% se vuelve suficientemente rápido podría mejorar el método probprun por
+% permitirle re-evaluar la información de temporización conforme va podando.
+Durante la experimentación, también se identificó que la generación de archivos
+SAIF para el método \texttt{probprun} es un cuello de botella.
+Se logró reducir el tiempo de creación de los archivos SAIF aproximadamente a
+un 5\% del tiempo original con una reimplementación en Rust de la utilidad que
+los crea, aunque aún existe margen para optimización.
+Si este proceso se vuelve suficientemente rápido, comparable a ejecutar una
+simulación, podría mejorar la efectividad del método \texttt{probprun} al
+permitirle reevaluar información de temporización durante la poda.
+
+%%% Lineamientos:
+%%% En lo que respecta a las recomendaciones, se deben incluir los aspectos en
+%%% que no se ahondó en el estudio pero que se consideran relevantes y
+%%% quedaron como trabajos futuros, así como otras recomendaciones que el
+%%% estudiante considere importantes para la continuación y aprovechamiento
+%%% de los resultados obtenidos con su proyecto.
+
+% Buscar otros métodos ML que proporcionen un mejor control del error
+% introducido.
+Se recomienda investigar otras técnicas de ML que ofrezcan mejor control sobre
+el error introducido. Para esto, se podría explorar métodos con múltiples
+hiperparámetros ajustables, como los MLP.
+% También podría ayudar buscar métodos ML cuya estructura se asemeje mejor a la
+% de un circuito, en vez de una estructura de árbol. Por ejemplo DG (decision
+% graph, poner cita) o CGP (Cartesian Genetic Programming).
+También sería valioso explorar modelos cuya estructura se asemeje más a la de
+un circuito, como los DG o la CGP.
+Los experimentos realizados indican que el método DT no se adapta bien a
+circuitos grandes, posiblemente porque su estructura de árbol no refleja la de
+estos circuitos.
+Por ejemplo, a mayor cantidad de variables de entrada, el árbol crece
+exponencialmente, y también le resulta difícil aprender operaciones con baja
+información mutua entre entradas y salidas, como el XOR.
+
+% Usar sets de datos más representativos de manera más equitativa para
+% diferentes rangos de números. O utilizar ejemplos prácticos y escoger sets de
+% datos adecuados.
+También se sugiere utilizar sets de datos más representativos y balanceados, o
+ejemplos prácticos con conjuntos de datos adecuados para cada caso.
+% En general sería mejor utilizar ejemplos prácticos para evaluar los
+% resultados y no quedarse con métricas.
+En general, es preferible utilizar ejemplos prácticos para evaluar los métodos,
+más allá de métricas abstractas.
+
+% También buscar más circuitos de diferentes tipos, más circuitos pequeños para
+% que sea más fácil usarlos en pruebas.
+Finalmente, sería útil ampliar el set de circuitos de prueba, incluyendo más
+circuitos de diferentes tipos y de menor tamaño, para facilitar pruebas rápidas
+y exploración.
