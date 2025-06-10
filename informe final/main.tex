@@ -34,19 +34,24 @@
 
 \begin{document}
 
-\include{portada.tex}
+\pagenumbering{roman}
 
-\chapter*{Hoja de Aprobación}
-\chapter*{Dedicatoria}
-\chapter*{Agradecimientos}
+\include{portada}
 
-\include{resumen.tex}
+\include{hoja_aprobación}
+
+\include{dedicatoria}
+
+\include{resumen}
 
 \tableofcontents
 \listoftables
 \listoffigures
 
 \include{siglas_y_acrónimos}
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
 
 \include{introducción}
 
