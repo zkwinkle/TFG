@@ -36,7 +36,7 @@ necesarios para la implementación de la técnica:
   \item Mapeo del árbol de decisiones a un circuito Verilog a través de
     expansión de Boole.
   \item Sintetización y simulación del circuito aproximado.
-  \item Evaluación de técnicas de error.
+  \item Evaluación de métricas de error.
 \end{enumerate}
 
 Cabe notar que la técnica no estaba realmente integrada dentro de la
@@ -500,20 +500,7 @@ eliminados porque el set de datos que se podía generar para $\SI{2}{\second}$
 de simulación era demasiado pequeño (se definió arbitrariamente un mínimo
 aceptable de 1000 datos) y no podría representar bien el error introducido.
 También se excluyeron algunos porque no estaban funcionando correctamente, la
-sintetización del circuito fallaba o no generaba bien las salidas. Finalmente,
-unos pocos se descartaron aunque sí se podían simular en $\SI{2}{\second}$, ya
-que los métodos de poda nunca lograron completarse y fue necesario cancelarlos
-después de varias horas sin alcanzar el umbral de error. La Tabla
-\ref{tab:exclusiones} detalla las razones por las que se excluyó cada circuito.
-
-Basado en esa prueba, se decidió excluir algunos circuitos del resto del
-proceso de recolección de resultados. La mayoría se descartaron por ser
-demasiado lentos en simulación; algunos incluso se cancelaron tras 4 horas de
-ejecución sin progreso aparente. Otros sí completaron la prueba, pero fueron
-eliminados porque el set de datos que se podía generar para $\SI{2}{\second}$
-de simulación era demasiado pequeño (se definió arbitrariamente un mínimo
-aceptable de 1000 datos) y no podría representar bien el error introducido.
-También se excluyeron algunos porque no estaban funcionando correctamente.
+sintetización del circuito fallaba o no generaba bien las salidas.
 Finalmente, unos pocos se descartaron aunque sí se podían simular en
 $\SI{2}{\second}$, ya que los métodos de poda nunca lograron completarse y fue
 necesario cancelarlos después de 4 o más horas sin alcanzar el umbral de error.

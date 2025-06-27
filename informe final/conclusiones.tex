@@ -45,15 +45,18 @@ algunos casos, pero no fue decisiva.
 Usar un único árbol multi-salida genera circuitos más pequeños y con menor
 error que utilizar un árbol diferente para cada bit de salida de un circuito,
 pero no de manera contundente. Se observó que utilizar múltiples árboles puede
-generar circuitos que a pesar de ser más grandes, capturan mejor los
-comportamientos complejos de un circuito.
-% En aplicación práctica se vio que puede generar circuitos mejor adaptados
-% usar un árbol diferente por salida.
-Por ejemplo, en un sumador aproximado aplicado a un filtro de desenfoque
-gaussiano, el circuito generado con múltiples árboles tenía peor MRED y
-ocupaba más área que el circuito aproximado con un solo árbol. Sin embargo,
-visualmente logró preservar mejor el brillo y los colores de la imagen
-original.
+generar circuitos que a pesar de ser más grandes, o hasta tener peor métricas
+de error, capturan mejor los comportamientos complejos de un circuito.
+
+% Quitado por recomendación de lector Pablo García
+%
+% % En aplicación práctica se vio que puede generar circuitos mejor adaptados
+% % usar un árbol diferente por salida.
+% Por ejemplo, en un sumador aproximado aplicado a un filtro de desenfoque
+% gaussiano, el circuito generado con múltiples árboles tenía peor MRED y
+% ocupaba más área que el circuito aproximado con un solo árbol. Sin embargo,
+% visualmente logró preservar mejor el brillo y los colores de la imagen
+% original.
 
 % En muchos circuitos el método de DT no pudo generar resultados aceptables (de
 % área menor a 100% y error menor a 50%)
@@ -109,9 +112,11 @@ un circuito, como los DG o la CGP.
 Los experimentos realizados indican que el método DT no se adapta bien a
 circuitos grandes, posiblemente porque su estructura de árbol no refleja la de
 estos circuitos.
-Por ejemplo, a mayor cantidad de variables de entrada, el árbol crece
-exponencialmente, y también le resulta difícil aprender operaciones con baja
-información mutua entre entradas y salidas, como el XOR.
+% Quitado por recomendación de lector Pablo García
+%
+% Por ejemplo, a mayor cantidad de variables de entrada, el árbol crece
+% exponencialmente, y también le resulta difícil aprender operaciones con baja
+% información mutua entre entradas y salidas, como el XOR.
 
 % Usar sets de datos más representativos de manera más equitativa para
 % diferentes rangos de números. O utilizar ejemplos prácticos y escoger sets de
